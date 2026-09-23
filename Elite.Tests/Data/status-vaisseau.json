@@ -1,0 +1,1 @@
+{ "timestamp":"2026-09-23T10:00:00Z", "event":"Status", "Flags":16842764, "Flags2":0, "Pips":[4,8,0], "FireGroup":0, "GuiFocus":6, "Fuel":{ "FuelMain":27.5, "FuelReservoir":0.63 }, "Cargo":1.0, "LegalState":"Clean", "Balance":12345678, "Destination":{ "System":2827992680811, "Body":0, "Name":"Bakewell Platform" } }

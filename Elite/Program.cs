@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
+using Elite.Generic;
 using EliteJournalReader;
 using EliteJournalReader.Events;
 using Newtonsoft.Json;
@@ -513,13 +514,19 @@ namespace Elite
 
                 StatusWatcher.StatusUpdated += EliteData.HandleStatusEvents;
 
+                StatusWatcher.RawStatusUpdated += EliteStore.HandleRawStatus;
+
                 StatusWatcher.StartWatching();
 
                 JournalWatcher = new JournalWatcher(journalPath, defaultFilter);
 
                 JournalWatcher.AllEventHandler += EliteData.HandleEliteEvents;
 
+                JournalWatcher.RawEventHandler += EliteStore.HandleRawJournal;
+
                 JournalWatcher.StartWatching().Wait();
+
+                Logger.Instance.LogMessage(TracingLevel.INFO, $"EliteStore: {EliteStore.KeyCount} keys after journal replay");
 
                 CargoWatcher = new CargoWatcher(journalPath);
 

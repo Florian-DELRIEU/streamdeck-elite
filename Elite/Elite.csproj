@@ -184,6 +184,8 @@
     <Compile Include="Buttons\Power.cs" />
     <Compile Include="Buttons\Alarm.cs" />
     <Compile Include="FifoExecution.cs" />
+    <Compile Include="Generic\EliteStore.cs" />
+    <Compile Include="Generic\StoreKeys.cs" />
     <Compile Include="Profile.cs" />
     <Compile Include="EpicPath.cs" />
     <Compile Include="SteamPath.cs" />

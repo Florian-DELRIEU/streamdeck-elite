@@ -68,6 +68,11 @@ namespace EliteJournalReader
         public event EventHandler<JournalEventArgs> AllEventHandler;
 
         /// <summary>
+        /// Fired for every journal line with an "event" field, whether or not a typed event class exists for it.
+        /// </summary>
+        public event EventHandler<RawJournalEventArgs> RawEventHandler;
+
+        /// <summary>
         /// Use reflection to generate a list of event handlers. This allows for a dynamic list of handler classes, one for each type
         /// of event.
         /// </summary>
@@ -574,6 +579,15 @@ namespace EliteJournalReader
                 if (IsLive)
                     Trace.TraceInformation($"Journal - firing event {eventType} @ {evt["timestamp"]?.Value<string>()}\r\n\t{line}");
 #endif
+                try
+                {
+                    RawEventHandler?.Invoke(this, new RawJournalEventArgs(eventType, evt, IsLive));
+                }
+                catch (Exception e)
+                {
+                    Trace.TraceError($"Exception in raw journal event handler for {eventType}: {e.GetType().FullName}: {e.Message}");
+                }
+
                 var journalEventArgs = FireEvent(eventType, evt);
                 if (journalEventArgs != null)
                     MessageReceived?.Invoke(this, new MessageReceivedEventArgs(journalEventArgs, eventType));
@@ -614,5 +628,22 @@ namespace EliteJournalReader
             return null;
         }
     }
-    
+
+    /// <summary>
+    /// A journal line as written by the game: event name, raw JSON and whether it was read live or replayed at startup.
+    /// </summary>
+    public class RawJournalEventArgs : EventArgs
+    {
+        public RawJournalEventArgs(string eventName, JObject evt, bool isLive)
+        {
+            EventName = eventName;
+            Event = evt;
+            IsLive = isLive;
+        }
+
+        public string EventName { get; }
+        public JObject Event { get; }
+        public bool IsLive { get; }
+    }
+
 }

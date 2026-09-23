@@ -25,6 +25,11 @@ namespace EliteJournalReader
         public event EventHandler<StatusFileEvent> StatusUpdated;
 
         /// <summary>
+        /// Same trigger as StatusUpdated, with the raw JSON (fields absent from status.json stay absent).
+        /// </summary>
+        public event EventHandler<RawStatusEventArgs> RawStatusUpdated;
+
+        /// <summary>
         ///     The default filter
         /// </summary>
         private const string DefaultFilter = @"Status*.json";
@@ -140,7 +145,8 @@ namespace EliteJournalReader
                 var streamReader = new StreamReader(new FileStream(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite));
                 using (JsonTextReader jsonTextReader = new JsonTextReader(streamReader))
                 {
-                    var evt = JToken.ReadFrom(jsonTextReader).ToObject<StatusFileEvent>();
+                    var token = JToken.ReadFrom(jsonTextReader);
+                    var evt = token.ToObject<StatusFileEvent>();
                     if (evt == null)
                         throw new ArgumentNullException($"Unexpected empty status.json file");
 
@@ -148,6 +154,7 @@ namespace EliteJournalReader
                     if (evt.Timestamp > lastTimestamp)
                     {
                         lastTimestamp = evt.Timestamp;
+                        FireRawStatusUpdatedEvent(token as JObject);
                         FireStatusUpdatedEvent(evt);
                     }
                 }
@@ -180,6 +187,34 @@ namespace EliteJournalReader
 
 
         protected void FireStatusUpdatedEvent(StatusFileEvent evt) => StatusUpdated?.Invoke(this, evt);
+
+        protected void FireRawStatusUpdatedEvent(JObject status)
+        {
+            if (status == null)
+                return;
+
+            try
+            {
+                RawStatusUpdated?.Invoke(this, new RawStatusEventArgs(status));
+            }
+            catch (Exception e)
+            {
+                Trace.TraceError($"Exception in raw status handler: {e.GetType().FullName}: {e.Message}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// The content of status.json as written by the game.
+    /// </summary>
+    public class RawStatusEventArgs : EventArgs
+    {
+        public RawStatusEventArgs(JObject status)
+        {
+            Status = status;
+        }
+
+        public JObject Status { get; }
     }
 
 }
