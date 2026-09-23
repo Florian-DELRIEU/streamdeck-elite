@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no,minimal-ui,viewport-fit=cover">
+    <meta name=apple-mobile-web-app-capable content=yes>
+    <meta name=apple-mobile-web-app-status-bar-style content=black>
+    <title>ZV Elite - donnée du jeu</title>
+    <link rel="stylesheet" href="../sdpi.css">
+    <style>
+        .generic-info { font-size: 9pt; opacity: 0.85; line-height: 1.3; }
+        .generic-warning { color: #f0ad4e; opacity: 1; }
+        .generic-hint { font-size: 8pt; opacity: 0.7; }
+    </style>
+    <script src="../sdtools.common.js"></script>
+    <script src="../catalog.js"></script>
+    <script src="../generic.js"></script>
+</head>
+<body>
+<div class="sdpi-wrapper">
+
+    <!-- data selection, shared by the generic actions -->
+    <div class="sdpi-heading">Donnée du jeu</div>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">Catégorie</div>
+        <select class="sdpi-item-value select" id="genericCategory" onchange="genericCategoryChanged()"></select>
+    </div>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">Recherche</div>
+        <input class="sdpi-item-value" id="genericSearch" type="text" placeholder="ex. fuel, StarSystem" oninput="genericSearchChanged()">
+    </div>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">Donnée</div>
+        <select class="sdpi-item-value select" id="genericField" onchange="genericFieldChanged()"></select>
+    </div>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label">Clé</div>
+        <input class="sdpi-item-value sdProperty" id="source" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
+    </div>
+    <div class="sdpi-item">
+        <div class="sdpi-item-label empty"></div>
+        <div class="sdpi-item-value generic-info" id="genericKeyInfo"></div>
+    </div>
+
+    <!-- Value action (§5.1) -->
+    <div data-actions="value">
+        <div class="sdpi-heading">Affichage</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Préfixe</div>
+            <input class="sdpi-item-value sdProperty" id="prefix" type="text" placeholder="ex. Fuel\n" oninput="setSettings()">
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Suffixe</div>
+            <input class="sdpi-item-value sdProperty" id="suffix" type="text" placeholder="ex.  t" oninput="setSettings()">
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">\n dans le préfixe ou le suffixe = retour à la ligne.</div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Décimales</div>
+            <input class="sdpi-item-value sdProperty" id="decimals" type="number" min="0" max="6" step="1" oninput="setSettings()">
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Facteur</div>
+            <input class="sdpi-item-value sdProperty" id="scale" type="text" placeholder="1" oninput="setSettings()">
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Décalage</div>
+            <input class="sdpi-item-value sdProperty" id="offset" type="text" placeholder="0 (K → °C : -273,15)" oninput="setSettings()">
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Abrégé</div>
+            <div class="sdpi-item-value">
+                <input id="compact" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                <label for="compact" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Si vide</div>
+            <input class="sdpi-item-value sdProperty" id="emptyText" type="text" placeholder="—" oninput="setSettings()">
+        </div>
+        <div class="sdpi-item" id="dvBackgroundImage">
+            <div class="sdpi-item-label" onclick="clearFileName('backgroundImage');">Fond</div>
+            <div class="sdpi-item-group file" id="filepickergroup1">
+                <input class="sdpi-item-value sdProperty sdFile" type="file" id="backgroundImage" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                <label class="sdpi-file-info " for="backgroundImage" id="backgroundImageFilename">No file...</label>
+                <label class="sdpi-file-label" for="backgroundImage">Choose file...</label>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

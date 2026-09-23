@@ -48,6 +48,8 @@
     <Compile Include="CatalogTests.cs" />
     <Compile Include="CommandsTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
+    <Compile Include="ManifestTests.cs" />
+    <Compile Include="ValueFormatterTests.cs" />
     <Compile Include="RawEventTests.cs" />
     <Compile Include="ReferenceKeysTests.cs" />
     <Compile Include="StoreKeysTests.cs" />
@@ -75,6 +77,10 @@
     </None>
     <None Include="..\Elite\PropertyInspector\commands.js">
       <Link>Data\commands.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Elite\manifest.json">
+      <Link>Data\manifest.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

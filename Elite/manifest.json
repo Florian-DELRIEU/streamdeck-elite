@@ -185,6 +185,22 @@
       "Tooltip": "Elite Dangerous FireGroup Dial",
       "UUID": "com.mhwlng.elite.firegroupdial",
       "PropertyInspectorPath": "PropertyInspector/Elite/FireGroupDial.html"
+    },
+    {
+      "Icon": "Images/icon",
+      "Name": "Valeur",
+      "States": [
+        {
+          "Image": "Images/Default",
+          "TitleAlignment": "middle",
+          "FontSize": "10"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Controllers": [ "Keypad" ],
+      "Tooltip": "Affiche la valeur d'une donnée du jeu (Status.json ou Journal)",
+      "UUID": "com.mhwlng.elite.value",
+      "PropertyInspectorPath": "PropertyInspector/Elite/Generic.html"
     }
   ],
   "Author": "mhwlng",
