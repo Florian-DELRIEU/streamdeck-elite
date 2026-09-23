@@ -36,4 +36,6 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host "== MSBuild ($Configuration) using $msbuild"
 & $msbuild Elite.sln "/p:Configuration=$Configuration" /m /nologo /v:minimal
-exit $LASTEXITCODE
+$code = $LASTEXITCODE
+if ($code -eq 0) { Write-Host "== BUILD OK ($Configuration)" } else { Write-Host "== BUILD FAILED (exit code $code)" }
+exit $code

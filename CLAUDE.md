@@ -31,7 +31,7 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 ## Git
 
 - Branche de travail : `feature/generic-api`, créée depuis `master` @ `71119aa` (= `origin/master` = `upstream/master` au moment du fork, aucune modification locale).
-- `CLAUDE.md`, `docs/` et `build.ps1` ne sont **pas encore commités** : premier commit à faire avant L1 (`docs: contexte projet pour Claude Code`).
+- Contexte projet (`CLAUDE.md`, `docs/`, `build.ps1`) commité le 2026-09-23 (`docs: contexte projet pour Claude Code`).
 - Une branche locale `claude/main` existe (commit `9a4df80`, absent d'`origin/master`, origine inconnue — probablement une ancienne session Claude). **Ne pas l'utiliser ni la supprimer sans demander à Florian.**
 - Nouveautés de mhwlng : `git fetch upstream` puis `git merge upstream/master`. Ne jamais installer sa version officielle (même UUID : elle écraserait celle-ci).
 - Commits atomiques par lot. **Jamais** de push, force-push, `reset --hard` ou suppression de branche sans accord explicite de Florian.
@@ -48,7 +48,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Configuration Rel
 
 Le script restaure les paquets avec `C:\nuget\nuget.exe` (obligatoire : `msbuild /t:Restore` ne restaure **pas** les projets `packages.config`, silencieusement) puis lance MSBuild trouvé par `vswhere`. Sortie : `Elite\bin\<Config>\com.mhwlng.elite.sdPlugin\`.
 
-Critère : 0 erreur et aucun nouvel avertissement par rapport à la baseline (seul MSB3884 existe aujourd'hui).
+Critère : le script se termine par `== BUILD OK` (code de sortie 0) et aucun nouvel avertissement n'apparaît par rapport à la baseline (seul MSB3884, sur `WindowsInput.csproj`, existe aujourd'hui). Script validé sur la machine de Florian le 2026-09-23.
 
 Piège shell : sous Windows, Claude Code exécute ses commandes dans Git Bash. Si MSBuild est appelé directement depuis bash, utiliser `-p:Configuration=Debug` et jamais `/p:...` (MSYS convertit les arguments commençant par `/` en chemins). Le plus simple : passer par `build.ps1`.
 
