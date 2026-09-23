@@ -48,6 +48,9 @@ namespace Elite.Tests
         {
             var value = Action("com.mhwlng.elite.value");
 
+            Assert.That((string)value["Name"], Is.EqualTo("Donnée"), "universal Data action (decision D4)");
+            Assert.That((string)value["States"][0]["FontSize"], Is.EqualTo("14"));
+            Assert.That(manifest["Actions"].Any(a => (string)a["UUID"] == "com.mhwlng.elite.state"), Is.False, "reserved, never declared");
             Assert.That(value["States"].Count(), Is.EqualTo(1));
             Assert.That(value["Controllers"].Values<string>(), Is.EqualTo(new[] { "Keypad" }));
             Assert.That((bool)value["SupportedInMultiActions"], Is.False);
@@ -75,6 +78,10 @@ namespace Elite.Tests
 
             foreach (var file in new[] { "catalog.js", "commands.js", "generic.js", "sdtools.common.js" })
                 Assert.That(File.Exists(Path.Combine(plugin, "PropertyInspector", file)), Is.True, file);
+
+            // generic.js is loaded without charset: ASCII only (non-ASCII written as \u escapes)
+            var script = File.ReadAllBytes(Path.Combine(plugin, "PropertyInspector", "generic.js"));
+            Assert.That(script.All(b => b < 0x80), Is.True, "generic.js must be ASCII-only");
         }
     }
 }

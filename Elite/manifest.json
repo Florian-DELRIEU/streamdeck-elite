@@ -188,17 +188,17 @@
     },
     {
       "Icon": "Images/icon",
-      "Name": "Valeur",
+      "Name": "Donnée",
       "States": [
         {
           "Image": "Images/Default",
           "TitleAlignment": "middle",
-          "FontSize": "10"
+          "FontSize": "14"
         }
       ],
       "SupportedInMultiActions": false,
       "Controllers": [ "Keypad" ],
-      "Tooltip": "Affiche la valeur d'une donnée du jeu (Status.json ou Journal)",
+      "Tooltip": "Affiche une donnée du jeu, change d'icône selon des seuils, agit à l'appui",
       "UUID": "com.mhwlng.elite.value",
       "PropertyInspectorPath": "PropertyInspector/Elite/Generic.html"
     }

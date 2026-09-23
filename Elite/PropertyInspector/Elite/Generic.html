@@ -10,82 +10,335 @@
     <style>
         .generic-info { font-size: 9pt; opacity: 0.85; line-height: 1.3; }
         .generic-warning { color: #f0ad4e; opacity: 1; }
-        .generic-hint { font-size: 8pt; opacity: 0.7; }
+        .generic-hint { font-size: 8pt; opacity: 0.7; line-height: 1.3; }
+        .sdpi-item > select.sdpi-item-value { width: 0; min-width: 0; flex: 1 1 auto; } /* long options must not widen the page */
+        .generic-rule { display: flex; gap: 4px; min-width: 0; box-sizing: border-box; }
+        .generic-rule select { flex: 0 0 45%; width: 45%; min-width: 0; box-sizing: border-box; }
+        .generic-rule input { flex: 1 1 0; width: 0; min-width: 0; box-sizing: border-box; }
     </style>
     <script src="../sdtools.common.js"></script>
     <script src="../catalog.js"></script>
+    <script src="../commands.js"></script>
     <script src="../generic.js"></script>
 </head>
 <body>
 <div class="sdpi-wrapper">
 
-    <!-- data selection, shared by the generic actions -->
-    <div class="sdpi-heading">Donnée du jeu</div>
-    <div class="sdpi-item">
-        <div class="sdpi-item-label">Catégorie</div>
-        <select class="sdpi-item-value select" id="genericCategory" onchange="genericCategoryChanged()"></select>
-    </div>
-    <div class="sdpi-item">
-        <div class="sdpi-item-label">Recherche</div>
-        <input class="sdpi-item-value" id="genericSearch" type="text" placeholder="ex. fuel, StarSystem" oninput="genericSearchChanged()">
-    </div>
-    <div class="sdpi-item">
-        <div class="sdpi-item-label">Donnée</div>
-        <select class="sdpi-item-value select" id="genericField" onchange="genericFieldChanged()"></select>
-    </div>
-    <div class="sdpi-item">
-        <div class="sdpi-item-label">Clé</div>
-        <input class="sdpi-item-value sdProperty" id="source" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
-    </div>
-    <div class="sdpi-item">
-        <div class="sdpi-item-label empty"></div>
-        <div class="sdpi-item-value generic-info" id="genericKeyInfo"></div>
-    </div>
-
-    <!-- Value action (§5.1) -->
+    <!-- Data key ("Donnee", com.mhwlng.elite.value) - see docs/L4-donnee.md -->
     <div data-actions="value">
-        <div class="sdpi-heading">Affichage</div>
+        <div class="sdpi-heading">Donnée du jeu</div>
         <div class="sdpi-item">
-            <div class="sdpi-item-label">Préfixe</div>
-            <input class="sdpi-item-value sdProperty" id="prefix" type="text" placeholder="ex. Fuel\n" oninput="setSettings()">
-        </div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Suffixe</div>
-            <input class="sdpi-item-value sdProperty" id="suffix" type="text" placeholder="ex.  t" oninput="setSettings()">
+            <div class="sdpi-item-label">Vue</div>
+            <select class="sdpi-item-value select" id="genericView" onchange="genericViewChanged()">
+                <option value="1">Vue 1 (principale)</option>
+                <option value="2">Vue 2</option>
+                <option value="3">Vue 3</option>
+                <option value="4">Vue 4</option>
+            </select>
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">\n dans le préfixe ou le suffixe = retour à la ligne.</div>
+            <div class="sdpi-item-value generic-hint">La vue 1 est la donnée principale (elle choisit aussi l'icône). Les vues 2 à 4, facultatives, défilent à l'appui.</div>
         </div>
         <div class="sdpi-item">
-            <div class="sdpi-item-label">Décimales</div>
-            <input class="sdpi-item-value sdProperty" id="decimals" type="number" min="0" max="6" step="1" oninput="setSettings()">
+            <div class="sdpi-item-label">Catégorie</div>
+            <select class="sdpi-item-value select" id="genericCategory" onchange="genericCategoryChanged()"></select>
         </div>
         <div class="sdpi-item">
-            <div class="sdpi-item-label">Facteur</div>
-            <input class="sdpi-item-value sdProperty" id="scale" type="text" placeholder="1" oninput="setSettings()">
+            <div class="sdpi-item-label">Recherche</div>
+            <input class="sdpi-item-value" id="genericSearch" type="text" placeholder="ex. fuel, StarSystem" oninput="genericSearchChanged()">
         </div>
         <div class="sdpi-item">
-            <div class="sdpi-item-label">Décalage</div>
-            <input class="sdpi-item-value sdProperty" id="offset" type="text" placeholder="0 (K → °C : -273,15)" oninput="setSettings()">
+            <div class="sdpi-item-label">Donnée</div>
+            <select class="sdpi-item-value select" id="genericField" onchange="genericFieldChanged()"></select>
+        </div>
+        <div class="sdpi-item" data-view="1">
+            <div class="sdpi-item-label">Clé</div>
+            <input class="sdpi-item-value sdProperty generic-key" id="source" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
+        </div>
+        <div class="sdpi-item" data-view="2">
+            <div class="sdpi-item-label">Clé</div>
+            <input class="sdpi-item-value sdProperty generic-key" id="source2" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
+        </div>
+        <div class="sdpi-item" data-view="3">
+            <div class="sdpi-item-label">Clé</div>
+            <input class="sdpi-item-value sdProperty generic-key" id="source3" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
+        </div>
+        <div class="sdpi-item" data-view="4">
+            <div class="sdpi-item-label">Clé</div>
+            <input class="sdpi-item-value sdProperty generic-key" id="source4" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
         </div>
         <div class="sdpi-item">
-            <div class="sdpi-item-label">Abrégé</div>
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-info" id="genericKeyInfo"></div>
+        </div>
+
+        <div class="sdpi-heading">Texte</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Afficher</div>
             <div class="sdpi-item-value">
-                <input id="compact" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
-                <label for="compact" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+                <input id="showText" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                <label for="showText" class="sdpi-item-label"><span></span>la valeur (sinon : titre du logiciel)</label>
             </div>
+        </div>
+        <div data-view="1">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Préfixe</div>
+                <input class="sdpi-item-value sdProperty" id="prefix" type="text" placeholder="ex. Fuel\n" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Suffixe</div>
+                <input class="sdpi-item-value sdProperty" id="suffix" type="text" placeholder="ex.  t" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décimales</div>
+                <input class="sdpi-item-value sdProperty" id="decimals" type="number" min="0" max="6" step="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Facteur</div>
+                <input class="sdpi-item-value sdProperty" id="scale" type="text" placeholder="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décalage</div>
+                <input class="sdpi-item-value sdProperty" id="offset" type="text" placeholder="0 (K → °C : -273,15)" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Abrégé</div>
+                <div class="sdpi-item-value">
+                    <input id="compact" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="compact" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="2">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Préfixe</div>
+                <input class="sdpi-item-value sdProperty" id="prefix2" type="text" placeholder="ex. Fuel\n" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Suffixe</div>
+                <input class="sdpi-item-value sdProperty" id="suffix2" type="text" placeholder="ex.  t" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décimales</div>
+                <input class="sdpi-item-value sdProperty" id="decimals2" type="number" min="0" max="6" step="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Facteur</div>
+                <input class="sdpi-item-value sdProperty" id="scale2" type="text" placeholder="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décalage</div>
+                <input class="sdpi-item-value sdProperty" id="offset2" type="text" placeholder="0 (K → °C : -273,15)" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Abrégé</div>
+                <div class="sdpi-item-value">
+                    <input id="compact2" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="compact2" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="3">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Préfixe</div>
+                <input class="sdpi-item-value sdProperty" id="prefix3" type="text" placeholder="ex. Fuel\n" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Suffixe</div>
+                <input class="sdpi-item-value sdProperty" id="suffix3" type="text" placeholder="ex.  t" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décimales</div>
+                <input class="sdpi-item-value sdProperty" id="decimals3" type="number" min="0" max="6" step="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Facteur</div>
+                <input class="sdpi-item-value sdProperty" id="scale3" type="text" placeholder="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décalage</div>
+                <input class="sdpi-item-value sdProperty" id="offset3" type="text" placeholder="0 (K → °C : -273,15)" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Abrégé</div>
+                <div class="sdpi-item-value">
+                    <input id="compact3" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="compact3" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="4">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Préfixe</div>
+                <input class="sdpi-item-value sdProperty" id="prefix4" type="text" placeholder="ex. Fuel\n" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Suffixe</div>
+                <input class="sdpi-item-value sdProperty" id="suffix4" type="text" placeholder="ex.  t" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décimales</div>
+                <input class="sdpi-item-value sdProperty" id="decimals4" type="number" min="0" max="6" step="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Facteur</div>
+                <input class="sdpi-item-value sdProperty" id="scale4" type="text" placeholder="1" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Décalage</div>
+                <input class="sdpi-item-value sdProperty" id="offset4" type="text" placeholder="0 (K → °C : -273,15)" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Abrégé</div>
+                <div class="sdpi-item-value">
+                    <input id="compact4" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="compact4" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+                </div>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">\n dans le préfixe ou le suffixe = retour à la ligne. Taille du texte : icône « T » du logiciel Stream Deck.</div>
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Si vide</div>
             <input class="sdpi-item-value sdProperty" id="emptyText" type="text" placeholder="—" oninput="setSettings()">
         </div>
-        <div class="sdpi-item" id="dvBackgroundImage">
-            <div class="sdpi-item-label" onclick="clearFileName('backgroundImage');">Fond</div>
-            <div class="sdpi-item-group file" id="filepickergroup1">
+
+        <div class="sdpi-heading">Icône</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" onclick="clearFileName('backgroundImage');">Par défaut</div>
+            <div class="sdpi-item-group file">
                 <input class="sdpi-item-value sdProperty sdFile" type="file" id="backgroundImage" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
                 <label class="sdpi-file-info " for="backgroundImage" id="backgroundImageFilename">No file...</label>
                 <label class="sdpi-file-label" for="backgroundImage">Choose file...</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Règles testées dans l'ordre sur la donnée principale (vue 1, après facteur et décalage) : la première vraie choisit l'image. Sinon, ou si la donnée est absente : image par défaut. Clic sur un libellé d'image = l'effacer.</div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Règle 1</div>
+            <div class="sdpi-item-value generic-rule">
+                <select class="select sdProperty generic-rule-op" id="rule1Op" onchange="setSettings()">
+                    <option value="">— aucune —</option>
+                    <option value="isTrue">est vrai / oui</option>
+                    <option value="isFalse">est faux / non</option>
+                    <option value="equals">=</option>
+                    <option value="notEquals">≠</option>
+                    <option value="lt">&lt;</option>
+                    <option value="lte">≤</option>
+                    <option value="gt">&gt;</option>
+                    <option value="gte">≥</option>
+                </select>
+                <input class="sdProperty" id="rule1Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" onclick="clearFileName('rule1Image');">Image 1</div>
+            <div class="sdpi-item-group file">
+                <input class="sdpi-item-value sdProperty sdFile" type="file" id="rule1Image" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                <label class="sdpi-file-info " for="rule1Image" id="rule1ImageFilename">No file...</label>
+                <label class="sdpi-file-label" for="rule1Image">Choose file...</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Règle 2</div>
+            <div class="sdpi-item-value generic-rule">
+                <select class="select sdProperty generic-rule-op" id="rule2Op" onchange="setSettings()">
+                    <option value="">— aucune —</option>
+                    <option value="isTrue">est vrai / oui</option>
+                    <option value="isFalse">est faux / non</option>
+                    <option value="equals">=</option>
+                    <option value="notEquals">≠</option>
+                    <option value="lt">&lt;</option>
+                    <option value="lte">≤</option>
+                    <option value="gt">&gt;</option>
+                    <option value="gte">≥</option>
+                </select>
+                <input class="sdProperty" id="rule2Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" onclick="clearFileName('rule2Image');">Image 2</div>
+            <div class="sdpi-item-group file">
+                <input class="sdpi-item-value sdProperty sdFile" type="file" id="rule2Image" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                <label class="sdpi-file-info " for="rule2Image" id="rule2ImageFilename">No file...</label>
+                <label class="sdpi-file-label" for="rule2Image">Choose file...</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Règle 3</div>
+            <div class="sdpi-item-value generic-rule">
+                <select class="select sdProperty generic-rule-op" id="rule3Op" onchange="setSettings()">
+                    <option value="">— aucune —</option>
+                    <option value="isTrue">est vrai / oui</option>
+                    <option value="isFalse">est faux / non</option>
+                    <option value="equals">=</option>
+                    <option value="notEquals">≠</option>
+                    <option value="lt">&lt;</option>
+                    <option value="lte">≤</option>
+                    <option value="gt">&gt;</option>
+                    <option value="gte">≥</option>
+                </select>
+                <input class="sdProperty" id="rule3Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" onclick="clearFileName('rule3Image');">Image 3</div>
+            <div class="sdpi-item-group file">
+                <input class="sdpi-item-value sdProperty sdFile" type="file" id="rule3Image" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                <label class="sdpi-file-info " for="rule3Image" id="rule3ImageFilename">No file...</label>
+                <label class="sdpi-file-label" for="rule3Image">Choose file...</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Règle 4</div>
+            <div class="sdpi-item-value generic-rule">
+                <select class="select sdProperty generic-rule-op" id="rule4Op" onchange="setSettings()">
+                    <option value="">— aucune —</option>
+                    <option value="isTrue">est vrai / oui</option>
+                    <option value="isFalse">est faux / non</option>
+                    <option value="equals">=</option>
+                    <option value="notEquals">≠</option>
+                    <option value="lt">&lt;</option>
+                    <option value="lte">≤</option>
+                    <option value="gt">&gt;</option>
+                    <option value="gte">≥</option>
+                </select>
+                <input class="sdProperty" id="rule4Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" onclick="clearFileName('rule4Image');">Image 4</div>
+            <div class="sdpi-item-group file">
+                <input class="sdpi-item-value sdProperty sdFile" type="file" id="rule4Image" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                <label class="sdpi-file-info " for="rule4Image" id="rule4ImageFilename">No file...</label>
+                <label class="sdpi-file-label" for="rule4Image">Choose file...</label>
+            </div>
+        </div>
+        <datalist id="genericEnumValues"></datalist>
+
+        <div class="sdpi-heading">Appui</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Défiler</div>
+            <div class="sdpi-item-value">
+                <input id="pressCycle" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                <label for="pressCycle" class="sdpi-item-label"><span></span>passer à la vue suivante</label>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty" id="pressCommand" onchange="setSettings()"></select>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label" onclick="clearFileName('clickSound');">Son</div>
+            <div class="sdpi-item-group file">
+                <input class="sdpi-item-value sdProperty sdFile" type="file" id="clickSound" accept=".wav" oninput="setSettings()">
+                <label class="sdpi-file-info " for="clickSound" id="clickSoundFilename">No file...</label>
+                <label class="sdpi-file-label" for="clickSound">Choose file...</label>
             </div>
         </div>
     </div>

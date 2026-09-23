@@ -47,6 +47,9 @@
   <ItemGroup>
     <Compile Include="CatalogTests.cs" />
     <Compile Include="CommandsTests.cs" />
+    <Compile Include="ConditionTests.cs" />
+    <Compile Include="DataKeyConfigTests.cs" />
+    <Compile Include="ImageRulesTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
     <Compile Include="ManifestTests.cs" />
     <Compile Include="ValueFormatterTests.cs" />

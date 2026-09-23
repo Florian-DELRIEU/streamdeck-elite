@@ -12,8 +12,9 @@ Chantier en cours : exposer **toute l'API du jeu** (`Status.json` + ~250 événe
 2. `docs/L0-baseline-build.md` — baseline de compilation et recette d'environnement.
 3. `docs/L1-socle-donnees.md` — **conventions de clés et API d'`EliteStore`** telles qu'implémentées (complète le §4.3).
 4. `docs/L2-catalogue.md` — **format de `catalog.js` / `commands.js`**, générateur, régénération des champs observés, consignes pour L3/L4.
-5. `docs/L3-valeur.md` — action Valeur (règles d'affichage), page de réglages commune (comment y ajouter État/Alarme), **mode d'emploi D3**.
-6. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
+5. `docs/L3-valeur.md` — mise en forme du texte (`ValueFormatter`), page de réglages commune (mécanique), mode d'emploi D3.
+6. `docs/L4-donnee.md` — **action universelle « Donnée »** (vues, règles d'image, appui), décisions D4/D5, **mode d'emploi D4**.
+7. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
 
 Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude Code, la copie du dépôt fait foi.
 
@@ -25,9 +26,17 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 | L1 | Correctif `RawEventHandler` (§4.2) + `EliteStore` (§4.3) + tests unitaires | ✅ terminé le 2026-09-23 (build Debug/Release OK, 23 tests OK ; non vérifié en jeu) |
 | L2 | Générateur de catalogue + `catalog.js` + liste des commandes | ✅ terminé le 2026-09-23 (1 926 clés, 366 commandes, 33 tests OK ; non vérifié dans le logiciel Stream Deck) |
 | L3 | Action Valeur (complète, §5.1) + Property Inspector commun | ✅ terminé le 2026-09-23 (50 tests OK, PI vérifiée dans un navigateur ; non vérifié sur le Stream Deck) |
-| D3 | Point de contrôle en jeu (Florian devant le jeu, Stream Deck MK.2) — mode d'emploi : `docs/L3-valeur.md` | ⏭️ **prochain** (Florian) |
-| L4 | État, Alarme (+ retours de D3) | à faire |
-| L5 | Non-régression, version 2.8.0, empaquetage, README | à faire |
+| D3 | Point de contrôle en jeu (Florian, MK.2, profil de test « Test ZV ») | ✅ 2026-09-23 : valeurs à jour, lisibles (police un peu petite → icône « T », défaut passé à 14), page de réglages correcte. Non-régression des anciens boutons : à confirmer en D4 |
+| L4 | Action universelle « Donnée » : vues + règles d'image + appui (décisions D4/D5) | ✅ terminé le 2026-09-23 (66 tests OK, PI vérifiée dans un navigateur ; non vérifié sur le Stream Deck) |
+| D4 | Test en jeu de « Donnée » + non-régression — mode d'emploi : `docs/L4-donnee.md` | ⏭️ **prochain** (Florian) |
+| L5 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) | à faire |
+| L6 | Non-régression, version 2.8.0, nom « ZV Stream Deck Elite », empaquetage, README | à faire |
+
+### Décisions postérieures au cahier des charges (Florian, 2026-09-23)
+
+- **D4 — action universelle** : l'action Valeur (`com.mhwlng.elite.value`, UUID conservé) devient « **Donnée** » et absorbe l'action État du §5.2 (icône on/off = Donnée sans texte). `com.mhwlng.elite.state` n'est **jamais déclaré** (réservé). L'Alarme reste une action séparée.
+- **D5 — Donnée enrichie** : jusqu'à 4 vues qui défilent à l'appui, jusqu'à 4 règles d'image (seuils, égalité…) + image par défaut, commande clavier et son à l'appui. Remplace « Valeur : affichage seul » (D2).
+- Ces décisions priment sur le cahier des charges (§0, §5.1–5.2, §9), qui reste inchangé pour l'historique.
 
 → **Mettre à jour ce tableau à la fin de chaque lot**, dans le commit du lot.
 
@@ -59,21 +68,21 @@ Note : `nuget restore` interroge nuget.org à chaque build (liste des vulnérabi
 
 Piège shell : sous Windows, Claude Code exécute ses commandes dans Git Bash. Si MSBuild est appelé directement depuis bash, utiliser `-p:Configuration=Debug` et jamais `/p:...` (MSYS convertit les arguments commençant par `/` en chemins). Le plus simple : passer par `build.ps1`.
 
-## Déployer pour un test en jeu (D3, L4, L5)
+## Déployer pour un test en jeu (D3, D4…)
 
-Aucun événement post-build : le déploiement est manuel. Le plugin installé vit dans `%APPDATA%\Elgato\StreamDeck\Plugins\com.mhwlng.elite.sdPlugin\`.
+Aucun événement post-build : le déploiement est manuel. Le plugin installé vit dans `%APPDATA%\Elgato\StreamDeck\Plugins\com.mhwlng.elite.sdPlugin\` ; Stream Deck est installé dans `D:\Programmes\Elgato\StreamDeck.exe`.
 
-1. Fermer le logiciel Stream Deck (sinon `com.mhwlng.elite.exe` est verrouillé).
-2. Sauvegarder ce dossier : il peut contenir des images personnelles de Florian que le build ne fournit pas (les images des boutons ne sont pas copiées en sortie de build).
-3. Copier le contenu de `Elite\bin\Debug\com.mhwlng.elite.sdPlugin\` **par-dessus** (écraser, ne jamais supprimer le dossier).
-4. Relancer Stream Deck. Journal du plugin : `pluginlog.log`, dans ce même dossier. Depuis L1, il doit contenir `EliteStore: N keys after journal replay` au démarrage.
+1. Fermer Stream Deck : `Stop-Process -Name StreamDeck` puis attendre la fin de `com.mhwlng.elite` (il s'arrête avec).
+2. Sauvegarde : **déjà faite** le 2026-09-23 — version officielle 2.7.4 d'origine, 73 fichiers, dans `C:\Users\Florian\Desktop\com.mhwlng.elite.sdPlugin.sauvegarde-2026-09-23` (le dossier installé ne contenait aucune image personnelle). Ne pas l'écraser.
+3. Copier le build **par-dessus**, sans rien supprimer : `robocopy <repo>\Elite\bin\Debug\com.mhwlng.elite.sdPlugin <dossier installé> /E` (codes 0–7 = succès ; jamais `/MIR` ni `/PURGE`).
+4. Relancer : `Start-Process 'D:\Programmes\Elgato\StreamDeck.exe'`. Le plugin met **~50 s** à démarrer. Vérifier dans `pluginlog.log` la ligne `EliteStore: N keys after journal replay` (676 au premier déploiement).
 
-Les réglages des touches sont stockés dans les profils Stream Deck, pas dans ce dossier. Ces étapes touchent au logiciel de Florian : les lui proposer, ne pas les exécuter sans son accord.
+Retour arrière : même procédure en copiant le dossier de sauvegarde. Les réglages des touches sont dans les profils Stream Deck, pas dans ce dossier ; Florian teste sur un profil « Test ZV ». La bascule automatique de profils du plugin n'est pas configurée (`Profiles: []`). Ces étapes touchent au logiciel de Florian : ne les exécuter qu'à sa demande explicite (« déploie »).
 
 ## Règles impératives
 
 - **Additif, pas de refonte** : `EliteData` et les 12 actions existantes restent intacts. Nouveau code dans `Elite/Generic/`. Fichiers existants modifiables : `Program.cs`, `manifest.json`, `Elite.csproj`, `JournalWatcher.cs`, `Elite.sln` ; en plus, validés par Florian en L1 : `StatusWatcher.cs` (événement brut) et `StatusFileEvent.cs` (correctif `BreathableAtmosphere`, déjà fait). Tout autre fichier existant : demander d'abord.
-- **UUID irréversibles** : `com.mhwlng.elite.value`, `com.mhwlng.elite.state`, `com.mhwlng.elite.eventalarm` (`.alarm` est déjà pris). `com.mhwlng.elite.counter` est réservé, non déclaré en V1.
+- **UUID irréversibles** : `com.mhwlng.elite.value` (action « Donnée », **déjà utilisé dans le profil de Florian**), `com.mhwlng.elite.eventalarm` (`.alarm` est déjà pris). Réservés, non déclarés : `com.mhwlng.elite.state` (fusionné dans Donnée, D4), `com.mhwlng.elite.counter`. Les réglages JSON d'une action déjà utilisée ne doivent être qu'**ajoutés** (jamais renommés) : une touche existante doit rester lisible (voir `DataKeyConfig`).
 - **1 seul `State`** par action dans `manifest.json` (limite firmware : 2 max) ; l'image change par code (`SetImageAsync`).
 - **Garde `IsLive`** obligatoire pour l'Alarme : les événements rejoués au démarrage ne doivent rien déclencher.
 - **C# 7.3 maximum** : les deux projets compilent avec `/langversion:7.3`. Interdits : types référence nullables, switch expressions, `using var`, index/range (`^1`, `..`), records, `init`, patterns récursifs, méthodes d'interface par défaut. Tuples et `out var` sont permis.
@@ -110,7 +119,9 @@ Projet `Elite.Tests` (csproj classique net48, `LangVersion` 7.3), NUnit 3.14.0 +
 powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1
 ```
 
-Critère : `== TESTS OK` (code de sortie 0) ; 50 tests à la fin de L3 (magasin, clés, événements bruts, catalogue, commandes, mise en forme Valeur, manifeste). NUnit.ConsoleRunner 3.22.0 ignore `--noresult` : `test.ps1` passe `--work=Elite.Tests\bin\Debug` pour que `TestResult.xml` et `nunit-agent_*.log` restent dans `bin/`. Tout nouveau fichier de test : `<Compile Include>` dans `Elite.Tests.csproj` ; tout fichier de données : `<None Include>` + `CopyToOutputDirectory`.
+Critère : `== TESTS OK` (code de sortie 0) ; 66 tests à la fin de L4 (magasin, clés, événements bruts, catalogue, commandes, mise en forme, conditions, règles d'image, réglages de « Donnée » dont compatibilité L3, manifeste).
+
+Piège : l'outil Write de Claude Code convertit les séquences `é` écrites dans un fichier en vrais caractères. Pour `generic.js` (qui doit rester ASCII), repasser un petit script d'échappement ; `ManifestTests` échoue sinon. NUnit.ConsoleRunner 3.22.0 ignore `--noresult` : `test.ps1` passe `--work=Elite.Tests\bin\Debug` pour que `TestResult.xml` et `nunit-agent_*.log` restent dans `bin/`. Tout nouveau fichier de test : `<Compile Include>` dans `Elite.Tests.csproj` ; tout fichier de données : `<None Include>` + `CopyToOutputDirectory`.
 
 Données de test (`Elite.Tests/Data/`) : extraits de vrais journaux de Florian. Le fork est public : ne committer que des extraits réduits aux lignes utiles, **sans** lignes `Commander`/`LoadGame`/`ReceiveText`/`Friends`/`Squadron*`, et vérifier par grep l'absence du nom de CMDR et du FID. Extension `.txt` (`*.log` est ignoré par git). Les `status-vaisseau.json` / `status-a-pied.json` sont synthétiques.
 

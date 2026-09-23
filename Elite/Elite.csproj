@@ -184,7 +184,10 @@
     <Compile Include="Buttons\Power.cs" />
     <Compile Include="Buttons\Alarm.cs" />
     <Compile Include="FifoExecution.cs" />
+    <Compile Include="Generic\Condition.cs" />
+    <Compile Include="Generic\DataKeyConfig.cs" />
     <Compile Include="Generic\EliteStore.cs" />
+    <Compile Include="Generic\ImageRules.cs" />
     <Compile Include="Generic\StoreKeys.cs" />
     <Compile Include="Generic\ValueAction.cs" />
     <Compile Include="Generic\ValueFormatter.cs" />
