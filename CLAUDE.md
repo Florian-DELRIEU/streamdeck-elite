@@ -10,8 +10,9 @@ Chantier en cours : exposer **toute l'API du jeu** (`Status.json` + ~250 événe
 
 1. `docs/cahier-des-charges-streamdeck-elite.md` — **spécification figée, source de vérité** : décisions validées (§0), architecture (§4), spec des actions (§5), Property Inspector (§6), exigences (§7), critères d'acceptation (§8), lots (§9), risques (§10).
 2. `docs/L0-baseline-build.md` — baseline de compilation et recette d'environnement.
-3. `docs/L1-socle-donnees.md` — **conventions de clés et API d'`EliteStore`** telles qu'implémentées (complète le §4.3), constats pour L2.
-4. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
+3. `docs/L1-socle-donnees.md` — **conventions de clés et API d'`EliteStore`** telles qu'implémentées (complète le §4.3).
+4. `docs/L2-catalogue.md` — **format de `catalog.js` / `commands.js`**, générateur, régénération des champs observés, consignes pour L3/L4.
+5. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
 
 Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude Code, la copie du dépôt fait foi.
 
@@ -21,8 +22,8 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 |---|---|---|
 | L0 | Branche + compilation de référence | ✅ terminé le 2026-09-23 (0 erreur, 1 avertissement MSB3884 bénin) |
 | L1 | Correctif `RawEventHandler` (§4.2) + `EliteStore` (§4.3) + tests unitaires | ✅ terminé le 2026-09-23 (build Debug/Release OK, 23 tests OK ; non vérifié en jeu) |
-| L2 | Générateur de catalogue + `catalog.js` + liste des commandes | ⏭️ **prochain** |
-| L3 | Action Valeur minimale + Property Inspector commun | à faire |
+| L2 | Générateur de catalogue + `catalog.js` + liste des commandes | ✅ terminé le 2026-09-23 (1 926 clés, 366 commandes, 33 tests OK ; non vérifié dans le logiciel Stream Deck) |
+| L3 | Action Valeur minimale + Property Inspector commun | ⏭️ **prochain** |
 | D3 | Point de contrôle en jeu (Florian devant le jeu, Stream Deck MK.2) | à faire |
 | L4 | Valeur complète, État, Alarme | à faire |
 | L5 | Non-régression, version 2.8.0, empaquetage, README | à faire |
@@ -49,7 +50,9 @@ powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Configuration Rel
 
 Le script restaure les paquets avec `C:\nuget\nuget.exe` (obligatoire : `msbuild /t:Restore` ne restaure **pas** les projets `packages.config`, silencieusement) puis lance MSBuild trouvé par `vswhere`. Sortie : `Elite\bin\<Config>\com.mhwlng.elite.sdPlugin\`.
 
-Critère : le script se termine par `== BUILD OK` (code de sortie 0) et aucun nouvel avertissement n'apparaît par rapport à la baseline (seul MSB3884, sur `WindowsInput.csproj`, existe aujourd'hui). Script validé sur la machine de Florian le 2026-09-23. Le projet `Elite.Tests` n'est compilé qu'en Debug : le build Release ne produit que le plugin.
+Critère : le script se termine par `== BUILD OK` (code de sortie 0) et aucun nouvel avertissement n'apparaît par rapport à la baseline (seul MSB3884, sur `WindowsInput.csproj`, existe aujourd'hui), en Debug **et** en Release. Script validé sur la machine de Florian le 2026-09-23. Le projet `Elite.Tests` n'est compilé qu'en Debug : le build Release ne produit que le plugin.
+
+Depuis L2, chaque build lance `Elite.CatalogGen` (compilé avant Elite) qui régénère `Elite/PropertyInspector/catalog.js` et `commands.js` (écrits seulement s'ils changent ; ligne `Elite.CatalogGen: ... (written|unchanged)` dans la sortie). En cas d'échec : `error CATGEN01` et build en échec. **Ne jamais éditer ces deux fichiers à la main.** Après une mise à jour du jeu : `powershell -NoProfile -ExecutionPolicy Bypass -File update-observed-keys.ps1` (réanalyse les journaux → `Elite.CatalogGen/observed-keys.txt`, noms de champs uniquement), relire le diff, rebuild, tests, commit.
 
 Note : `nuget restore` interroge nuget.org à chaque build (liste des vulnérabilités, parfois servie depuis le cache) ; les paquets eux-mêmes ne sont téléchargés que s'ils manquent dans `packages/`.
 
@@ -90,7 +93,9 @@ Les réglages des touches sont stockés dans les profils Stream Deck, pas dans c
 - Newtonsoft (`JObject.Parse`, `JToken.ReadFrom`) convertit les chaînes ISO (`timestamp`…) en `JTokenType.Date` (UTC).
 - `manifest.json` : 12 actions (10 Keypad sans clé `Controllers` + `dial` et `firegroupdial` en `Encoder`), chacune 1 `State`. Pas de champ `UUID` racine (SDKVersion 2 : l'identifiant vient du dossier `.sdPlugin`). L'action Toggle a pour UUID `com.mhwlng.elite`. Actuellement `Version` 2.7.4, `Name` « Elite Dangerous ».
 - Rafraîchissement historique : Toggle et Alarm s'abonnent à `JournalWatcher.AllEventHandler` et redessinent aussi à chaque `OnTick` (~1 s) en relisant `EliteData` — un changement de `Status.json` y apparaît donc avec ≤ 1 s de retard.
-- `UserBindings.cs` : 316 `StandardBindingInfo` (les commandes clavier de D2) + 21 `ToggleBindingInfo` + 35 `AxisBindingInfo`. Fichiers de bindings lus dans `%LOCALAPPDATA%\Frontier Developments\Elite Dangerous\Options\Bindings\`.
+- `UserBindings.cs` : 316 `StandardBindingInfo` + 21 `ToggleBindingInfo` + 35 `AxisBindingInfo`, liste plate sans notion de contexte. Fichiers de bindings lus dans `%LOCALAPPDATA%\Frontier Developments\Elite Dangerous\Options\Bindings\`.
+- `EliteKeys.SendKeypress(string function)` (`Elite/Buttons/EliteKeys.cs`) sait envoyer **366 commandes** par leur nom : 336 bindings (tous sauf `SelectTargetBuggy`), chacun avec son contexte `Program.Binding[BindingType.X]` (Ship 153, Srv 42, OnFoot 60, General 81), + 30 commandes « selon l'état » (`LandingGearToggle-ON/OFF`, `FireGroup-A…H`…). C'est la source de `commands.js` et le moyen d'envoyer une commande en L4 (aucune modification nécessaire).
+- `EliteJournalReader` : `[Description]` sur certaines valeurs d'enum = texte écrit par le jeu (« Metal rich body ») ; propriétés calculées sans setter (ex. `Reputation.*Status`) absentes du JSON ; en Release, la lib (et Elite) sont en x64 → tout projet qui la référence doit l'être aussi en Release (sinon MSB3270).
 - Fichiers du jeu : `%USERPROFILE%\Saved Games\Frontier Developments\Elite Dangerous\` (`Journal.*.log`, `Status.json`, `Cargo.json`, `NavRoute.json`) — source des vraies lignes pour les tests.
 
 ## Tests unitaires
@@ -101,7 +106,7 @@ Projet `Elite.Tests` (csproj classique net48, `LangVersion` 7.3), NUnit 3.14.0 +
 powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1
 ```
 
-Critère : `== TESTS OK` (code de sortie 0). NUnit.ConsoleRunner 3.22.0 ignore `--noresult` : `test.ps1` passe `--work=Elite.Tests\bin\Debug` pour que `TestResult.xml` et `nunit-agent_*.log` restent dans `bin/`. Tout nouveau fichier de test : `<Compile Include>` dans `Elite.Tests.csproj` ; tout fichier de données : `<None Include>` + `CopyToOutputDirectory`.
+Critère : `== TESTS OK` (code de sortie 0) ; 33 tests à la fin de L2 (magasin, clés, événements bruts, catalogue, commandes). NUnit.ConsoleRunner 3.22.0 ignore `--noresult` : `test.ps1` passe `--work=Elite.Tests\bin\Debug` pour que `TestResult.xml` et `nunit-agent_*.log` restent dans `bin/`. Tout nouveau fichier de test : `<Compile Include>` dans `Elite.Tests.csproj` ; tout fichier de données : `<None Include>` + `CopyToOutputDirectory`.
 
 Données de test (`Elite.Tests/Data/`) : extraits de vrais journaux de Florian. Le fork est public : ne committer que des extraits réduits aux lignes utiles, **sans** lignes `Commander`/`LoadGame`/`ReceiveText`/`Friends`/`Squadron*`, et vérifier par grep l'absence du nom de CMDR et du FID. Extension `.txt` (`*.log` est ignoré par git). Les `status-vaisseau.json` / `status-a-pied.json` sont synthétiques.
 

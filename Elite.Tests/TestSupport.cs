@@ -42,6 +42,18 @@ namespace Elite.Tests
         {
             return JObject.Parse(File.ReadAllText(PathOf(name)));
         }
+
+        /// <summary>
+        /// JSON object of a generated "var NAME = {...};" file (catalog.js, commands.js).
+        /// </summary>
+        public static JObject GeneratedJs(string fileName, string variableName)
+        {
+            var text = File.ReadAllText(PathOf(fileName));
+            var declaration = "var " + variableName + " =";
+            int start = text.IndexOf(declaration, System.StringComparison.Ordinal);
+            Assert.That(start, Is.GreaterThanOrEqualTo(0), declaration + " not found in " + fileName);
+            return JObject.Parse(text.Substring(start + declaration.Length).Trim().TrimEnd(';'));
+        }
     }
 
     /// <summary>

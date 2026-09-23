@@ -293,6 +293,12 @@
     <Content Include="PropertyInspector\caret.svg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="PropertyInspector\catalog.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PropertyInspector\commands.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="PropertyInspector\check.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -386,6 +392,13 @@
     <ProjectReference Include="..\InputSimulatorPlus\WindowsInput\WindowsInput.csproj">
       <Project>{3549cd6f-80f8-450f-b99e-cf0a736b1f2a}</Project>
       <Name>WindowsInput</Name>
+    </ProjectReference>
+    <!-- build order only: the generator writes PropertyInspector\catalog.js and commands.js before Elite copies them -->
+    <ProjectReference Include="..\Elite.CatalogGen\Elite.CatalogGen.csproj">
+      <Project>{DEFA16E0-34BA-4FEA-BDB8-5B61FCED435E}</Project>
+      <Name>Elite.CatalogGen</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <Private>false</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
