@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
@@ -45,6 +46,23 @@ namespace Elite.Tests
                 .ToList();
 
             Assert.That(notBindings, Is.Empty);
+        }
+
+        [Test]
+        public void EveryCommand_HasAFrenchDescription_AndNoDescriptionIsOrphan()
+        {
+            var commands = TestData.GeneratedJs("commands.js", "ELITE_COMMANDS")["groups"].SelectMany(g => g["commands"]).ToList();
+            var undescribed = commands.Where(c => c.Count() < 3 || string.IsNullOrWhiteSpace((string)c[2])).Select(c => (string)c[0]).ToList();
+            Assert.That(undescribed, Is.Empty, "commands without description in Elite.CatalogGen/commands-fr.json");
+
+            var names = new HashSet<string>(commands.Select(c => (string)c[0]));
+            var french = JObject.Parse(File.ReadAllText(TestData.PathOf("commands-fr.json")));
+            var orphans = french.Properties().Select(p => p.Name).Where(n => !n.StartsWith("#") && !names.Contains(n)).ToList();
+            Assert.That(orphans, Is.Empty);
+
+            var description = commands.First(c => (string)c[0] == "LandingGearToggle-ON")[2];
+            Assert.That((string)description, Does.Contain("train d'atterrissage"));
+            Assert.That((string)commands.First(c => (string)c[0] == "FireGroup-C")[2], Does.Contain("à quai"));
         }
 
         [Test]

@@ -56,6 +56,7 @@
   <ItemGroup>
     <None Include="descriptions-en.json" />
     <None Include="descriptions-fr.json" />
+    <None Include="commands-fr.json" />
     <None Include="observed-keys.txt" />
     <None Include="packages.config" />
   </ItemGroup>

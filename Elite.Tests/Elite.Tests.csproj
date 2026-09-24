@@ -52,6 +52,7 @@
     <Compile Include="DescriptionsTests.cs" />
     <Compile Include="ImageRulesTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
+    <Compile Include="HotkeyTests.cs" />
     <Compile Include="ManifestTests.cs" />
     <Compile Include="PressGestureTests.cs" />
     <Compile Include="ValueFormatterTests.cs" />
@@ -88,6 +89,10 @@
       <Link>Data\descriptions-fr.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="..\Elite.CatalogGen\commands-fr.json">
+      <Link>Data\commands-fr.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="..\Elite\manifest.json">
       <Link>Data\manifest.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -101,6 +106,10 @@
     <ProjectReference Include="..\EliteJournalReader\EliteJournalReader.csproj">
       <Project>{7790285B-E2EE-440B-8EA6-D27BBE6006D9}</Project>
       <Name>EliteJournalReader</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\InputSimulatorPlus\WindowsInput\WindowsInput.csproj">
+      <Project>{3549cd6f-80f8-450f-b99e-cf0a736b1f2a}</Project>
+      <Name>WindowsInput</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

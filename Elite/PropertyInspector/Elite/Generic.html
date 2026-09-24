@@ -21,6 +21,9 @@
         .generic-info-panel { font-size: 9pt; line-height: 1.35; white-space: normal; }
         .generic-info-panel div { margin-bottom: 4px; }
         .generic-info-panel b { opacity: 0.8; }
+        .generic-clickable { cursor: pointer; }
+        input.generic-hotkey { cursor: pointer; }
+        input.generic-hotkey:focus { outline: 1px solid #f0ad4e; }
     </style>
     <script src="../sdtools.common.js"></script>
     <script src="../catalog.js"></script>
@@ -699,10 +702,47 @@
         <datalist id="genericEnumValues"></datalist>
 
         <div class="sdpi-heading">Action (appui)</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Recherche</div>
+            <input class="sdpi-item-value" id="genericCommandSearch" type="text" placeholder="ex. train, phares, carte, groupe" oninput="genericCommandSearchChanged()">
+        </div>
+        <div class="sdpi-item" id="genericCommandSearchInfoRow" style="display: none">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint" id="genericCommandSearchInfo"></div>
+        </div>
+        <div class="sdpi-item" id="genericCommandResultsRow" style="display: none">
+            <div class="sdpi-item-label empty"></div>
+            <select class="sdpi-item-value generic-results" id="genericCommandResults" size="8" onchange="genericCommandResultChosen()" onclick="genericCommandResultChosen()" onmouseover="genericCommandHover(event)" onmouseout="genericCommandHover(null)"></select>
+        </div>
+        <div class="sdpi-item" id="genericCommandHoverRow" style="display: none">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-info" id="genericCommandHover"></div>
+        </div>
+        <div class="sdpi-item" data-view="1">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand" onchange="genericCommandChanged()"></select>
+        </div>
+        <div class="sdpi-item" data-view="2">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand2" onchange="genericCommandChanged()"></select>
+        </div>
+        <div class="sdpi-item" data-view="3">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand3" onchange="genericCommandChanged()"></select>
+        </div>
+        <div class="sdpi-item" data-view="4">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand4" onchange="genericCommandChanged()"></select>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-info" id="genericCommandInfo"></div>
+        </div>
         <div data-view="1">
             <div class="sdpi-item">
-                <div class="sdpi-item-label">Commande</div>
-                <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand" onchange="setSettings()"></select>
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(1)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(1)" onblur="genericHotkeyBlur(1)" onkeydown="genericHotkeyKeyDown(event, 1)" onkeyup="genericHotkeyKeyUp(event, 1)">
+                <input class="sdProperty" id="pressHotkey" type="hidden">
             </div>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('clickSound');">Son</div>
@@ -715,8 +755,9 @@
         </div>
         <div data-view="2">
             <div class="sdpi-item">
-                <div class="sdpi-item-label">Commande</div>
-                <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand2" onchange="setSettings()"></select>
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(2)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText2" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(2)" onblur="genericHotkeyBlur(2)" onkeydown="genericHotkeyKeyDown(event, 2)" onkeyup="genericHotkeyKeyUp(event, 2)">
+                <input class="sdProperty" id="pressHotkey2" type="hidden">
             </div>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('clickSound2');">Son</div>
@@ -729,8 +770,9 @@
         </div>
         <div data-view="3">
             <div class="sdpi-item">
-                <div class="sdpi-item-label">Commande</div>
-                <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand3" onchange="setSettings()"></select>
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(3)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText3" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(3)" onblur="genericHotkeyBlur(3)" onkeydown="genericHotkeyKeyDown(event, 3)" onkeyup="genericHotkeyKeyUp(event, 3)">
+                <input class="sdProperty" id="pressHotkey3" type="hidden">
             </div>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('clickSound3');">Son</div>
@@ -743,8 +785,9 @@
         </div>
         <div data-view="4">
             <div class="sdpi-item">
-                <div class="sdpi-item-label">Commande</div>
-                <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand4" onchange="setSettings()"></select>
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(4)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText4" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(4)" onblur="genericHotkeyBlur(4)" onkeydown="genericHotkeyKeyDown(event, 4)" onkeyup="genericHotkeyKeyUp(event, 4)">
+                <input class="sdProperty" id="pressHotkey4" type="hidden">
             </div>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('clickSound4');">Son</div>
@@ -754,6 +797,10 @@
                     <label class="sdpi-file-label" for="clickSound4">Choose file...</label>
                 </div>
             </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Commande : utilise ta touche clavier du jeu (liaison clavier nécessaire), en un appui bref. Raccourci : clic dans le champ, puis appuie sur la combinaison (ex. Ctrl+Maj+F5) ; envoyé à la fenêtre active après la commande. Clic sur le libellé « Raccourci » = l'effacer.</div>
         </div>
 
         <div class="sdpi-heading">Réglages de la touche</div>

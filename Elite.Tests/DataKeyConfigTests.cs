@@ -29,6 +29,40 @@ namespace Elite.Tests
         }
 
         [Test]
+        public void Shortcut_PerView_AndAViewWithOnlyAShortcutExists()
+        {
+            var settings = JObject.Parse(@"{ ""source"":""status.Flags.NightVision"",
+                ""pressHotkey"":""ControlLeft+ShiftLeft+F5"", ""pressHotkeyText"":""Ctrl+Maj+F5"",
+                ""pressHotkey3"":""KeyQ"", ""pressHotkeyText3"":""A"" }");
+
+            var config = DataKeyConfig.FromSettings(settings);
+
+            Assert.That(config.MainView.Hotkey, Is.EqualTo("ControlLeft+ShiftLeft+F5"));
+            Assert.That(config.MainView.HotkeyText, Is.EqualTo("Ctrl+Maj+F5"));
+            Assert.That(config.Views.Select(v => v.Number), Is.EqualTo(new[] { 1, 3 }), "view 3 has only a shortcut");
+            Assert.That(config.Views[1].Hotkey, Is.EqualTo("KeyQ"));
+            Assert.That(config.Views[1].Command, Is.Empty);
+        }
+
+        [Test]
+        public void CurrentView_IsTheSavedDisplayedView()
+        {
+            // keys saved before L7: view 1
+            var old = DataKeyConfig.FromSettings(JObject.Parse(@"{ ""source"":""a.b"", ""source2"":""c.d"" }"));
+            Assert.That(old.CurrentViewNumber, Is.EqualTo(1));
+            Assert.That(old.CurrentViewIndex, Is.EqualTo(0));
+
+            // views 1 and 3: view 3 is the second of the list
+            var drawer = DataKeyConfig.FromSettings(JObject.Parse(@"{ ""source"":""a.b"", ""source3"":""c.d"", ""currentView"":3 }"));
+            Assert.That(drawer.CurrentViewIndex, Is.EqualTo(1));
+
+            // view removed since, or invalid value: view 1
+            Assert.That(DataKeyConfig.FromSettings(JObject.Parse(@"{ ""source"":""a.b"", ""currentView"":2 }")).CurrentViewIndex, Is.EqualTo(0));
+            Assert.That(DataKeyConfig.FromSettings(JObject.Parse(@"{ ""source"":""a.b"", ""currentView"":""9"" }")).CurrentViewNumber, Is.EqualTo(1));
+            Assert.That(DataKeyConfig.FromSettings(JObject.Parse(@"{ ""source"":""a.b"", ""source2"":""c.d"", ""currentView"":""2"" }")).CurrentViewIndex, Is.EqualTo(1));
+        }
+
+        [Test]
         public void SettingsOfAnL4Key_View1KeepsEverything_OtherViewsInheritTheIconOnly()
         {
             // night vision key created by Florian in D4 (L4): rules + command on the key, pressCycle, 2 views

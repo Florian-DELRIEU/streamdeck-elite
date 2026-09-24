@@ -16,7 +16,8 @@ Chantier en cours : exposer **toute l'API du jeu** (`Status.json` + ~250 événe
 6. `docs/L4-donnee.md` — action universelle « Donnée » (règles d'image, conditions), décisions D4/D5.
 7. `docs/L5-tiroir.md` — **tiroir : vues complètes, gestes court/long, héritage, page de réglages générée**, **mode d'emploi D5**.
 8. `docs/L6-retours-d5.md` — recherche, bouton « i » (valeur actuelle en jeu), **descriptions françaises** (`descriptions-fr.json`), types entier/décimal, **mode d'emploi D6**.
-9. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
+9. `docs/L7-retours-d6.md` — commandes (recherche, `commands-fr.json`, survol), **raccourci clavier libre** (`Hotkey.cs`), **vue mémorisée** (`currentView`), ⚠ groupe de tir bloqué (`CommandGuard.cs`), **mode d'emploi D7**.
+10. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
 
 Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude Code, la copie du dépôt fait foi.
 
@@ -34,9 +35,11 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 | L5 | Tiroir : chaque vue = action complète, appui court/long (décision D6), facteur `/32` `*4` | ✅ terminé le 2026-09-24 (91 tests OK, PI vérifiée dans un navigateur ; non vérifié sur le Stream Deck) |
 | D5 | Test en jeu du tiroir | ✅ 2026-09-24 : tiroirs OK. Recherche impossible au clavier (seul le collage marchait), demande d'un bouton « i », rôle de « Clé » peu clair → L6. Firegroup « non configuré » : impossible (le jeu ne l'écrit pas), laissé tel quel |
 | L6 | Retours D5 : recherche corrigée (FR, sans accents), bouton « i » + valeur actuelle, 635 descriptions FR, types entier/décimal | ✅ terminé le 2026-09-25 (95 tests OK, PI vérifiée dans un navigateur en frappe lettre par lettre ; non vérifié sur le Stream Deck) |
-| D6 | Test de la page de réglages — mode d'emploi : `docs/L6-retours-d5.md` | ⏭️ **prochain** (Florian) |
-| L7 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) | à faire |
-| L8 | Non-régression, version 2.8.0, nom « ZV Stream Deck Elite », empaquetage, README | à faire |
+| D6 | Test de la page de réglages | ✅ 2026-09-25 : bouton « i » clair et précis. Demandes : raccourci libre, recherche + description des commandes ; vue revenue à 1 en revenant dans un dossier ; `Fire Group (A)` sans effet (bloqué par `EliteKeys` à quai / train sorti, pas un problème de config) → L7 |
+| L7 | Retours D6 : 366 descriptions de commandes + recherche, raccourci clavier libre, vue mémorisée (`currentView`), ⚠ si groupe de tir bloqué | ✅ terminé le 2026-09-25 (106 tests OK, PI vérifiée dans un navigateur avec vraie frappe ; non vérifié sur le Stream Deck) |
+| D7 | Test en jeu — mode d'emploi : `docs/L7-retours-d6.md` | ⏭️ **prochain** (Florian) |
+| L8 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) | à faire |
+| L9 | Non-régression, version 2.8.0, nom « ZV Stream Deck Elite », empaquetage, README | à faire |
 | — | Icônes des nouvelles actions dans la charte du pack de Florian (voir mémoire / demande du 2026-09-24) | plus tard, à sa demande |
 
 ### Décisions postérieures au cahier des charges (Florian, 2026-09-23)
@@ -44,7 +47,8 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 - **D4 — action universelle** : l'action Valeur (`com.mhwlng.elite.value`, UUID conservé) devient « **Donnée** » et absorbe l'action État du §5.2 (icône on/off = Donnée sans texte). `com.mhwlng.elite.state` n'est **jamais déclaré** (réservé). L'Alarme reste une action séparée.
 - **D5 — Donnée enrichie** : jusqu'à 4 vues qui défilent à l'appui, jusqu'à 4 règles d'image (seuils, égalité…) + image par défaut, commande clavier et son à l'appui. Remplace « Valeur : affichage seul » (D2).
 - **D6 — tiroir** (2026-09-24) : chaque vue de « Donnée » a sa donnée, son texte, son icône (une vue sans icône propre reprend celle de la vue 1), sa commande et son son (jamais hérités). Gestes réglables par touche : par défaut appui court = agir, appui long (0,5 s) = vue suivante. `pressCycle` (L4) abandonné.
-- **Firegroup** (2026-09-25) : l'action historique n'est pas modifiée ; le jeu n'expose que le groupe actif (`Status.json` `FireGroup`), pas la configuration des groupes.
+- **Firegroup** (2026-09-25) : l'action historique n'est pas modifiée ; le jeu n'expose que le groupe actif (`Status.json` `FireGroup`), pas la configuration des groupes. Les commandes `FireGroup-X` sont ignorées par `EliteKeys.HandleFireGroup` à pied / SRV / à quai / posé / train sorti / saut : sur une touche « Donnée », ⚠ (L7).
+- **Commandes** (2026-09-25) : libellés anglais conservés, mais description française de chaque commande (`Elite.CatalogGen/commands-fr.json`) + recherche ; **raccourci clavier libre** par vue, envoyé après la commande.
 - **Descriptions** (2026-09-25) : tout en français, dans `Elite.CatalogGen/descriptions-fr.json` (éditable à la main, UTF-8), fusionnées dans `catalog.js` au build.
 - Ces décisions priment sur le cahier des charges (§0, §5.1–5.2, §9), qui reste inchangé pour l'historique.
 
@@ -74,7 +78,7 @@ Critère : le script se termine par `== BUILD OK` (code de sortie 0) et aucun no
 
 Depuis L2, chaque build lance `Elite.CatalogGen` (compilé avant Elite) qui régénère `Elite/PropertyInspector/catalog.js` et `commands.js` (écrits seulement s'ils changent ; ligne `Elite.CatalogGen: ... (written|unchanged)` dans la sortie). En cas d'échec : `error CATGEN01` et build en échec. **Ne jamais éditer ces deux fichiers à la main.** Après une mise à jour du jeu : `powershell -NoProfile -ExecutionPolicy Bypass -File update-observed-keys.ps1` (réanalyse les journaux → `Elite.CatalogGen/observed-keys.txt`, noms de champs uniquement ; fonctionne jeu lancé, lecture partagée), relire le diff, rebuild, tests, commit.
 
-Depuis L6, le générateur fusionne aussi `Elite.CatalogGen/descriptions-fr.json` dans `catalog.js` (section `info`, ligne `... keys, N descriptions`). Après une mise à jour de la bibliothèque : `Elite.CatalogGen.exe descriptions <racine du dépôt>` régénère `descriptions-en.json` (commentaires anglais de `EliteJournalReader/Events`) ; comparer le diff, compléter `descriptions-fr.json` ; `DescriptionsTests` échoue si un événement ou une donnée de statut n'a pas de description, ou si une description ne correspond à rien.
+Depuis L6, le générateur fusionne aussi `Elite.CatalogGen/descriptions-fr.json` dans `catalog.js` (section `info`, ligne `... keys, N descriptions`). Après une mise à jour de la bibliothèque : `Elite.CatalogGen.exe descriptions <racine du dépôt>` régénère `descriptions-en.json` (commentaires anglais de `EliteJournalReader/Events`) ; comparer le diff, compléter `descriptions-fr.json` ; `DescriptionsTests` échoue si un événement ou une donnée de statut n'a pas de description, ou si une description ne correspond à rien. Depuis L7, idem pour les commandes : `Elite.CatalogGen/commands-fr.json` → 3ᵉ élément de chaque commande de `commands.js` (`CommandsTests` : aucune commande sans description, aucune description orpheline) ; une nouvelle commande dans `EliteKeys.cs` (fusion upstream) demande sa description.
 
 Note : `nuget restore` interroge nuget.org à chaque build (liste des vulnérabilités, parfois servie depuis le cache) ; les paquets eux-mêmes ne sont téléchargés que s'ils manquent dans `packages/`.
 
@@ -131,7 +135,7 @@ Projet `Elite.Tests` (csproj classique net48, `LangVersion` 7.3), NUnit 3.14.0 +
 powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1
 ```
 
-Critère : `== TESTS OK` (code de sortie 0) ; 95 tests à la fin de L6 (magasin, clés, événements bruts, catalogue, commandes, mise en forme et facteurs, conditions, règles d'image, gestes, réglages de « Donnée » dont compatibilité L3/L4, manifeste, descriptions).
+Critère : `== TESTS OK` (code de sortie 0) ; 106 tests à la fin de L7 (magasin, clés, événements bruts, catalogue, commandes et leurs descriptions, mise en forme et facteurs, conditions, règles d'image, gestes, réglages de « Donnée » dont compatibilité L3/L4 et `currentView`, manifeste, descriptions, raccourci, groupe de tir bloqué).
 
 `Generic.html` et le bloc des réglages des vues 2 à 4 de `ValueAction.cs` sont **générés** par `python tools/make-generic-html.py` : ne pas les éditer à la main (voir `docs/L5-tiroir.md`).
 

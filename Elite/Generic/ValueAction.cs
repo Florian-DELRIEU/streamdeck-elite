@@ -51,6 +51,8 @@ namespace Elite.Generic
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image")] public string Rule4Image { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand")] public string PressCommand { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkey")] public string PressHotkey { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkeyText")] public string PressHotkeyText { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "clickSound")] public string ClickSound { get; set; } = "";
 
@@ -83,6 +85,8 @@ namespace Elite.Generic
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image2")] public string Rule4Image2 { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand2")] public string PressCommand2 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkey2")] public string PressHotkey2 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkeyText2")] public string PressHotkeyText2 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "clickSound2")] public string ClickSound2 { get; set; } = "";
             [JsonProperty(PropertyName = "source3")] public string Source3 { get; set; } = "";
@@ -112,6 +116,8 @@ namespace Elite.Generic
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image3")] public string Rule4Image3 { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand3")] public string PressCommand3 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkey3")] public string PressHotkey3 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkeyText3")] public string PressHotkeyText3 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "clickSound3")] public string ClickSound3 { get; set; } = "";
             [JsonProperty(PropertyName = "source4")] public string Source4 { get; set; } = "";
@@ -141,6 +147,8 @@ namespace Elite.Generic
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image4")] public string Rule4Image4 { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand4")] public string PressCommand4 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkey4")] public string PressHotkey4 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressHotkeyText4")] public string PressHotkeyText4 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "clickSound4")] public string ClickSound4 { get; set; } = "";
             // </generated-views-2-4>
@@ -148,6 +156,9 @@ namespace Elite.Generic
             // ---- whole key
             [JsonProperty(PropertyName = "emptyText")] public string EmptyText { get; set; } = ValueSettings.DefaultEmptyText;
             [JsonProperty(PropertyName = "pressMode")] public string PressMode { get; set; } = PressGesture.ShortActLongViewName;
+
+            // ---- saved by the plugin, not by the page: displayed view (1 to 4), kept when the key disappears (folder...)
+            [JsonProperty(PropertyName = "currentView")] public int CurrentView { get; set; } = 1;
         }
 
         private const string NoTitle = "\u0000no title";
@@ -302,24 +313,44 @@ namespace Elite.Generic
         {
             DataView view;
             PressOutcome outcome;
+            JObject savedSettings = null;
             lock (renderLock)
             {
                 if (config == null)
                     return;
                 outcome = PressGesture.Resolve(isLongPress, config.PressMode, config.Views.Count);
                 if (outcome == PressOutcome.NextView)
+                {
                     viewIndex = (viewIndex + 1) % config.Views.Count;
+                    // the key is recreated each time it appears again (folder, page...): the view is kept in its settings
+                    settings.CurrentView = config.Views[viewIndex].Number;
+                    savedSettings = JObject.FromObject(settings);
+                }
                 view = CurrentView();
             }
 
             if (outcome == PressOutcome.NextView)
             {
                 Render(false);
+                Watch(Connection.SetSettingsAsync(savedSettings), "SetSettings");
                 return;
             }
 
             if (view.Command.Length > 0)
-                EliteKeys.SendKeypress(view.Command);
+            {
+                var blocked = CommandGuard.BlockReason(view.Command, EliteData.StatusData);
+                if (blocked != null)
+                {
+                    // EliteKeys ignores it silently: the Stream Deck warning triangle says so
+                    Logger.Instance.LogMessage(TracingLevel.INFO, $"ValueAction[{view.Source}]: {view.Command} ignored ({blocked})");
+                    Watch(Connection.ShowAlert(), "ShowAlert");
+                }
+                else
+                    EliteKeys.SendKeypress(view.Command);
+            }
+
+            if (view.Hotkey.Length > 0)
+                Hotkey.Send(view.Hotkey, view.HotkeyText);
 
             var sound = Sound(view.Sound);
             if (sound != null)
@@ -394,8 +425,9 @@ namespace Elite.Generic
             {
                 config = newConfig;
                 validRules = newRules;
-                if (viewIndex >= config.Views.Count)
-                    viewIndex = 0;
+                // saved displayed view (view 1 if it no longer exists)
+                viewIndex = config.CurrentViewIndex;
+                settings.CurrentView = CurrentView().Number;
             }
         }
 

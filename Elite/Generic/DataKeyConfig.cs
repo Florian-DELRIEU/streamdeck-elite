@@ -24,6 +24,9 @@ namespace Elite.Generic
         public string DefaultImage { get; internal set; } = "";
         public List<ImageRule> Rules { get; } = new List<ImageRule>();
         public string Command { get; internal set; } = "";
+        /// <summary>Free keyboard shortcut (physical key codes, see Hotkey), sent after the command.</summary>
+        public string Hotkey { get; internal set; } = "";
+        public string HotkeyText { get; internal set; } = "";
         public string Sound { get; internal set; } = "";
 
         /// <summary>A view without default image and without rule uses the icon of view 1.</summary>
@@ -36,9 +39,10 @@ namespace Elite.Generic
     /// <summary>
     /// Settings of a Data key (action com.mhwlng.elite.value), read from the settings JSON.
     /// View 1 uses the names of L3/L4 (source, prefix, ..., showText, backgroundImage, rule1Op..., pressCommand, clickSound);
-    /// views 2 to 4 the same names followed by their number (source2, rule1Op2, pressCommand2...).
+    /// views 2 to 4 the same names followed by their number (source2, rule1Op2, pressCommand2...). Added in L7:
+    /// pressHotkey / pressHotkeyText (per view) and currentView (displayed view, saved by the plugin).
     /// Inheritance: absent showText of a view = the one of view 1; a view without its own icon uses the icon of view 1;
-    /// commands and sounds are never inherited.
+    /// commands, shortcuts and sounds are never inherited.
     /// </summary>
     public class DataKeyConfig
     {
@@ -46,9 +50,22 @@ namespace Elite.Generic
         public const int MaxRules = 4;
         private const string NoFile = "No file...";
 
-        /// <summary>View 1 is always present; views 2 to 4 only when they have a key, a command or their own icon.</summary>
+        /// <summary>View 1 is always present; views 2 to 4 only when they have a key, a command, a shortcut or their own icon.</summary>
         public List<DataView> Views { get; } = new List<DataView>();
         public PressMode PressMode { get; private set; }
+
+        /// <summary>Number (1 to 4) of the view displayed when the key was last seen; 1 when absent.</summary>
+        public int CurrentViewNumber { get; private set; } = 1;
+
+        /// <summary>Index in Views of the view CurrentViewNumber, 0 when it no longer exists.</summary>
+        public int CurrentViewIndex
+        {
+            get
+            {
+                int index = Views.FindIndex(v => v.Number == CurrentViewNumber);
+                return index < 0 ? 0 : index;
+            }
+        }
 
         public DataView MainView
         {
@@ -83,6 +100,8 @@ namespace Elite.Generic
                     ShowText = i == 1 ? mainShowText : Flag(settings, "showText" + suffix, mainShowText),
                     DefaultImage = FileName(settings, "backgroundImage" + suffix),
                     Command = Text(settings, "pressCommand" + suffix, "").Trim(),
+                    Hotkey = Text(settings, "pressHotkey" + suffix, "").Trim(),
+                    HotkeyText = Text(settings, "pressHotkeyText" + suffix, "").Trim(),
                     Sound = FileName(settings, "clickSound" + suffix),
                 };
 
@@ -93,11 +112,15 @@ namespace Elite.Generic
                         view.Rules.Add(new ImageRule(op, Text(settings, "rule" + r + "Value" + suffix, ""), FileName(settings, "rule" + r + "Image" + suffix)));
                 }
 
-                if (i == 1 || view.Source.Length > 0 || view.Command.Length > 0 || view.HasOwnIcon)
+                if (i == 1 || view.Source.Length > 0 || view.Command.Length > 0 || view.Hotkey.Length > 0 || view.HasOwnIcon)
                     config.Views.Add(view);
             }
 
             config.PressMode = PressGesture.ParseMode(Text(settings, "pressMode", ""));
+
+            int current;
+            if (int.TryParse(Text(settings, "currentView", "1"), out current) && current >= 1 && current <= MaxViews)
+                config.CurrentViewNumber = current;
             return config;
         }
 
