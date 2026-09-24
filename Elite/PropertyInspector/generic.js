@@ -1,4 +1,4 @@
-// Property inspector of the generic actions ("Donnee" = com.mhwlng.elite.value; Alarm later) - see docs/L4-donnee.md.
+// Property inspector of the generic actions ("Donnee" = com.mhwlng.elite.value; Alarm later) - see docs/L5-tiroir.md.
 // Needs sdtools.common.js, catalog.js and commands.js (generated at build time by Elite.CatalogGen).
 // The real settings are the elements of class sdProperty; the view / category / search / field controls only help
 // to fill the key of the view being edited (source, source2, source3, source4).
@@ -162,23 +162,24 @@ function genericFieldOption(entry) {
     return genericOption(entry.key, entry.path + ' \u2014 ' + (GENERIC_TYPE_LABELS[entry.type] || entry.type));
 }
 
-// keyboard commands (commands.js), grouped by binding file
+// keyboard commands (commands.js), grouped by binding file, in the command list of every view
 function genericFillCommands() {
-    var select = genericElement('pressCommand');
-    if (!select || typeof ELITE_COMMANDS === 'undefined')
+    if (typeof ELITE_COMMANDS === 'undefined')
         return;
 
-    select.innerHTML = '';
-    select.appendChild(genericOption('', '\u2014 aucune \u2014'));
-    ELITE_COMMANDS.groups.forEach(function (group) {
-        var optgroup = document.createElement('optgroup');
-        optgroup.label = group.label;
-        group.commands.forEach(function (command) {
-            var option = genericOption(command[0], command[1]);
-            option.title = command[0];
-            optgroup.appendChild(option);
+    Array.prototype.forEach.call(document.querySelectorAll('select.generic-command'), function (select) {
+        select.innerHTML = '';
+        select.appendChild(genericOption('', '\u2014 aucune \u2014'));
+        ELITE_COMMANDS.groups.forEach(function (group) {
+            var optgroup = document.createElement('optgroup');
+            optgroup.label = group.label;
+            group.commands.forEach(function (command) {
+                var option = genericOption(command[0], command[1]);
+                option.title = command[0];
+                optgroup.appendChild(option);
+            });
+            select.appendChild(optgroup);
         });
-        select.appendChild(optgroup);
     });
 }
 
@@ -302,16 +303,17 @@ function genericSourceTyped() {
     setSettings();
 }
 
-// image rules: tests offered according to the type of the main value (view 1), enum values proposed as operands
+// image rules of the edited view: tests offered according to the type of its value, enum values proposed as operands
 function genericUpdateRuleHelpers() {
-    var main = genericKeyInput(1);
-    if (!main || !genericIndex)
+    var key = genericKeyInput(genericActiveView);
+    if (!key || !genericIndex)
         return;
 
-    var entry = genericFindEntry(genericIndex, main.value);
+    var suffix = genericActiveView === 1 ? '' : String(genericActiveView);
+    var entry = genericFindEntry(genericIndex, key.value);
     var allowed = entry ? GENERIC_RULE_OPERATORS[entry.type] : null;
     for (var i = 1; i <= GENERIC_RULES; i++) {
-        var select = genericElement('rule' + i + 'Op');
+        var select = genericElement('rule' + i + 'Op' + suffix);
         if (!select)
             continue;
         Array.prototype.forEach.call(select.options, function (option) {
@@ -358,9 +360,14 @@ function genericShowSections() {
         baseLoadConfiguration(payload);
 
         try {
-            // keys created before "showText" existed show their value
+            // keys created before "showText" existed show their value; views 2 to 4 created before L5 follow view 1
             if (payload && !Object.prototype.hasOwnProperty.call(payload, 'showText') && genericElement('showText'))
                 genericElement('showText').checked = true;
+            for (var v = 2; v <= GENERIC_VIEWS; v++) {
+                var box = genericElement('showText' + v);
+                if (payload && box && !Object.prototype.hasOwnProperty.call(payload, 'showText' + v))
+                    box.checked = genericElement('showText').checked;
+            }
             genericShowSections();
             genericShowView();
             if (payload && Object.prototype.hasOwnProperty.call(payload, 'source'))

@@ -52,6 +52,7 @@
     <Compile Include="ImageRulesTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
     <Compile Include="ManifestTests.cs" />
+    <Compile Include="PressGestureTests.cs" />
     <Compile Include="ValueFormatterTests.cs" />
     <Compile Include="RawEventTests.cs" />
     <Compile Include="ReferenceKeysTests.cs" />

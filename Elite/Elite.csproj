@@ -188,6 +188,7 @@
     <Compile Include="Generic\DataKeyConfig.cs" />
     <Compile Include="Generic\EliteStore.cs" />
     <Compile Include="Generic\ImageRules.cs" />
+    <Compile Include="Generic\PressGesture.cs" />
     <Compile Include="Generic\StoreKeys.cs" />
     <Compile Include="Generic\ValueAction.cs" />
     <Compile Include="Generic\ValueFormatter.cs" />

@@ -21,41 +21,95 @@ namespace Elite.Tests
             Assert.That(config.MainView.Source, Is.EqualTo("status.Fuel.FuelMain"));
             Assert.That(config.MainView.Display.Decimals, Is.EqualTo(1));
             Assert.That(config.MainView.Display.Prefix, Is.EqualTo("Fuel\\n"));
-            Assert.That(config.ShowText, Is.True, "absent -> text shown");
-            Assert.That(config.PressCycle, Is.False);
-            Assert.That(config.PressCommand, Is.Empty);
-            Assert.That(config.Rules, Is.Empty);
+            Assert.That(config.MainView.ShowText, Is.True, "absent -> text shown");
+            Assert.That(config.MainView.DefaultImage, Is.Empty, "\"No file...\" = no image");
+            Assert.That(config.MainView.Command, Is.Empty);
+            Assert.That(config.MainView.Rules, Is.Empty);
+            Assert.That(config.PressMode, Is.EqualTo(PressMode.ShortActLongView), "default gesture");
         }
 
         [Test]
-        public void FullSettings_ViewsRulesAndPress()
+        public void SettingsOfAnL4Key_View1KeepsEverything_OtherViewsInheritTheIconOnly()
+        {
+            // night vision key created by Florian in D4 (L4): rules + command on the key, pressCycle, 2 views
+            var l4 = JObject.Parse(@"{
+                ""source"":""status.Flags.NightVision"", ""source2"":""journal.CrewAssign.Name"", ""showText"":true,
+                ""backgroundImage"":""F:/img/chaff on.png"",
+                ""rule1Op"":""isTrue"", ""rule1Value"":"""", ""rule1Image"":""F:/img/night vision on.png"",
+                ""rule2Op"":""isFalse"", ""rule2Value"":"""", ""rule2Image"":""F:/img/night vision off.png"",
+                ""pressCycle"":true, ""pressCommand"":""NightVisionToggle"", ""clickSound"":"""" }");
+
+            var config = DataKeyConfig.FromSettings(l4);
+
+            Assert.That(config.Views.Count, Is.EqualTo(2));
+            var main = config.MainView;
+            Assert.That(main.Rules.Count, Is.EqualTo(2));
+            Assert.That(main.Command, Is.EqualTo("NightVisionToggle"));
+            Assert.That(main.HasOwnIcon, Is.True);
+
+            var second = config.Views[1];
+            Assert.That(second.Source, Is.EqualTo("journal.CrewAssign.Name"));
+            Assert.That(second.ShowText, Is.True, "absent showText2 -> same as view 1");
+            Assert.That(second.HasOwnIcon, Is.False);
+            Assert.That(config.IconViewOf(second), Is.SameAs(main), "icon of view 1, computed on the data of view 1");
+            Assert.That(second.Command, Is.Empty, "commands are never inherited");
+            Assert.That(config.PressMode, Is.EqualTo(PressMode.ShortActLongView), "pressCycle is ignored");
+        }
+
+        [Test]
+        public void Drawer_EveryViewHasItsOwnDataIconAndCommand()
         {
             var settings = new JObject
             {
-                { "source", "status.Fuel.FuelMain" }, { "decimals", "1" },
+                { "source", "status.Flags.LightsOn" }, { "showText", false },
+                { "rule1Op", "isTrue" }, { "rule1Image", "C:\\img\\lights on.png" }, { "backgroundImage", "C:\\img\\lights off.png" },
+                { "pressCommand", "ShipSpotLightToggle" },
+
+                { "source2", "status.Flags.NightVision" }, { "showText2", false },
+                { "rule1Op2", "isTrue" }, { "rule1Value2", "" }, { "rule1Image2", "C:\\img\\night on.png" },
+                { "pressCommand2", "NightVisionToggle" }, { "clickSound2", "C:\\snd\\click.wav" },
+
+                // view 3: no data, only an icon and a command (e.g. open the galaxy map)
+                { "source3", "" }, { "backgroundImage3", "C:\\img\\galaxy map.png" }, { "pressCommand3", "GalaxyMapOpen" },
+
+                // view 4: nothing at all -> not a view
+                { "source4", "" }, { "backgroundImage4", "No file..." }, { "pressCommand4", "" },
+
+                { "pressMode", "shortViewLongAct" },
+            };
+
+            var config = DataKeyConfig.FromSettings(settings);
+
+            Assert.That(config.Views.Select(v => v.Number), Is.EqualTo(new[] { 1, 2, 3 }));
+            Assert.That(config.Views.Select(v => v.Command), Is.EqualTo(new[] { "ShipSpotLightToggle", "NightVisionToggle", "GalaxyMapOpen" }));
+            Assert.That(config.Views[1].ShowText, Is.False);
+            Assert.That(config.Views[1].Rules.Single().Image, Is.EqualTo("C:\\img\\night on.png"));
+            Assert.That(config.Views[1].Sound, Is.EqualTo("C:\\snd\\click.wav"));
+            Assert.That(config.IconViewOf(config.Views[1]), Is.SameAs(config.Views[1]), "own icon, own data");
+            Assert.That(config.IconViewOf(config.Views[2]), Is.SameAs(config.Views[2]));
+            Assert.That(config.Views[2].Source, Is.Empty);
+            Assert.That(config.PressMode, Is.EqualTo(PressMode.ShortViewLongAct));
+        }
+
+        [Test]
+        public void ViewsWithDifferentFormats()
+        {
+            var settings = new JObject
+            {
+                { "source", "status.Fuel.FuelMain" }, { "decimals", "1" }, { "scale", "*100/32" },
                 { "source2", "status.Fuel.FuelReservoir" }, { "decimals2", "2" }, { "prefix2", "R\u00e9s.\\n" },
                 { "source3", "" },
                 { "source4", "status.Balance" }, { "compact4", true },
-                { "showText", false },
-                { "rule1Op", "lt" }, { "rule1Value", "25" }, { "rule1Image", "C:\\img\\red.png" },
-                { "rule2Op", "" }, { "rule2Value", "50" },
-                { "rule3Op", "gte" }, { "rule3Value", "50" }, { "rule3Image", "C:\\img\\green.png" },
-                { "pressCycle", true }, { "pressCommand", " GalaxyMapOpen " }, { "clickSound", "C:\\snd\\click.wav" },
             };
 
             var config = DataKeyConfig.FromSettings(settings);
 
             Assert.That(config.Views.Select(v => v.Source), Is.EqualTo(new[] { "status.Fuel.FuelMain", "status.Fuel.FuelReservoir", "status.Balance" }),
                 "empty view 3 skipped");
+            Assert.That(config.MainView.Display.Scale, Is.EqualTo(3.125));
             Assert.That(config.Views[1].Display.Decimals, Is.EqualTo(2));
             Assert.That(config.Views[2].Display.Compact, Is.True);
-            Assert.That(config.ShowText, Is.False);
-            Assert.That(config.Rules.Select(r => r.Operator), Is.EqualTo(new[] { ConditionOperator.LessThan, ConditionOperator.GreaterOrEqual }),
-                "rule without test skipped");
-            Assert.That(config.Rules[1].Image, Is.EqualTo("C:\\img\\green.png"));
-            Assert.That(config.PressCycle, Is.True);
-            Assert.That(config.PressCommand, Is.EqualTo("GalaxyMapOpen"));
-            Assert.That(config.ClickSound, Is.EqualTo("C:\\snd\\click.wav"));
+            Assert.That(config.Views[2].Number, Is.EqualTo(4));
         }
 
         [Test]
@@ -65,7 +119,7 @@ namespace Elite.Tests
 
             Assert.That(config.Views.Count, Is.EqualTo(1));
             Assert.That(config.MainView.Source, Is.Empty);
-            Assert.That(config.ShowText, Is.True);
+            Assert.That(config.MainView.ShowText, Is.True);
         }
     }
 }

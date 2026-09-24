@@ -13,7 +13,8 @@ Chantier en cours : exposer **toute l'API du jeu** (`Status.json` + ~250 événe
 3. `docs/L1-socle-donnees.md` — **conventions de clés et API d'`EliteStore`** telles qu'implémentées (complète le §4.3).
 4. `docs/L2-catalogue.md` — **format de `catalog.js` / `commands.js`**, générateur, régénération des champs observés, consignes pour L3/L4.
 5. `docs/L3-valeur.md` — mise en forme du texte (`ValueFormatter`), page de réglages commune (mécanique), mode d'emploi D3.
-6. `docs/L4-donnee.md` — **action universelle « Donnée »** (vues, règles d'image, appui), décisions D4/D5, **mode d'emploi D4**.
+6. `docs/L4-donnee.md` — action universelle « Donnée » (règles d'image, conditions), décisions D4/D5.
+7. `docs/L5-tiroir.md` — **tiroir : vues complètes, gestes court/long, héritage, page de réglages générée**, **mode d'emploi D5**.
 7. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
 
 Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude Code, la copie du dépôt fait foi.
@@ -28,14 +29,18 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 | L3 | Action Valeur (complète, §5.1) + Property Inspector commun | ✅ terminé le 2026-09-23 (50 tests OK, PI vérifiée dans un navigateur ; non vérifié sur le Stream Deck) |
 | D3 | Point de contrôle en jeu (Florian, MK.2, profil de test « Test ZV ») | ✅ 2026-09-23 : valeurs à jour, lisibles (police un peu petite → icône « T », défaut passé à 14), page de réglages correcte. Non-régression des anciens boutons : à confirmer en D4 |
 | L4 | Action universelle « Donnée » : vues + règles d'image + appui (décisions D4/D5) | ✅ terminé le 2026-09-23 (66 tests OK, PI vérifiée dans un navigateur ; non vérifié sur le Stream Deck) |
-| D4 | Test en jeu de « Donnée » + non-régression — mode d'emploi : `docs/L4-donnee.md` | ⏭️ **prochain** (Florian) |
-| L5 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) | à faire |
-| L6 | Non-régression, version 2.8.0, nom « ZV Stream Deck Elite », empaquetage, README | à faire |
+| D4 | Test en jeu de « Donnée » + non-régression | ✅ 2026-09-24 : icônes selon état + commandes OK ; l'image ne suivait pas la vue et un appui faisait vue + commande → L5. Anciennes touches cassées = dossier d'icônes déplacé (pas le plugin) → 87 chemins corrigés dans le profil de Florian |
+| L5 | Tiroir : chaque vue = action complète, appui court/long (décision D6), facteur `/32` `*4` | ✅ terminé le 2026-09-24 (91 tests OK, PI vérifiée dans un navigateur ; non vérifié sur le Stream Deck) |
+| D5 | Test en jeu du tiroir — mode d'emploi : `docs/L5-tiroir.md` | ⏭️ **prochain** (Florian) |
+| L6 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) | à faire |
+| L7 | Non-régression, version 2.8.0, nom « ZV Stream Deck Elite », empaquetage, README | à faire |
+| — | Icônes des nouvelles actions dans la charte du pack de Florian (voir mémoire / demande du 2026-09-24) | plus tard, à sa demande |
 
 ### Décisions postérieures au cahier des charges (Florian, 2026-09-23)
 
 - **D4 — action universelle** : l'action Valeur (`com.mhwlng.elite.value`, UUID conservé) devient « **Donnée** » et absorbe l'action État du §5.2 (icône on/off = Donnée sans texte). `com.mhwlng.elite.state` n'est **jamais déclaré** (réservé). L'Alarme reste une action séparée.
 - **D5 — Donnée enrichie** : jusqu'à 4 vues qui défilent à l'appui, jusqu'à 4 règles d'image (seuils, égalité…) + image par défaut, commande clavier et son à l'appui. Remplace « Valeur : affichage seul » (D2).
+- **D6 — tiroir** (2026-09-24) : chaque vue de « Donnée » a sa donnée, son texte, son icône (une vue sans icône propre reprend celle de la vue 1), sa commande et son son (jamais hérités). Gestes réglables par touche : par défaut appui court = agir, appui long (0,5 s) = vue suivante. `pressCycle` (L4) abandonné.
 - Ces décisions priment sur le cahier des charges (§0, §5.1–5.2, §9), qui reste inchangé pour l'historique.
 
 → **Mettre à jour ce tableau à la fin de chaque lot**, dans le commit du lot.
@@ -74,7 +79,7 @@ Aucun événement post-build : le déploiement est manuel. Le plugin installé v
 
 1. Fermer Stream Deck : `Stop-Process -Name StreamDeck` puis attendre la fin de `com.mhwlng.elite` (il s'arrête avec).
 2. Sauvegarde : **déjà faite** le 2026-09-23 — version officielle 2.7.4 d'origine, 73 fichiers, dans `C:\Users\Florian\Desktop\com.mhwlng.elite.sdPlugin.sauvegarde-2026-09-23` (le dossier installé ne contenait aucune image personnelle). Ne pas l'écraser.
-3. Copier le build **par-dessus**, sans rien supprimer : `robocopy <repo>\Elite\bin\Debug\com.mhwlng.elite.sdPlugin <dossier installé> /E` (codes 0–7 = succès ; jamais `/MIR` ni `/PURGE`).
+3. Copier le build **Release** (x64, comme la version officielle — le Debug est AnyCPU et tourne en 32 bits) **par-dessus**, sans rien supprimer : `robocopy <repo>\Elite\bin\Release\com.mhwlng.elite.sdPlugin <dossier installé> /E` (codes 0–7 = succès ; jamais `/MIR` ni `/PURGE`). Lancer `build.ps1 -Configuration Release` juste avant.
 4. Relancer : `Start-Process 'D:\Programmes\Elgato\StreamDeck.exe'`. Le plugin met **~50 s** à démarrer. Vérifier dans `pluginlog.log` la ligne `EliteStore: N keys after journal replay` (676 au premier déploiement).
 
 Retour arrière : même procédure en copiant le dossier de sauvegarde. Les réglages des touches sont dans les profils Stream Deck, pas dans ce dossier ; Florian teste sur un profil « Test ZV ». La bascule automatique de profils du plugin n'est pas configurée (`Profiles: []`). Ces étapes touchent au logiciel de Florian : ne les exécuter qu'à sa demande explicite (« déploie »).
@@ -119,7 +124,9 @@ Projet `Elite.Tests` (csproj classique net48, `LangVersion` 7.3), NUnit 3.14.0 +
 powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1
 ```
 
-Critère : `== TESTS OK` (code de sortie 0) ; 66 tests à la fin de L4 (magasin, clés, événements bruts, catalogue, commandes, mise en forme, conditions, règles d'image, réglages de « Donnée » dont compatibilité L3, manifeste).
+Critère : `== TESTS OK` (code de sortie 0) ; 91 tests à la fin de L5 (magasin, clés, événements bruts, catalogue, commandes, mise en forme et facteurs, conditions, règles d'image, gestes, réglages de « Donnée » dont compatibilité L3/L4, manifeste).
+
+`Generic.html` et le bloc des réglages des vues 2 à 4 de `ValueAction.cs` sont **générés** par `python tools/make-generic-html.py` : ne pas les éditer à la main (voir `docs/L5-tiroir.md`).
 
 Piège : l'outil Write de Claude Code convertit les séquences `é` écrites dans un fichier en vrais caractères. Pour `generic.js` (qui doit rester ASCII), repasser un petit script d'échappement ; `ManifestTests` échoue sinon. NUnit.ConsoleRunner 3.22.0 ignore `--noresult` : `test.ps1` passe `--work=Elite.Tests\bin\Debug` pour que `TestResult.xml` et `nunit-agent_*.log` restent dans `bin/`. Tout nouveau fichier de test : `<Compile Include>` dans `Elite.Tests.csproj` ; tout fichier de données : `<None Include>` + `CopyToOutputDirectory`.
 

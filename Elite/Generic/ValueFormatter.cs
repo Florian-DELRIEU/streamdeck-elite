@@ -31,11 +31,58 @@ namespace Elite.Generic
                 Prefix = prefix ?? "",
                 Suffix = suffix ?? "",
                 Decimals = Math.Max(0, Math.Min(6, (int)ParseNumber(decimals, 0, "decimals", warn))),
-                Scale = ParseNumber(scale, 1, "scale", warn),
+                Scale = ParseScale(scale, warn),
                 Offset = ParseNumber(offset, 0, "offset", warn),
                 Compact = compact,
                 EmptyText = emptyText ?? DefaultEmptyText,
             };
+        }
+
+        /// <summary>
+        /// Scale: a number ("0,5") or a chain of multiplications / divisions ("/32", "*4", "100/32", "*100/32", "x2").
+        /// Invalid (or division by zero): 1, reported through warn.
+        /// </summary>
+        public static double ParseScale(string text, Action<string> warn = null)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return 1;
+
+            var expression = text.Trim().Replace(" ", "").Replace(',', '.').Replace('\u00D7', '*').Replace('x', '*').Replace('X', '*');
+            double result = 1;
+            int position = 0;
+            if (position < expression.Length && expression[position] != '*' && expression[position] != '/')
+            {
+                if (!ReadNumber(expression, ref position, out result))
+                    return InvalidScale(text, warn);
+            }
+
+            while (position < expression.Length)
+            {
+                char op = expression[position++];
+                double operand;
+                if ((op != '*' && op != '/') || !ReadNumber(expression, ref position, out operand) || (op == '/' && operand == 0))
+                    return InvalidScale(text, warn);
+                result = op == '*' ? result * operand : result / operand;
+            }
+
+            return double.IsNaN(result) || double.IsInfinity(result) ? InvalidScale(text, warn) : result;
+        }
+
+        private static bool ReadNumber(string expression, ref int position, out double number)
+        {
+            int start = position;
+            if (position < expression.Length && expression[position] == '-')
+                position++;
+            while (position < expression.Length && (char.IsDigit(expression[position]) || expression[position] == '.'))
+                position++;
+
+            return double.TryParse(expression.Substring(start, position - start), NumberStyles.Float, CultureInfo.InvariantCulture, out number);
+        }
+
+        private static double InvalidScale(string text, Action<string> warn)
+        {
+            warn?.Invoke("invalid scale '" + text + "', using 1");
+            return 1;
         }
 
         private static double ParseNumber(string text, double defaultValue, string name, Action<string> warn)

@@ -95,6 +95,38 @@ namespace Elite.Tests
             Assert.That(warnings.Count, Is.EqualTo(1));
         }
 
+        [TestCase("/32", 1.0 / 32)]
+        [TestCase("*4", 4.0)]
+        [TestCase("x2", 2.0)]
+        [TestCase("100/32", 3.125)]
+        [TestCase("*100/32", 3.125)]
+        [TestCase(" 0,5 ", 0.5)]
+        [TestCase("-1", -1.0)]
+        [TestCase("", 1.0)]
+        public void Scale_NumbersAndOperations(string text, double expected)
+        {
+            Assert.That(ValueSettings.ParseScale(text), Is.EqualTo(expected).Within(1e-12));
+        }
+
+        [TestCase("/0")]
+        [TestCase("abc")]
+        [TestCase("2*")]
+        [TestCase("*")]
+        [TestCase("4+1")]
+        public void Scale_Invalid_GivesOneAndWarns(string text)
+        {
+            var warnings = new List<string>();
+            Assert.That(ValueSettings.ParseScale(text, warnings.Add), Is.EqualTo(1));
+            Assert.That(warnings.Count, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void Scale_FuelPercentage()
+        {
+            // 24 t in a 32 t tank, shown as a percentage
+            Assert.That(Format(new JValue(24.0), new ValueSettings { Scale = ValueSettings.ParseScale("*100/32"), Suffix = " %" }), Is.EqualTo("75 %"));
+        }
+
         [Test]
         public void RealStoreValue_IsFormatted()
         {

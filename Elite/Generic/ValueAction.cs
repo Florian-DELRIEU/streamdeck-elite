@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using BarRaider.SdTools;
 using Elite.Buttons;
@@ -11,18 +12,18 @@ using Newtonsoft.Json.Linq;
 namespace Elite.Generic
 {
     /// <summary>
-    /// "Donnée" action (UUID kept from L3: com.mhwlng.elite.value), see docs/L4-donnee.md:
-    /// - text: the value of the displayed view (up to 4 views), optional;
-    /// - image: first matching rule on the main value (view 1), otherwise the default image;
-    /// - key press: next view and/or a keyboard command (EliteKeys.SendKeypress) and/or a sound.
+    /// "Donnée" action (UUID kept from L3: com.mhwlng.elite.value), see docs/L5-tiroir.md.
+    /// Up to 4 views ("drawer"); each view has its data and text, its icon (rules), its command and its sound.
+    /// Gestures: by default a short press acts (command of the displayed view) and a long press (0.5 s) shows the next view.
     /// Redrawn only when one of its keys changes, and only what changed is sent (§4.5).
     /// </summary>
     [PluginActionId("com.mhwlng.elite.value")]
     public class ValueAction : EliteKeypadBase
     {
-        // property names = JSON names of Generic.html; defaults apply to keys created in L3 (missing settings)
+        // property names = JSON names of Generic.html; defaults apply to keys created before the setting existed
         protected class PluginSettings
         {
+            // ---- view 1 (names of L3 / L4)
             [JsonProperty(PropertyName = "source")] public string Source { get; set; } = "";
             [JsonProperty(PropertyName = "prefix")] public string Prefix { get; set; } = "";
             [JsonProperty(PropertyName = "suffix")] public string Suffix { get; set; } = "";
@@ -30,37 +31,9 @@ namespace Elite.Generic
             [JsonProperty(PropertyName = "scale")] public string Scale { get; set; } = "1";
             [JsonProperty(PropertyName = "offset")] public string Offset { get; set; } = "0";
             [JsonProperty(PropertyName = "compact")] public bool Compact { get; set; }
-
-            [JsonProperty(PropertyName = "source2")] public string Source2 { get; set; } = "";
-            [JsonProperty(PropertyName = "prefix2")] public string Prefix2 { get; set; } = "";
-            [JsonProperty(PropertyName = "suffix2")] public string Suffix2 { get; set; } = "";
-            [JsonProperty(PropertyName = "decimals2")] public string Decimals2 { get; set; } = "0";
-            [JsonProperty(PropertyName = "scale2")] public string Scale2 { get; set; } = "1";
-            [JsonProperty(PropertyName = "offset2")] public string Offset2 { get; set; } = "0";
-            [JsonProperty(PropertyName = "compact2")] public bool Compact2 { get; set; }
-
-            [JsonProperty(PropertyName = "source3")] public string Source3 { get; set; } = "";
-            [JsonProperty(PropertyName = "prefix3")] public string Prefix3 { get; set; } = "";
-            [JsonProperty(PropertyName = "suffix3")] public string Suffix3 { get; set; } = "";
-            [JsonProperty(PropertyName = "decimals3")] public string Decimals3 { get; set; } = "0";
-            [JsonProperty(PropertyName = "scale3")] public string Scale3 { get; set; } = "1";
-            [JsonProperty(PropertyName = "offset3")] public string Offset3 { get; set; } = "0";
-            [JsonProperty(PropertyName = "compact3")] public bool Compact3 { get; set; }
-
-            [JsonProperty(PropertyName = "source4")] public string Source4 { get; set; } = "";
-            [JsonProperty(PropertyName = "prefix4")] public string Prefix4 { get; set; } = "";
-            [JsonProperty(PropertyName = "suffix4")] public string Suffix4 { get; set; } = "";
-            [JsonProperty(PropertyName = "decimals4")] public string Decimals4 { get; set; } = "0";
-            [JsonProperty(PropertyName = "scale4")] public string Scale4 { get; set; } = "1";
-            [JsonProperty(PropertyName = "offset4")] public string Offset4 { get; set; } = "0";
-            [JsonProperty(PropertyName = "compact4")] public bool Compact4 { get; set; }
-
-            [JsonProperty(PropertyName = "emptyText")] public string EmptyText { get; set; } = ValueSettings.DefaultEmptyText;
             [JsonProperty(PropertyName = "showText")] public bool ShowText { get; set; } = true;
-
             [FilenameProperty]
             [JsonProperty(PropertyName = "backgroundImage")] public string BackgroundImage { get; set; } = "";
-
             [JsonProperty(PropertyName = "rule1Op")] public string Rule1Op { get; set; } = "";
             [JsonProperty(PropertyName = "rule1Value")] public string Rule1Value { get; set; } = "";
             [FilenameProperty]
@@ -77,37 +50,134 @@ namespace Elite.Generic
             [JsonProperty(PropertyName = "rule4Value")] public string Rule4Value { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image")] public string Rule4Image { get; set; } = "";
-
-            [JsonProperty(PropertyName = "pressCycle")] public bool PressCycle { get; set; }
             [JsonProperty(PropertyName = "pressCommand")] public string PressCommand { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "clickSound")] public string ClickSound { get; set; } = "";
+
+            // ---- views 2 to 4 (same names + view number): generated by tools/make-generic-html.py, do not edit by hand
+            // <generated-views-2-4>
+            [JsonProperty(PropertyName = "source2")] public string Source2 { get; set; } = "";
+            [JsonProperty(PropertyName = "prefix2")] public string Prefix2 { get; set; } = "";
+            [JsonProperty(PropertyName = "suffix2")] public string Suffix2 { get; set; } = "";
+            [JsonProperty(PropertyName = "decimals2")] public string Decimals2 { get; set; } = "0";
+            [JsonProperty(PropertyName = "scale2")] public string Scale2 { get; set; } = "1";
+            [JsonProperty(PropertyName = "offset2")] public string Offset2 { get; set; } = "0";
+            [JsonProperty(PropertyName = "compact2")] public bool Compact2 { get; set; }
+            [JsonProperty(PropertyName = "showText2")] public bool ShowText2 { get; set; } = true;
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "backgroundImage2")] public string BackgroundImage2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Op2")] public string Rule1Op2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Value2")] public string Rule1Value2 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule1Image2")] public string Rule1Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Op2")] public string Rule2Op2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Value2")] public string Rule2Value2 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule2Image2")] public string Rule2Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Op2")] public string Rule3Op2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Value2")] public string Rule3Value2 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule3Image2")] public string Rule3Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Op2")] public string Rule4Op2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Value2")] public string Rule4Value2 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule4Image2")] public string Rule4Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressCommand2")] public string PressCommand2 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "clickSound2")] public string ClickSound2 { get; set; } = "";
+            [JsonProperty(PropertyName = "source3")] public string Source3 { get; set; } = "";
+            [JsonProperty(PropertyName = "prefix3")] public string Prefix3 { get; set; } = "";
+            [JsonProperty(PropertyName = "suffix3")] public string Suffix3 { get; set; } = "";
+            [JsonProperty(PropertyName = "decimals3")] public string Decimals3 { get; set; } = "0";
+            [JsonProperty(PropertyName = "scale3")] public string Scale3 { get; set; } = "1";
+            [JsonProperty(PropertyName = "offset3")] public string Offset3 { get; set; } = "0";
+            [JsonProperty(PropertyName = "compact3")] public bool Compact3 { get; set; }
+            [JsonProperty(PropertyName = "showText3")] public bool ShowText3 { get; set; } = true;
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "backgroundImage3")] public string BackgroundImage3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Op3")] public string Rule1Op3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Value3")] public string Rule1Value3 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule1Image3")] public string Rule1Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Op3")] public string Rule2Op3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Value3")] public string Rule2Value3 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule2Image3")] public string Rule2Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Op3")] public string Rule3Op3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Value3")] public string Rule3Value3 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule3Image3")] public string Rule3Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Op3")] public string Rule4Op3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Value3")] public string Rule4Value3 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule4Image3")] public string Rule4Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressCommand3")] public string PressCommand3 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "clickSound3")] public string ClickSound3 { get; set; } = "";
+            [JsonProperty(PropertyName = "source4")] public string Source4 { get; set; } = "";
+            [JsonProperty(PropertyName = "prefix4")] public string Prefix4 { get; set; } = "";
+            [JsonProperty(PropertyName = "suffix4")] public string Suffix4 { get; set; } = "";
+            [JsonProperty(PropertyName = "decimals4")] public string Decimals4 { get; set; } = "0";
+            [JsonProperty(PropertyName = "scale4")] public string Scale4 { get; set; } = "1";
+            [JsonProperty(PropertyName = "offset4")] public string Offset4 { get; set; } = "0";
+            [JsonProperty(PropertyName = "compact4")] public bool Compact4 { get; set; }
+            [JsonProperty(PropertyName = "showText4")] public bool ShowText4 { get; set; } = true;
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "backgroundImage4")] public string BackgroundImage4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Op4")] public string Rule1Op4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Value4")] public string Rule1Value4 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule1Image4")] public string Rule1Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Op4")] public string Rule2Op4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Value4")] public string Rule2Value4 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule2Image4")] public string Rule2Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Op4")] public string Rule3Op4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Value4")] public string Rule3Value4 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule3Image4")] public string Rule3Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Op4")] public string Rule4Op4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Value4")] public string Rule4Value4 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "rule4Image4")] public string Rule4Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "pressCommand4")] public string PressCommand4 { get; set; } = "";
+            [FilenameProperty]
+            [JsonProperty(PropertyName = "clickSound4")] public string ClickSound4 { get; set; } = "";
+            // </generated-views-2-4>
+
+            // ---- whole key
+            [JsonProperty(PropertyName = "emptyText")] public string EmptyText { get; set; } = ValueSettings.DefaultEmptyText;
+            [JsonProperty(PropertyName = "pressMode")] public string PressMode { get; set; } = PressGesture.ShortActLongViewName;
         }
 
         private const string NoTitle = "\u0000no title";
 
         private readonly object renderLock = new object();
         private readonly Dictionary<string, string> imageCache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, CachedSound> soundCache = new Dictionary<string, CachedSound>(StringComparer.OrdinalIgnoreCase);
         private PluginSettings settings;
         private DataKeyConfig config;
-        private List<ImageRule> rules = new List<ImageRule>();
+        private Dictionary<DataView, List<ImageRule>> validRules = new Dictionary<DataView, List<ImageRule>>();
         private int viewIndex;
         private string lastTitle;
         private string lastImage;
         private bool imageSent;
-        private string soundPath;
-        private CachedSound sound;
         private bool disposed;
+
+        // key press: the long action fires after LongPressMilliseconds, the short one on release
+        private Timer longPressTimer;
+        private bool keyDown;
+        private bool longPressDone;
 
         public ValueAction(SDConnection connection, InitialPayload payload) : base(connection, payload)
         {
             try
             {
-                settings = payload.Settings == null || payload.Settings.Count == 0
-                    ? new PluginSettings()
-                    : payload.Settings.ToObject<PluginSettings>();
+                var raw = payload.Settings ?? new JObject();
+                InheritShowText(raw);
+                settings = raw.Count == 0 ? new PluginSettings() : raw.ToObject<PluginSettings>();
 
-                // saves the defaults of the settings added since the key was created (L3 keys)
+                // saves the defaults of the settings added since the key was created
                 Connection.SetSettingsAsync(JObject.FromObject(settings)).Wait();
 
                 ApplySettings();
@@ -124,18 +194,13 @@ namespace Elite.Generic
         {
             try
             {
-                if (config.PressCycle && config.Views.Count > 1)
+                lock (renderLock)
                 {
-                    lock (renderLock)
-                        viewIndex = (viewIndex + 1) % config.Views.Count;
-                    Render(false);
+                    keyDown = true;
+                    longPressDone = false;
+                    longPressTimer?.Dispose();
+                    longPressTimer = new Timer(OnLongPress, null, PressGesture.LongPressMilliseconds, Timeout.Infinite);
                 }
-
-                if (!string.IsNullOrEmpty(config.PressCommand))
-                    EliteKeys.SendKeypress(config.PressCommand);
-
-                if (sound != null)
-                    AudioPlaybackEngine.Instance.PlaySound(sound);
             }
             catch (Exception ex)
             {
@@ -143,10 +208,33 @@ namespace Elite.Generic
             }
         }
 
+        public override void KeyReleased(KeyPayload payload)
+        {
+            try
+            {
+                bool shortPress;
+                lock (renderLock)
+                {
+                    longPressTimer?.Dispose();
+                    longPressTimer = null;
+                    shortPress = keyDown && !longPressDone;
+                    keyDown = false;
+                }
+
+                if (shortPress)
+                    Perform(false);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ValueAction[{config?.MainView.Source}]: key release failed: {ex}");
+            }
+        }
+
         public override void ReceivedSettings(ReceivedSettingsPayload payload)
         {
             try
             {
+                InheritShowText(payload.Settings);
                 BarRaider.SdTools.Tools.AutoPopulateSettings(settings, payload.Settings);
                 ApplySettings();
                 Connection.SetSettingsAsync(JObject.FromObject(settings)).Wait();
@@ -161,10 +249,79 @@ namespace Elite.Generic
         public override void Dispose()
         {
             lock (renderLock)
+            {
                 disposed = true;
+                longPressTimer?.Dispose();
+                longPressTimer = null;
+            }
 
             EliteStore.DataChanged -= OnDataChanged;
             base.Dispose();
+        }
+
+        /// <summary>
+        /// Keys created before L5 have no showText2..4: those views keep the choice of view 1 (as in L4).
+        /// </summary>
+        private static void InheritShowText(JObject raw)
+        {
+            if (raw == null)
+                return;
+
+            var main = raw["showText"];
+            for (int i = 2; i <= DataKeyConfig.MaxViews; i++)
+            {
+                var name = "showText" + i;
+                if (raw[name] == null || raw[name].Type == JTokenType.Null)
+                    raw[name] = main == null || main.Type == JTokenType.Null ? new JValue(true) : main.DeepClone();
+            }
+        }
+
+        // timer thread
+        private void OnLongPress(object state)
+        {
+            try
+            {
+                lock (renderLock)
+                {
+                    if (!keyDown || longPressDone || disposed)
+                        return;
+                    longPressDone = true;
+                }
+
+                Perform(true);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ValueAction[{config?.MainView.Source}]: long press failed: {ex}");
+            }
+        }
+
+        private void Perform(bool isLongPress)
+        {
+            DataView view;
+            PressOutcome outcome;
+            lock (renderLock)
+            {
+                if (config == null)
+                    return;
+                outcome = PressGesture.Resolve(isLongPress, config.PressMode, config.Views.Count);
+                if (outcome == PressOutcome.NextView)
+                    viewIndex = (viewIndex + 1) % config.Views.Count;
+                view = CurrentView();
+            }
+
+            if (outcome == PressOutcome.NextView)
+            {
+                Render(false);
+                return;
+            }
+
+            if (view.Command.Length > 0)
+                EliteKeys.SendKeypress(view.Command);
+
+            var sound = Sound(view.Sound);
+            if (sound != null)
+                AudioPlaybackEngine.Instance.PlaySound(sound);
         }
 
         // background thread (status or journal watcher)
@@ -172,10 +329,17 @@ namespace Elite.Generic
         {
             try
             {
-                var current = config.Views[Math.Min(viewIndex, config.Views.Count - 1)].Source;
-                var main = config.MainView.Source;
-                if ((current.Length > 0 && changedKeys.Contains(current, StoreKeys.Comparer))
-                    || (main.Length > 0 && changedKeys.Contains(main, StoreKeys.Comparer)))
+                DataView view, iconView;
+                lock (renderLock)
+                {
+                    if (config == null)
+                        return;
+                    view = CurrentView();
+                    iconView = config.IconViewOf(view);
+                }
+
+                if ((view.Source.Length > 0 && changedKeys.Contains(view.Source, StoreKeys.Comparer))
+                    || (iconView.Source.Length > 0 && changedKeys.Contains(iconView.Source, StoreKeys.Comparer)))
                     Render(false);
             }
             catch (Exception ex)
@@ -190,22 +354,27 @@ namespace Elite.Generic
                 warning => Logger.Instance.LogMessage(TracingLevel.WARN, $"ValueAction[{settings.Source}]: {warning}"));
 
             // a rule whose image file does not exist is ignored
-            var newRules = newConfig.Rules.Select(r => new ImageRule(r.Operator, r.Operand, ExistingFile(r.Image))).ToList();
+            var newRules = newConfig.Views.ToDictionary(
+                v => v,
+                v => v.Rules.Select(r => new ImageRule(r.Operator, r.Operand, ExistingFile(r.Image))).ToList());
 
             lock (renderLock)
             {
                 config = newConfig;
-                rules = newRules;
+                validRules = newRules;
                 if (viewIndex >= config.Views.Count)
                     viewIndex = 0;
             }
+        }
 
-            LoadSound(config.ClickSound);
+        private DataView CurrentView()
+        {
+            return config.Views[Math.Min(viewIndex, config.Views.Count - 1)];
         }
 
         /// <summary>
-        /// Sends the title and the image only when they changed (force: after creation or a settings change).
-        /// Nothing is awaited, so that the watcher threads are never blocked.
+        /// Sends the title and the image of the displayed view only when they changed (force: after creation or a
+        /// settings change). Nothing is awaited, so that the watcher threads are never blocked.
         /// </summary>
         private void Render(bool force)
         {
@@ -214,8 +383,8 @@ namespace Elite.Generic
                 if (disposed || config == null)
                     return;
 
-                var view = config.Views[Math.Min(viewIndex, config.Views.Count - 1)];
-                var title = config.ShowText ? ValueFormatter.Format(Read(view.Source), view.Display, DateTime.Now) : NoTitle;
+                var view = CurrentView();
+                var title = view.ShowText ? ValueFormatter.Format(Read(view.Source), view.Display, DateTime.Now) : NoTitle;
                 if (force || title != lastTitle)
                 {
                     lastTitle = title;
@@ -223,12 +392,13 @@ namespace Elite.Generic
                         Watch(Connection.SetTitleAsync(null), "SetTitle"); // the title typed in the Stream Deck software is shown
                     else
                     {
-                        Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Value[{view.Source}] = {title.Replace("\n", "\\n")}");
+                        Logger.Instance.LogMessage(TracingLevel.DEBUG, $"Value[{view.Source}] view {view.Number} = {title.Replace("\n", "\\n")}");
                         Watch(Connection.SetTitleAsync(title), "SetTitle");
                     }
                 }
 
-                var image = ImageRules.Choose(Read(config.MainView.Source), config.MainView.Display, rules) ?? ExistingFile(config.DefaultImage);
+                var iconView = config.IconViewOf(view);
+                var image = ImageRules.Choose(Read(iconView.Source), iconView.Display, validRules[iconView]) ?? ExistingFile(iconView.DefaultImage);
                 if (force || !imageSent || image != lastImage)
                 {
                     lastImage = image;
@@ -276,23 +446,30 @@ namespace Elite.Generic
             return base64;
         }
 
-        private void LoadSound(string path)
+        private CachedSound Sound(string path)
         {
-            if (path == soundPath)
-                return;
-
-            soundPath = path;
-            sound = null;
             if (ExistingFile(path) == null)
-                return;
+                return null;
 
-            try
+            lock (soundCache)
             {
-                sound = new CachedSound(path);
-            }
-            catch (Exception ex)
-            {
-                Logger.Instance.LogMessage(TracingLevel.WARN, $"ValueAction: cannot load sound {path}: {ex.Message}");
+                CachedSound sound;
+                if (!soundCache.TryGetValue(path, out sound))
+                {
+                    try
+                    {
+                        sound = new CachedSound(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.WARN, $"ValueAction: cannot load sound {path}: {ex.Message}");
+                        sound = null;
+                    }
+
+                    soundCache[path] = sound;
+                }
+
+                return sound;
             }
         }
 

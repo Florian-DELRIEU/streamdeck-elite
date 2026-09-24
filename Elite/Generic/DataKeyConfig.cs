@@ -4,41 +4,61 @@ using Newtonsoft.Json.Linq;
 
 namespace Elite.Generic
 {
+    /// <summary>
+    /// One view ("drawer") of a Data key: its data and text, its icon, its command (docs/L5-tiroir.md).
+    /// </summary>
     public class DataView
     {
-        public DataView(string source, ValueSettings display)
+        public DataView(int number, string source, ValueSettings display)
         {
+            Number = number;
             Source = source;
             Display = display;
         }
 
+        /// <summary>1 to 4.</summary>
+        public int Number { get; }
         public string Source { get; }
         public ValueSettings Display { get; }
+        public bool ShowText { get; internal set; } = true;
+        public string DefaultImage { get; internal set; } = "";
+        public List<ImageRule> Rules { get; } = new List<ImageRule>();
+        public string Command { get; internal set; } = "";
+        public string Sound { get; internal set; } = "";
+
+        /// <summary>A view without default image and without rule uses the icon of view 1.</summary>
+        public bool HasOwnIcon
+        {
+            get { return DefaultImage.Length > 0 || Rules.Count > 0; }
+        }
     }
 
     /// <summary>
     /// Settings of a Data key (action com.mhwlng.elite.value), read from the settings JSON.
-    /// View 1 uses the names of L3 (source, prefix, suffix, decimals, scale, offset, compact), views 2 to 4 the same
-    /// names followed by their number (source2, prefix2...). Absent settings take their default value,
-    /// so that the keys created in L3 keep working.
+    /// View 1 uses the names of L3/L4 (source, prefix, ..., showText, backgroundImage, rule1Op..., pressCommand, clickSound);
+    /// views 2 to 4 the same names followed by their number (source2, rule1Op2, pressCommand2...).
+    /// Inheritance: absent showText of a view = the one of view 1; a view without its own icon uses the icon of view 1;
+    /// commands and sounds are never inherited.
     /// </summary>
     public class DataKeyConfig
     {
         public const int MaxViews = 4;
         public const int MaxRules = 4;
+        private const string NoFile = "No file...";
 
-        /// <summary>View 1 is always present; views 2 to 4 only when they have a key.</summary>
+        /// <summary>View 1 is always present; views 2 to 4 only when they have a key, a command or their own icon.</summary>
         public List<DataView> Views { get; } = new List<DataView>();
-        public List<ImageRule> Rules { get; } = new List<ImageRule>();
-        public bool ShowText { get; private set; }
-        public bool PressCycle { get; private set; }
-        public string PressCommand { get; private set; }
-        public string ClickSound { get; private set; }
-        public string DefaultImage { get; private set; }
+        public PressMode PressMode { get; private set; }
 
         public DataView MainView
         {
             get { return Views[0]; }
+        }
+
+        /// <summary>View whose icon is shown while the given view is displayed.</summary>
+        public DataView IconViewOf(DataView view)
+        {
+            return view.HasOwnIcon ? view : MainView;
         }
 
         public static DataKeyConfig FromSettings(JObject settings, Action<string> warn = null)
@@ -46,34 +66,38 @@ namespace Elite.Generic
             settings = settings ?? new JObject();
             var config = new DataKeyConfig();
             var emptyText = Text(settings, "emptyText", null);
+            var mainShowText = Flag(settings, "showText", true);
 
             for (int i = 1; i <= MaxViews; i++)
             {
                 var suffix = i == 1 ? "" : i.ToString();
-                var source = Text(settings, "source" + suffix, "").Trim();
-                if (i > 1 && source.Length == 0)
-                    continue;
-
+                int number = i;
                 var display = ValueSettings.Parse(
                     Text(settings, "prefix" + suffix, ""), Text(settings, "suffix" + suffix, ""),
                     Text(settings, "decimals" + suffix, ""), Text(settings, "scale" + suffix, ""), Text(settings, "offset" + suffix, ""),
                     Flag(settings, "compact" + suffix, false), emptyText,
-                    warn == null ? (Action<string>)null : message => warn("view " + i + ": " + message));
-                config.Views.Add(new DataView(source, display));
+                    warn == null ? (Action<string>)null : message => warn("view " + number + ": " + message));
+
+                var view = new DataView(i, Text(settings, "source" + suffix, "").Trim(), display)
+                {
+                    ShowText = i == 1 ? mainShowText : Flag(settings, "showText" + suffix, mainShowText),
+                    DefaultImage = FileName(settings, "backgroundImage" + suffix),
+                    Command = Text(settings, "pressCommand" + suffix, "").Trim(),
+                    Sound = FileName(settings, "clickSound" + suffix),
+                };
+
+                for (int r = 1; r <= MaxRules; r++)
+                {
+                    var op = Condition.ParseOperator(Text(settings, "rule" + r + "Op" + suffix, ""));
+                    if (op != ConditionOperator.None)
+                        view.Rules.Add(new ImageRule(op, Text(settings, "rule" + r + "Value" + suffix, ""), FileName(settings, "rule" + r + "Image" + suffix)));
+                }
+
+                if (i == 1 || view.Source.Length > 0 || view.Command.Length > 0 || view.HasOwnIcon)
+                    config.Views.Add(view);
             }
 
-            for (int i = 1; i <= MaxRules; i++)
-            {
-                var op = Condition.ParseOperator(Text(settings, "rule" + i + "Op", ""));
-                if (op != ConditionOperator.None)
-                    config.Rules.Add(new ImageRule(op, Text(settings, "rule" + i + "Value", ""), Text(settings, "rule" + i + "Image", "")));
-            }
-
-            config.ShowText = Flag(settings, "showText", true);
-            config.PressCycle = Flag(settings, "pressCycle", false);
-            config.PressCommand = Text(settings, "pressCommand", "").Trim();
-            config.ClickSound = Text(settings, "clickSound", "");
-            config.DefaultImage = Text(settings, "backgroundImage", "");
+            config.PressMode = PressGesture.ParseMode(Text(settings, "pressMode", ""));
             return config;
         }
 
@@ -83,6 +107,13 @@ namespace Elite.Generic
             if (token == null || token.Type == JTokenType.Null)
                 return defaultValue;
             return token.Type == JTokenType.String ? (string)token : token.ToString();
+        }
+
+        // the property inspector may send "No file..." for an empty file field
+        private static string FileName(JObject settings, string name)
+        {
+            var value = Text(settings, name, "").Trim();
+            return value == NoFile ? "" : value;
         }
 
         private static bool Flag(JObject settings, string name, bool defaultValue)
