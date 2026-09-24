@@ -15,7 +15,7 @@ namespace Elite.Tests
     [TestFixture]
     public class CatalogTests
     {
-        private static readonly string[] FieldTypes = { "bool", "number", "text", "date", "enum" };
+        private static readonly string[] FieldTypes = { "bool", "integer", "number", "text", "date", "enum" };
 
         private JObject catalog;
         private Dictionary<string, JArray> fields;     // full key -> [path, type, enum?]
@@ -90,12 +90,14 @@ namespace Elite.Tests
         {
             Assert.That((string)Field("journal.FSDJump.StarSystem")[1], Is.EqualTo("text"));
             Assert.That((string)Field("journal.FSDJump.JumpDist")[1], Is.EqualTo("number"));
-            Assert.That((string)Field("journal.FSDJump.StarPos.#count")[1], Is.EqualTo("number"));
+            Assert.That((string)Field("journal.FSDJump.StarPos.#count")[1], Is.EqualTo("integer"));
             Assert.That((string)Field("journal.FSDJump.timestamp")[1], Is.EqualTo("date"));
-            Assert.That((string)Field("journal.Cargo.Inventory.#count")[1], Is.EqualTo("number"));
+            Assert.That((string)Field("journal.Cargo.Inventory.#count")[1], Is.EqualTo("integer"));
             Assert.That((string)Field("journal.FSSSignalDiscovered.SignalType")[1], Is.EqualTo("text"), "observed in real journals");
             Assert.That((string)Field("status.Flags.LandingGearDown")[1], Is.EqualTo("bool"));
-            Assert.That((string)Field("status.Pips.Engine")[1], Is.EqualTo("number"));
+            Assert.That((string)Field("status.Pips.Engine")[1], Is.EqualTo("integer"));
+            Assert.That((string)Field("status.Fuel.FuelMain")[1], Is.EqualTo("number"), "decimal");
+            Assert.That((string)Field("status.Balance")[1], Is.EqualTo("integer"));
 
             var planetClass = Field("journal.Scan.PlanetClass");
             Assert.That((string)planetClass[1], Is.EqualTo("enum"));

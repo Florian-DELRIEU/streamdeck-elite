@@ -49,6 +49,7 @@
     <Compile Include="CommandsTests.cs" />
     <Compile Include="ConditionTests.cs" />
     <Compile Include="DataKeyConfigTests.cs" />
+    <Compile Include="DescriptionsTests.cs" />
     <Compile Include="ImageRulesTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
     <Compile Include="ManifestTests.cs" />
@@ -81,6 +82,10 @@
     </None>
     <None Include="..\Elite\PropertyInspector\commands.js">
       <Link>Data\commands.js</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Elite.CatalogGen\descriptions-fr.json">
+      <Link>Data\descriptions-fr.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\Elite\manifest.json">

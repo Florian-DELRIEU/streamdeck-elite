@@ -182,6 +182,7 @@ namespace Elite.Generic
 
                 ApplySettings();
                 EliteStore.DataChanged += OnDataChanged;
+                Connection.OnSendToPlugin += OnSendToPlugin;
                 Render(true);
             }
             catch (Exception ex)
@@ -256,6 +257,7 @@ namespace Elite.Generic
             }
 
             EliteStore.DataChanged -= OnDataChanged;
+            Connection.OnSendToPlugin -= OnSendToPlugin;
             base.Dispose();
         }
 
@@ -325,6 +327,36 @@ namespace Elite.Generic
         }
 
         // background thread (status or journal watcher)
+        /// <summary>
+        /// "i" panel of the property inspector: { genericValueRequest: key, genericView: n } -> current value of the key,
+        /// formatted with the settings of view n.
+        /// </summary>
+        private void OnSendToPlugin(object sender, BarRaider.SdTools.Wrappers.SDEventReceivedEventArgs<BarRaider.SdTools.Events.SendToPlugin> e)
+        {
+            try
+            {
+                var payload = e?.Event?.Payload;
+                var key = payload?["genericValueRequest"];
+                if (key == null)
+                    return;
+
+                int viewNumber = payload["genericView"] != null ? payload["genericView"].Value<int>() : 1;
+                ValueSettings display;
+                lock (renderLock)
+                {
+                    var view = config?.Views.FirstOrDefault(v => v.Number == viewNumber) ?? config?.MainView;
+                    display = view != null ? view.Display : new ValueSettings();
+                }
+
+                var reply = ValueFormatter.DescribeCurrentValue((string)key, Read((string)key), display, DateTime.Now);
+                Watch(Connection.SendToPropertyInspectorAsync(reply), "SendToPropertyInspector");
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.LogMessage(TracingLevel.ERROR, $"ValueAction: current value request failed: {ex}");
+            }
+        }
+
         private void OnDataChanged(IReadOnlyCollection<string> changedKeys)
         {
             try

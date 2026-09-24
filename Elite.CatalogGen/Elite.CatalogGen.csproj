@@ -47,12 +47,15 @@
     <Compile Include="Categories.cs" />
     <Compile Include="CatalogModel.cs" />
     <Compile Include="CommandList.cs" />
+    <Compile Include="Descriptions.cs" />
     <Compile Include="EventCatalog.cs" />
     <Compile Include="ObservedKeys.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="StatusCatalog.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="descriptions-en.json" />
+    <None Include="descriptions-fr.json" />
     <None Include="observed-keys.txt" />
     <None Include="packages.config" />
   </ItemGroup>

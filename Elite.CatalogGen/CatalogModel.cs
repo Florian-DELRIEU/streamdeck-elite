@@ -9,7 +9,8 @@ namespace Elite.CatalogGen
     internal static class FieldTypes
     {
         public const string Bool = "bool";
-        public const string Number = "number";
+        public const string Number = "number";   // decimal number
+        public const string Integer = "integer"; // whole number
         public const string Text = "text";
         public const string Date = "date";
         public const string Enum = "enum";
@@ -75,6 +76,9 @@ namespace Elite.CatalogGen
     internal class Catalog
     {
         public List<Group> Groups { get; } = new List<Group>();
+
+        // French descriptions of events and keys ("i" button), see Descriptions
+        public SortedDictionary<string, string> Info { get; } = new SortedDictionary<string, string>(StringComparer.Ordinal);
 
         // enum name -> values as written by the game
         public SortedDictionary<string, List<string>> Enums { get; } = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);

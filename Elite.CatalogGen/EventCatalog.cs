@@ -88,7 +88,7 @@ namespace Elite.CatalogGen
             if (converter != null && !converter.ConverterType.Name.StartsWith("ExtendedStringEnumConverter", StringComparison.Ordinal))
             {
                 // custom converters of the library read JSON arrays (StarPos, Parents, Modifiers...)
-                group.Add(path + ".#count", FieldTypes.Number);
+                group.Add(path + ".#count", FieldTypes.Integer);
                 return;
             }
 
@@ -101,17 +101,22 @@ namespace Elite.CatalogGen
             else if (type.IsEnum)
                 group.Add(path, FieldTypes.Enum, catalog.RegisterEnum(type));
             else if (type.IsPrimitive || type == typeof(decimal))
-                group.Add(path, FieldTypes.Number);
+                group.Add(path, NumberType(type));
             else if (typeof(JToken).IsAssignableFrom(type) || IsDictionary(type))
                 return; // unknown shape
             else if (type.IsArray || typeof(IEnumerable).IsAssignableFrom(type))
-                group.Add(path + ".#count", FieldTypes.Number);
+                group.Add(path + ".#count", FieldTypes.Integer);
             else if (depth < MaxDepth && !visiting.Contains(type))
             {
                 visiting.Add(type);
                 Walk(catalog, group, path + ".", type, depth + 1, visiting);
                 visiting.Remove(type);
             }
+        }
+
+        public static string NumberType(Type type)
+        {
+            return type == typeof(float) || type == typeof(double) || type == typeof(decimal) ? FieldTypes.Number : FieldTypes.Integer;
         }
 
         private static bool IsDictionary(Type type)

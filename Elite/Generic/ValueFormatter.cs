@@ -179,6 +179,21 @@ namespace Elite.Generic
         }
 
         /// <summary>
+        /// Reply to the property inspector "i" panel: raw value of a key and the text a key would show with these settings.
+        /// </summary>
+        public static JObject DescribeCurrentValue(string key, JToken value, ValueSettings settings, DateTime now)
+        {
+            bool present = value != null && value.Type != JTokenType.Null && value.Type != JTokenType.Undefined;
+            return new JObject
+            {
+                { "genericValueKey", key ?? "" },
+                { "genericValuePresent", present },
+                { "genericValueRaw", present ? (value.Type == JTokenType.String ? (string)value : value.ToString(Newtonsoft.Json.Formatting.None)) : "" },
+                { "genericValueText", present ? Format(value, settings, now) : "" },
+            };
+        }
+
+        /// <summary>
         /// "\n" typed in the property inspector becomes a line break.
         /// </summary>
         public static string Unescape(string text)

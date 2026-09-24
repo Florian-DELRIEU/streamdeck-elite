@@ -23,8 +23,8 @@ namespace Elite.CatalogGen
         // the library types these as strings, the game writes numbers (system address, body id)
         private static readonly Dictionary<string, string> TypeOverrides = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
         {
-            { "Destination.System", FieldTypes.Number },
-            { "Destination.Body", FieldTypes.Number },
+            { "Destination.System", FieldTypes.Integer },
+            { "Destination.Body", FieldTypes.Integer },
         };
 
         private static readonly HashSet<string> OdysseyFields = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -69,9 +69,9 @@ namespace Elite.CatalogGen
                     case "Flags2":
                         break;
                     case "Pips":
-                        values.Add("Pips.System", FieldTypes.Number);
-                        values.Add("Pips.Engine", FieldTypes.Number);
-                        values.Add("Pips.Weapons", FieldTypes.Number);
+                        values.Add("Pips.System", FieldTypes.Integer);
+                        values.Add("Pips.Engine", FieldTypes.Integer);
+                        values.Add("Pips.Weapons", FieldTypes.Integer);
                         break;
                     case "GuiFocus":
                         values.Add(name, FieldTypes.Enum, catalog.RegisterEnum(typeof(StatusGuiFocus)));
@@ -116,7 +116,7 @@ namespace Elite.CatalogGen
             else if (type == typeof(string))
                 group.Add(path, FieldTypes.Text);
             else if (type.IsPrimitive || type == typeof(decimal))
-                group.Add(path, FieldTypes.Number);
+                group.Add(path, EventCatalog.NumberType(type));
             else
             {
                 // StatusFuel, Destination

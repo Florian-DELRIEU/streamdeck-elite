@@ -33,8 +33,10 @@ namespace Elite.CatalogGen
                     return Generate(Path.GetFullPath(args[1]));
                 if (args.Length == 3 && args[0] == "scan")
                     return Scan(args[1], Path.GetFullPath(args[2]));
+                if (args.Length == 2 && args[0] == "descriptions")
+                    return ExtractDescriptions(Path.GetFullPath(args[1]));
 
-                Console.Error.WriteLine("usage: Elite.CatalogGen.exe generate <repository root> | scan <journal folder> <repository root>");
+                Console.Error.WriteLine("usage: Elite.CatalogGen.exe generate <repository root> | scan <journal folder> <repository root> | descriptions <repository root>");
                 return 2;
             }
             catch (Exception ex)
@@ -54,6 +56,11 @@ namespace Elite.CatalogGen
             if (File.Exists(observedPath))
                 ObservedKeys.Merge(catalog, File.ReadAllLines(observedPath));
 
+            var descriptions = Descriptions.Load(Path.Combine(root, "Elite.CatalogGen", Descriptions.FrenchFile));
+            var orphans = Descriptions.Merge(catalog, descriptions);
+            if (orphans.Count > 0)
+                Console.WriteLine("Elite.CatalogGen: " + orphans.Count + " description(s) without catalog key ignored: " + string.Join(", ", orphans.Take(5)));
+
             if (catalog.KeyCount < MinimumKeys)
                 throw new InvalidOperationException("catalog: only " + catalog.KeyCount + " keys (expected at least " + MinimumKeys + ")");
 
@@ -66,7 +73,7 @@ namespace Elite.CatalogGen
             bool catalogWritten = WriteIfChanged(Path.Combine(inspector, "catalog.js"), CatalogJs(catalog));
             bool commandsWritten = WriteIfChanged(Path.Combine(inspector, "commands.js"), CommandsJs(commands));
 
-            Console.WriteLine("Elite.CatalogGen: catalog.js " + catalog.Groups.Count + " groups, " + catalog.KeyCount + " keys ("
+            Console.WriteLine("Elite.CatalogGen: catalog.js " + catalog.Groups.Count + " groups, " + catalog.KeyCount + " keys, " + catalog.Info.Count + " descriptions ("
                 + (catalogWritten ? "written" : "unchanged") + "); commands.js " + commandCount + " commands ("
                 + (commandsWritten ? "written" : "unchanged") + ")");
             return 0;
@@ -90,6 +97,22 @@ namespace Elite.CatalogGen
             Console.WriteLine("Elite.CatalogGen scan: " + files + " files, " + lines + " lines, " + observed.Count + " entries"
                 + (rejected > 0 ? ", " + rejected + " rejected (contained the commander name or FID)" : "")
                 + " (" + (written ? "written" : "unchanged") + ")");
+            return 0;
+        }
+
+        private static int ExtractDescriptions(string root)
+        {
+            var catalog = ReflectionCatalog();
+            var observedPath = Path.Combine(root, "Elite.CatalogGen", ObservedKeys.FileName);
+            if (File.Exists(observedPath))
+                ObservedKeys.Merge(catalog, File.ReadAllLines(observedPath));
+
+            var english = Descriptions.ExtractEnglish(Path.Combine(root, "EliteJournalReader", "Events"), catalog);
+            var content = Descriptions.ToJson(english,
+                "English comments of EliteJournalReader/Events/*.cs (When written / Parameters), extracted by Elite.CatalogGen.exe descriptions. Source of descriptions-fr.json.");
+            bool written = WriteIfChanged(Path.Combine(root, "Elite.CatalogGen", Descriptions.EnglishFile), content);
+            Console.WriteLine("Elite.CatalogGen descriptions: " + english.Count(p => p.Key.Count(c => c == '.') == 1) + " events, "
+                + english.Count(p => p.Key.Count(c => c == '.') > 1) + " fields (" + (written ? "written" : "unchanged") + ")");
             return 0;
         }
 
@@ -125,6 +148,11 @@ namespace Elite.CatalogGen
 
             sb.Append("\"enums\": {\r\n");
             sb.Append(string.Join(",\r\n", catalog.Enums.Select(e => Json(e.Key) + ": " + Json(new JArray(e.Value)))));
+            sb.Append("\r\n},\r\n");
+
+            // French descriptions shown by the "i" button: key = event ("journal.FSDJump") or full key
+            sb.Append("\"info\": {\r\n");
+            sb.Append(string.Join(",\r\n", catalog.Info.Select(i => Json(i.Key) + ": " + Json(i.Value))));
             sb.Append("\r\n},\r\n");
 
             sb.Append("\"groups\": [\r\n");

@@ -32,7 +32,7 @@ namespace Elite.CatalogGen
             foreach (var file in Directory.GetFiles(journalDir, "Journal.*.log").OrderBy(f => f, StringComparer.OrdinalIgnoreCase))
             {
                 fileCount++;
-                foreach (var line in File.ReadLines(file))
+                foreach (var line in ReadLinesShared(file))
                 {
                     if (string.IsNullOrWhiteSpace(line))
                         continue;
@@ -121,6 +121,18 @@ namespace Elite.CatalogGen
             }
         }
 
+        // the game keeps the current journal open for writing: read it without locking it
+        private static IEnumerable<string> ReadLinesShared(string path)
+        {
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
+            using (var reader = new StreamReader(stream))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                    yield return line;
+            }
+        }
+
         private static void RememberSecrets(string eventName, JObject evt, HashSet<string> secrets)
         {
             string[] fields;
@@ -149,7 +161,7 @@ namespace Elite.CatalogGen
                         Flatten(key + "." + property.Name, property.Value, types);
                     break;
                 case JTokenType.Array:
-                    SetType(types, key + ".#count", FieldTypes.Number);
+                    SetType(types, key + ".#count", FieldTypes.Integer);
                     break;
                 case JTokenType.Null:
                 case JTokenType.Undefined:
@@ -158,6 +170,8 @@ namespace Elite.CatalogGen
                     SetType(types, key, FieldTypes.Bool);
                     break;
                 case JTokenType.Integer:
+                    SetType(types, key, FieldTypes.Integer);
+                    break;
                 case JTokenType.Float:
                     SetType(types, key, FieldTypes.Number);
                     break;
@@ -170,13 +184,18 @@ namespace Elite.CatalogGen
             }
         }
 
+        private static bool IsNumeric(string type)
+        {
+            return type == FieldTypes.Integer || type == FieldTypes.Number;
+        }
+
         private static void SetType(Dictionary<string, string> types, string key, string type)
         {
             string existing;
             if (!types.TryGetValue(key, out existing))
                 types[key] = type;
             else if (existing != type)
-                types[key] = FieldTypes.Text; // mixed types: display as text
+                types[key] = IsNumeric(existing) && IsNumeric(type) ? FieldTypes.Number : FieldTypes.Text; // 1 and 1.5: decimal; otherwise text
         }
     }
 }

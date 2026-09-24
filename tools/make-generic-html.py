@@ -35,7 +35,7 @@ IMAGES = ".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff"
 def key_block(v):
     s = sfx(v)
     return f'''        <div class="sdpi-item" data-view="{v}">
-            <div class="sdpi-item-label">Clé</div>
+            <div class="sdpi-item-label">Clé (avancé)</div>
             <input class="sdpi-item-value sdProperty generic-key" id="source{s}" type="text" placeholder="ex. status.Fuel.FuelMain" oninput="genericSourceTyped()">
         </div>'''
 
@@ -145,6 +145,11 @@ def page():
         .generic-rule {{ display: flex; gap: 4px; min-width: 0; box-sizing: border-box; }}
         .generic-rule select {{ flex: 0 0 45%; width: 45%; min-width: 0; box-sizing: border-box; }}
         .generic-rule input {{ flex: 1 1 0; width: 0; min-width: 0; box-sizing: border-box; }}
+        select.generic-results {{ -webkit-appearance: listbox; appearance: listbox; background-image: none; height: auto; width: 0; min-width: 0; flex: 1 1 auto; }}
+        .generic-info-button {{ text-align: left; cursor: pointer; }}
+        .generic-info-panel {{ font-size: 9pt; line-height: 1.35; white-space: normal; }}
+        .generic-info-panel div {{ margin-bottom: 4px; }}
+        .generic-info-panel b {{ opacity: 0.8; }}
     </style>
     <script src="../sdtools.common.js"></script>
     <script src="../catalog.js"></script>
@@ -178,7 +183,15 @@ def page():
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Recherche</div>
-            <input class="sdpi-item-value" id="genericSearch" type="text" placeholder="ex. fuel, StarSystem" oninput="genericSearchChanged()">
+            <input class="sdpi-item-value" id="genericSearch" type="text" placeholder="ex. carburant, train, fuel" oninput="genericSearchChanged()">
+        </div>
+        <div class="sdpi-item" id="genericSearchInfoRow" style="display: none">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint" id="genericSearchInfo"></div>
+        </div>
+        <div class="sdpi-item" id="genericResultsRow" style="display: none">
+            <div class="sdpi-item-label empty"></div>
+            <select class="sdpi-item-value generic-results" id="genericResults" size="8" onchange="genericResultChosen()" onclick="genericResultChosen()"></select>
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Donnée</div>
@@ -187,7 +200,19 @@ def page():
 {keys}
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Clé = identifiant de la donnée, remplie par le menu. À taper seulement pour une donnée absente du menu.</div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
             <div class="sdpi-item-value generic-info" id="genericKeyInfo"></div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <button class="sdpi-item-value generic-info-button" id="genericInfoButton" onclick="genericToggleInfo()">ⓘ Que signifie cette donnée ?</button>
+        </div>
+        <div class="sdpi-item" id="genericInfoRow" style="display: none">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-info-panel" id="genericInfoPanel"></div>
         </div>
 
         <div class="sdpi-heading">Texte</div>
