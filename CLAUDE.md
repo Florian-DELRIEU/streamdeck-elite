@@ -19,7 +19,8 @@ Chantier en cours : exposer **toute l'API du jeu** (`Status.json` + ~250 événe
 9. `docs/L7-retours-d6.md` — commandes (recherche, `commands-fr.json`, survol), **raccourci clavier libre** (`Hotkey.cs`), **vue mémorisée** (`currentView`), ⚠ groupe de tir bloqué (`CommandGuard.cs`), **mode d'emploi D7**.
 10. `docs/L8-alarme.md` — **action Alarme** (`com.mhwlng.elite.eventalarm`) : réglages définitifs, garde `IsLive`, page `EventAlarm.html` + `alarm.js`, tests.
 11. `docs/L9-finalisation.md` — version 2.8.0, nom et catégorie « ZV Stream Deck Elite », `pack.ps1`, README, **liste de non-régression** et **mode d'emploi D8** (test unique L7b + L8 + L9).
-12. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
+12. `docs/icones-plan.md` — **plan des icônes** (document de travail de Florian, théorie sans image) : grammaire visuelle du pack `Elite/Images`, types A à F, réutilisation du pack, dossiers.
+13. `docs/plan-extension-api-toutes-donnees.md` — étude de faisabilité amont, **historique**. Son Annexe A (catégories + emojis des événements) sert de référence au catalogue ; pour tout le reste, le cahier des charges prime (l'étude contient des points corrigés depuis : « 10 actions », « remplacer EliteData », etc.).
 
 Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude Code, la copie du dépôt fait foi.
 
@@ -44,7 +45,7 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 | L8 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) : événement + filtre sur un champ, durée (0 = jusqu'à l'appui), images repos/alerte, son, commande + raccourci, bouton « Tester » | ✅ terminé le 2026-09-25, avec L9 à la demande de Florian (session cloud : compilation Roslyn C# 7.3 sous Mono + 125 tests OK, PI vérifiée dans Chromium en frappe lettre par lettre ; non vérifié sous Windows ni sur le Stream Deck → D8) |
 | L9 | Version 2.8.0, nom et catégorie « ZV Stream Deck Elite », `pack.ps1` (zip ou DistributionTool), README (section FR en tête), liste de non-régression | ✅ terminé le 2026-09-25, avec L8 (126 tests OK dans le cloud ; `pack.ps1` exécuté sous PowerShell 7 Linux, archive vérifiée ; non vérifié sous Windows PowerShell 5.1) |
 | D8 | Test unique L7b + L8 + L9 — mode d'emploi : `docs/L9-finalisation.md` (D7b, nom, Alarme, non-régression des 12 actions, paquet) | ⏭️ **prochain** (Florian) |
-| — | Icônes des nouvelles actions dans la charte du pack de Florian (voir mémoire / demande du 2026-09-24) | plus tard, à sa demande |
+| — | Icônes des nouvelles actions dans la charte du pack de Florian : plan dans `docs/icones-plan.md` (2026-09-25) | plus tard, à sa demande |
 
 ### Décisions postérieures au cahier des charges (Florian, 2026-09-23)
 
@@ -66,6 +67,7 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 - Nouveautés de mhwlng : `git fetch upstream` puis `git merge upstream/master`. Ne jamais installer sa version officielle (même UUID : elle écraserait celle-ci).
 - Commits atomiques par lot. **Jamais** de push, force-push, `reset --hard` ou suppression de branche sans accord explicite de Florian.
 - **Session Claude Code dans le cloud** (conteneur Linux, depuis le 2026-09-25) : le travail se fait sur la branche de session `claude/...` (partie de `feature/generic-api`), poussée à la fin de chaque lot avec l'accord de Florian ; il la fusionne en avance rapide sur sa machine (`git fetch`, puis `git merge --ff-only origin/claude/<branche>` sur `feature/generic-api`), puis lance `build.ps1` / `test.ps1`. Dans le cloud : pas de MSBuild ni de déploiement, mais pré-compilation Roslyn (C# 7.3) sous Mono avec les paquets NuGet de nuget.org, tests NUnit sous Mono, et pages de réglages testées dans Chromium (Playwright). Cette vérification ne remplace pas `build.ps1` / `test.ps1` sous Windows.
+- Avant chaque push de la branche de session : `git fetch origin feature/generic-api` et fusionner ce que Florian y a poussé entre-temps (ex. `1021d1c` « add plan », le 2026-09-25), sinon son `git merge --ff-only` échoue (« Diverging branches »).
 - `.gitignore` exclut déjà `bin/`, `obj/`, `packages/`, `.vs/`, `*.log`, `TestResult.xml`, et `Claude outputs/` (notes de travail locales de Florian, retirées du suivi le 2026-09-23).
 
 ## Compiler
