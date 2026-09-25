@@ -219,12 +219,12 @@
   ],
   "Author": "mhwlng",
   "Description": "Elite Dangerous Buttons",
-  "Name": "Elite Dangerous",
+  "Name": "ZV Stream Deck Elite",
   "Icon": "Images/pluginIcon",
   "URL": "https://github.com/mhwlng/streamdeck-elite",
-  "Version": "2.7.4",
+  "Version": "2.8.0",
   "CodePath": "com.mhwlng.elite",
-  "Category": "Elite Dangerous",
+  "Category": "ZV Stream Deck Elite",
   "CategoryIcon": "Images/categoryIcon",
   "OS": [
     {

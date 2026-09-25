@@ -1,3 +1,63 @@
+# ZV Stream Deck Elite
+
+Version personnelle (fork) du plugin Stream Deck « Elite Dangerous » de [mhwlng](https://github.com/mhwlng/streamdeck-elite), version **2.8.0**. Elle ajoute **toute l'API du jeu** : les données de `Status.json` et les quelque 250 événements du Journal, soit un catalogue de 1 926 données décrites en français. On construit une touche à partir de n'importe quelle donnée sans écrire de code.
+
+Les 12 actions d'origine sont inchangées. Les nouvelles actions sont rangées dans la catégorie **« ZV Stream Deck Elite »** du logiciel Stream Deck. Le README d'origine de mhwlng, en anglais, suit plus bas, sans modification.
+
+## Les nouvelles actions
+
+### Donnée
+- **Affiche** n'importe quelle donnée du jeu, sous forme de texte réglable : préfixe, suffixe, décimales, facteur (ex. `/32`), décalage, forme abrégée (12,3 M).
+- **Change d'icône** selon jusqu'à 4 règles (`=`, `≠`, `<`, `>`, vrai/faux…), avec une image par défaut.
+- **Jusqu'à 4 vues (« tiroir »)** : chacune a sa donnée, son texte, son icône et son action. Par défaut, un appui court agit et un appui long (0,5 s) passe à la vue suivante. La vue affichée est mémorisée.
+- **À l'appui** :
+  - une commande du jeu, parmi 366, avec recherche en français et description de chaque commande ;
+  - et/ou un **raccourci clavier libre** ;
+  - un son.
+- **Bouton ⓘ** : signification de la donnée, valeurs possibles et **valeur actuelle en jeu**.
+
+### Alarme
+- **Passe en alerte** (image d'alerte et son) quand un événement du Journal survient. Un **filtre** optionnel porte sur un de ses champs : par exemple `UnderAttack` avec `Target = You`.
+- **Durée réglable** ; `0` = jusqu'à un appui. Un appui acquitte l'alerte, puis envoie la commande et le raccourci.
+- **Jamais déclenchée** par le journal relu au lancement du plugin.
+- Bouton **« Tester l'alarme »** dans les réglages.
+
+## Installer et mettre à jour
+
+- **Première installation** : double-clic sur `com.mhwlng.elite.streamDeckPlugin`, produit par `pack.ps1`.
+
+  ⚠ Ce plugin a **le même identifiant** que la version officielle de mhwlng. Les deux ne peuvent pas coexister, et installer la version officielle remplacerait celle-ci.
+- **Mettre à jour** une version déjà installée (le double-clic ne fonctionne que si le plugin n'est pas installé) :
+  1. fermer Stream Deck ;
+  2. copier le build Release **par-dessus** `%APPDATA%\Elgato\StreamDeck\Plugins\com.mhwlng.elite.sdPlugin` (`robocopy <dossier Release> <dossier installé> /E`, jamais `/MIR`) ;
+  3. relancer Stream Deck.
+
+  Les réglages des touches sont dans les profils Stream Deck, pas dans ce dossier : ils sont conservés.
+
+## Compiler
+
+**Prérequis :** Windows, Visual Studio Build Tools 2022 (« .NET Desktop Development »), .NET Framework 4.8 Developer Pack, `C:\nuget\nuget.exe`. Voir `docs/L0-baseline-build.md`.
+
+```
+powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1                          # Debug (plugin + tests)
+powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1                           # tests unitaires : == TESTS OK
+powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Configuration Release   # plugin 64 bits
+powershell -NoProfile -ExecutionPolicy Bypass -File pack.ps1                           # dist\com.mhwlng.elite.streamDeckPlugin
+```
+
+- `pack.ps1` utilise `DistributionTool.exe` d'Elgato s'il est présent dans `tools\` ou dans le PATH ; sinon, il crée directement le zip.
+- **Récupérer les nouveautés de mhwlng** : `git fetch upstream`, puis `git merge upstream/master`.
+
+## Documentation
+
+- `docs/cahier-des-charges-streamdeck-elite.md` : spécification.
+- `docs/L1-…` à `docs/L9-finalisation.md` : les lots, avec leurs décisions et leurs tests en jeu.
+- `CLAUDE.md` : état d'avancement et règles du projet.
+
+---
+
+*README d'origine de mhwlng (en anglais) :*
+
 # streamdeck-elite
 Elgato Stream Deck button plugin for Elite Dangerous
 

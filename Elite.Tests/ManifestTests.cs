@@ -39,8 +39,17 @@ namespace Elite.Tests
 
             Assert.That(uuids.Take(HistoricActions.Length), Is.EqualTo(HistoricActions), "12 historic actions, same order");
             Assert.That(uuids, Is.Unique);
-            Assert.That((string)manifest["Version"], Is.EqualTo("2.7.4"), "changes in L5");
-            Assert.That((string)manifest["CodePath"], Is.EqualTo("com.mhwlng.elite"));
+            Assert.That((string)manifest["CodePath"], Is.EqualTo("com.mhwlng.elite"), "same plugin: keys of the profiles stay valid");
+            Assert.That(manifest["UUID"], Is.Null, "the identifier comes from the com.mhwlng.elite.sdPlugin folder");
+        }
+
+        [Test]
+        public void Identity_ZvStreamDeckElite_Version280()
+        {
+            // L9 (decisions D1 and of Florian, 2026-09-25): new name and category, UUIDs unchanged
+            Assert.That((string)manifest["Name"], Is.EqualTo("ZV Stream Deck Elite"));
+            Assert.That((string)manifest["Category"], Is.EqualTo("ZV Stream Deck Elite"));
+            Assert.That((string)manifest["Version"], Is.EqualTo("2.8.0"));
         }
 
         [Test]
