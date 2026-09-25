@@ -613,10 +613,12 @@ function genericCommandSearchChanged() {
     var text = genericElement('genericCommandSearch').value;
     var info = genericElement('genericCommandSearchInfo');
     var resultsRow = genericElement('genericCommandResultsRow');
+    var hoverRow = genericElement('genericCommandHoverRow');
     genericCommandHover(null);
     if (!genericCommands || genericNormalize(text).trim().length < GENERIC_MIN_SEARCH) {
         genericElement('genericCommandSearchInfoRow').style.display = 'none';
         resultsRow.style.display = 'none';
+        hoverRow.style.display = 'none';
         return;
     }
 
@@ -625,6 +627,7 @@ function genericCommandSearchChanged() {
     if (entries.length === 0) {
         info.textContent = 'Aucune commande : essaie un autre mot (fran\u00e7ais ou anglais).';
         resultsRow.style.display = 'none';
+        hoverRow.style.display = 'none';
         return;
     }
 
@@ -639,12 +642,13 @@ function genericCommandSearchChanged() {
             optgroup.label = entry.group.label;
             results.appendChild(optgroup);
         }
-        var option = genericOption(entry.name, entry.label);
-        option.title = entry.description;
-        optgroup.appendChild(option);
+        // no native tooltip (title) here: in the Stream Deck software, a click on a result showing its tooltip did
+        // nothing (D7). The description is shown in the fixed-height line under the list instead.
+        optgroup.appendChild(genericOption(entry.name, entry.label));
     });
     genericSelectOption(results, genericCommandSelect(genericActiveView).value);
     resultsRow.style.display = '';
+    hoverRow.style.display = '';
 }
 
 function genericCommandResultChosen() {
@@ -656,12 +660,16 @@ function genericCommandResultChosen() {
     genericCommandChanged();
 }
 
-// description of the result under the mouse (native tooltips may not be shown by the Stream Deck software)
+// description of the result under the mouse, in a line of fixed height shown with the list: hovering only changes
+// its text, never the layout (a result must not move under the mouse). Leaving the list (event null) resets it.
 function genericCommandHover(event) {
     var target = event ? event.target : null;
-    var description = target && target.tagName === 'OPTION' ? genericCommandDescription(target.value) : '';
-    genericElement('genericCommandHover').textContent = description ? target.textContent + ' : ' + description : '';
-    genericElement('genericCommandHoverRow').style.display = description ? '' : 'none';
+    if (event && !(target && target.tagName === 'OPTION'))
+        return;
+    var description = target ? genericCommandDescription(target.value) : '';
+    genericElement('genericCommandHover').textContent = description
+        ? target.textContent + ' : ' + description
+        : 'Survole un r\u00e9sultat pour lire sa description.';
 }
 
 // ---------- free shortcut: recorded with the physical keys (KeyboardEvent.code) ----------

@@ -150,6 +150,7 @@ def page():
     <link rel="stylesheet" href="../sdpi.css">
     <style>
         .generic-info {{ font-size: 9pt; opacity: 0.85; line-height: 1.3; }}
+        .generic-hover {{ height: 3.9em; overflow: hidden; }} /* fixed height: hovering must never move the list (docs/L7-retours-d6.md, D7) */
         .generic-warning {{ color: #f0ad4e; opacity: 1; }}
         .generic-hint {{ font-size: 8pt; opacity: 0.7; line-height: 1.3; }}
         .sdpi-item > select.sdpi-item-value {{ width: 0; min-width: 0; flex: 1 1 auto; }} /* long options must not widen the page */
@@ -255,11 +256,11 @@ def page():
         </div>
         <div class="sdpi-item" id="genericCommandResultsRow" style="display: none">
             <div class="sdpi-item-label empty"></div>
-            <select class="sdpi-item-value generic-results" id="genericCommandResults" size="8" onchange="genericCommandResultChosen()" onclick="genericCommandResultChosen()" onmouseover="genericCommandHover(event)" onmouseout="genericCommandHover(null)"></select>
+            <select class="sdpi-item-value generic-results" id="genericCommandResults" size="8" onchange="genericCommandResultChosen()" onclick="genericCommandResultChosen()" onmouseover="genericCommandHover(event)" onmouseleave="genericCommandHover(null)"></select>
         </div>
         <div class="sdpi-item" id="genericCommandHoverRow" style="display: none">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-info" id="genericCommandHover"></div>
+            <div class="sdpi-item-value generic-info generic-hover" id="genericCommandHover"></div>
         </div>
 {commands}
         <div class="sdpi-item">

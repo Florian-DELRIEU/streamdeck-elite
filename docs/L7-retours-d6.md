@@ -95,3 +95,50 @@ Statut : **terminé** le 2026-09-25 (code). Le test **D7 reste à faire avec Flo
    - `Fire Group (B)` **en vol, train rentré, hors station** : le groupe change ;
    - **à quai** : la touche affiche ⚠.
 6. Tes autres touches et tiroirs fonctionnent comme avant.
+
+---
+
+## Retours de D7 (2026-09-25) et correctif L7b
+
+| Point de D7 | Résultat | Suite |
+|---|---|---|
+| 1. Vue mémorisée | ✅ | — |
+| 2. Recherche de commandes | La description au survol s'affiche, **mais un clic sur un résultat ne fait rien** tant que « Recherche » contient du texte. Il faut effacer la recherche et passer par le menu « Commande ». Le clic sur un résultat de **donnée** fonctionne. | **Corrigé (L7b)**, voir ci-dessous |
+| 3. Raccourci libre (Maj+R, T dans le Bloc-notes → `lRlR…`, `ltlt…`) | Le raccourci est bien envoyé. Le « l » est la **commande** de la même vue (touche `L` du jeu), envoyée juste avant, comme prévu. | Pas un défaut |
+| 4. Groupes de tir | ✅ en vol ; ⚠ à quai | — |
+| 5. Train sorti | **Le jeu accepte** le changement de groupe de tir train sorti (touche N). | Décision de Florian : **laisser tel quel**. Le blocage de `EliteKeys.HandleFireGroup` (code de mhwlng) et le ⚠ restent. |
+| 6. Non-régression | Rien de cassé | — |
+
+### Diagnostic du point 2
+- **Hors de Stream Deck, le défaut ne se reproduit pas.** Dans Chromium (Playwright), avec plusieurs tailles de panneau et positions de défilement, un clic sur un résultat choisit bien la commande.
+- **Les deux listes de résultats sont construites de la même façon** : `select` à 8 lignes, groupes, `onchange` et `onclick`. La liste des commandes a seulement deux choses en plus :
+  - une **infobulle native** (`title`) sur chaque résultat, que Florian confirme voir dans le logiciel Stream Deck ;
+  - une ligne de description **affichée puis masquée** à chaque passage d'un résultat à l'autre.
+- **Hypothèse retenue :** l'infobulle, qui s'affiche pendant le survol (donc juste avant le clic), absorbe le clic dans le navigateur intégré de Stream Deck.
+
+### Correctif
+- **Les résultats n'ont plus de `title`.** La liste se comporte maintenant exactement comme celle des données. Le menu « Commande » garde les siens, car il fonctionne.
+- **La ligne de description** :
+  - s'affiche et se masque **avec la liste**, avec une hauteur fixe d'environ 3 lignes ;
+  - au survol, seul son texte change ;
+  - elle est remise à « Survole un résultat… » en quittant la liste (`onmouseleave`), et non plus entre deux résultats (`onmouseout`).
+
+  Un résultat ne peut donc plus bouger sous la souris.
+- **Fichiers :**
+  - `generic.js` : `genericCommandSearchChanged`, `genericCommandHover` ;
+  - `tools/make-generic-html.py` → `Generic.html` régénéré.
+- **Vérifié dans Chromium** (frappe « train » lettre par lettre) :
+  - aucun des 12 résultats n'a de `title` ;
+  - la liste et le menu « Commande » gardent **la même position** pendant le survol successif des 12 résultats ;
+  - la description suit la souris ;
+  - un vrai clic choisit la commande ;
+  - effacer la recherche masque la liste et la ligne.
+- **Non vérifié :** le logiciel Stream Deck. C'est l'objet du test D7b.
+
+### D7b — Test (à faire par Florian, inclus dans le test D8)
+Dans une touche « Donnée », section « Action (appui) » :
+1. tape `train` dans « Recherche » ;
+2. survole quelques résultats : la description s'affiche sous la liste ;
+3. clique sur un résultat.
+
+**Attendu :** la « Commande » change et sa description s'affiche dessous, sans effacer la recherche.
