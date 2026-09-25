@@ -58,6 +58,22 @@ namespace Elite.Tests
         }
 
         [Test]
+        public void AlarmAction_OneStateKeypadOnly()
+        {
+            var alarm = Action("com.mhwlng.elite.eventalarm");
+
+            Assert.That((string)alarm["Name"], Is.EqualTo("Alarme"));
+            Assert.That(alarm["States"].Count(), Is.EqualTo(1));
+            Assert.That(alarm["Controllers"].Values<string>(), Is.EqualTo(new[] { "Keypad" }));
+            Assert.That((bool)alarm["SupportedInMultiActions"], Is.False);
+            Assert.That((string)alarm["PropertyInspectorPath"], Is.EqualTo("PropertyInspector/Elite/EventAlarm.html"));
+
+            var uuids = manifest["Actions"].Select(a => (string)a["UUID"]).ToList();
+            Assert.That(uuids.Count, Is.EqualTo(HistoricActions.Length + 2), "12 historic actions + Donnee + Alarme");
+            Assert.That(uuids, Has.No.Member("com.mhwlng.elite.counter"), "reserved, never declared");
+        }
+
+        [Test]
         public void EveryAction_HasItsClassAndItsInspectorInThePlugin()
         {
             var actionIds = typeof(EliteData).Assembly.GetTypes()
@@ -76,12 +92,15 @@ namespace Elite.Tests
                 Assert.That(File.Exists(Path.Combine(plugin, (string)action["PropertyInspectorPath"])), Is.True, "inspector of " + uuid);
             }
 
-            foreach (var file in new[] { "catalog.js", "commands.js", "generic.js", "sdtools.common.js" })
+            foreach (var file in new[] { "catalog.js", "commands.js", "generic.js", "alarm.js", "sdtools.common.js" })
                 Assert.That(File.Exists(Path.Combine(plugin, "PropertyInspector", file)), Is.True, file);
 
-            // generic.js is loaded without charset: ASCII only (non-ASCII written as \u escapes)
-            var script = File.ReadAllBytes(Path.Combine(plugin, "PropertyInspector", "generic.js"));
-            Assert.That(script.All(b => b < 0x80), Is.True, "generic.js must be ASCII-only");
+            // generic.js and alarm.js are loaded without charset: ASCII only (non-ASCII written as \u escapes)
+            foreach (var file in new[] { "generic.js", "alarm.js" })
+            {
+                var script = File.ReadAllBytes(Path.Combine(plugin, "PropertyInspector", file));
+                Assert.That(script.All(b => b < 0x80), Is.True, file + " must be ASCII-only");
+            }
         }
     }
 }

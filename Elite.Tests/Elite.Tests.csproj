@@ -45,12 +45,15 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlarmConfigTests.cs" />
+    <Compile Include="AlarmStateTests.cs" />
     <Compile Include="CatalogTests.cs" />
     <Compile Include="CommandsTests.cs" />
     <Compile Include="ConditionTests.cs" />
     <Compile Include="DataKeyConfigTests.cs" />
     <Compile Include="DescriptionsTests.cs" />
     <Compile Include="ImageRulesTests.cs" />
+    <Compile Include="InspectorFieldsTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
     <Compile Include="HotkeyTests.cs" />
     <Compile Include="ManifestTests.cs" />

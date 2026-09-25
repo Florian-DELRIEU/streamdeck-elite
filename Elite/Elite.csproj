@@ -184,12 +184,16 @@
     <Compile Include="Buttons\Power.cs" />
     <Compile Include="Buttons\Alarm.cs" />
     <Compile Include="FifoExecution.cs" />
+    <Compile Include="Generic\AlarmConfig.cs" />
+    <Compile Include="Generic\AlarmState.cs" />
     <Compile Include="Generic\CommandGuard.cs" />
     <Compile Include="Generic\Condition.cs" />
     <Compile Include="Generic\DataKeyConfig.cs" />
     <Compile Include="Generic\EliteStore.cs" />
+    <Compile Include="Generic\EventAlarmAction.cs" />
     <Compile Include="Generic\Hotkey.cs" />
     <Compile Include="Generic\ImageRules.cs" />
+    <Compile Include="Generic\KeyMedia.cs" />
     <Compile Include="Generic\PressGesture.cs" />
     <Compile Include="Generic\StoreKeys.cs" />
     <Compile Include="Generic\ValueAction.cs" />
@@ -311,6 +315,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="PropertyInspector\Elite\Generic.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PropertyInspector\Elite\EventAlarm.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PropertyInspector\alarm.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="PropertyInspector\check.png">

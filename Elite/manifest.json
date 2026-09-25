@@ -201,6 +201,20 @@
       "Tooltip": "Affiche une donnée du jeu, change d'icône selon des seuils, agit à l'appui",
       "UUID": "com.mhwlng.elite.value",
       "PropertyInspectorPath": "PropertyInspector/Elite/Generic.html"
+    },
+    {
+      "Icon": "Images/icon",
+      "Name": "Alarme",
+      "States": [
+        {
+          "Image": "Images/Default"
+        }
+      ],
+      "SupportedInMultiActions": false,
+      "Controllers": [ "Keypad" ],
+      "Tooltip": "Change d'image et joue un son quand un événement du journal du jeu survient",
+      "UUID": "com.mhwlng.elite.eventalarm",
+      "PropertyInspectorPath": "PropertyInspector/Elite/EventAlarm.html"
     }
   ],
   "Author": "mhwlng",
