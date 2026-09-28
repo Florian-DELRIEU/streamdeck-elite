@@ -175,7 +175,41 @@ def rule_rows(v, r):
                     <input class="sdProperty" id="rule{r}Value{s}" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+{and_rows("rule", v, r)}
 {file_picker(f"rule{r}Image{s}", f"Image {r}", IMAGES)}'''
+
+
+# v3.5 (docs/L10-v3.md): own data of a rule and second condition linked by AND, folded by default
+def and_rows(prefix, v, r):
+    s = sfx(v)
+    return f'''            <details class="generic-and">
+                <summary>règle {r} : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="{prefix}{r}Key{s}" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="{prefix}{r}AndOp{s}" onchange="setSettings()">
+{operator_options(" " * 28)}
+                        </select>
+                        <input class="sdProperty" id="{prefix}{r}AndValue{s}" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="{prefix}{r}AndKey{s}" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>'''
+
+
+def and_props(prop, prefix, v, r):
+    s = "" if v == 1 else str(v)
+    prop(f"{prefix}{r}Key{s}", "string", '""')
+    prop(f"{prefix}{r}AndOp{s}", "string", '""')
+    prop(f"{prefix}{r}AndValue{s}", "string", '""')
+    prop(f"{prefix}{r}AndKey{s}", "string", '""')
 
 
 def icon_block(v):
@@ -230,6 +264,8 @@ def head(title, doc, scripts):
         .generic-rule select {{ flex: 0 0 45%; width: 45%; min-width: 0; box-sizing: border-box; }}
         .generic-rule input {{ flex: 1 1 0; width: 0; min-width: 0; box-sizing: border-box; }}
         .generic-rule input.generic-rule-color {{ flex: 0 0 30px; width: 30px; padding: 0; }}
+        details.generic-and {{ margin: -2px 0 4px 0; }}
+        details.generic-and > summary {{ font-size: 8pt; opacity: 0.7; cursor: pointer; margin-left: 110px; }}
         select.generic-results {{ -webkit-appearance: listbox; appearance: listbox; background-image: none; height: auto; width: 0; min-width: 0; flex: 1 1 auto; }}
         .generic-info-button {{ text-align: left; cursor: pointer; }}
         .generic-info-panel {{ font-size: 9pt; line-height: 1.35; white-space: normal; }}
@@ -296,7 +332,8 @@ def color_rule_row(v, r):
                     <input class="sdProperty" id="colorRule{r}Value{s}" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                     <input class="sdProperty generic-rule-color" id="colorRule{r}Color{s}" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
-            </div>'''
+            </div>
+{and_rows("colorRule", v, r)}'''
 
 
 # graph of a view of the "Graphique" key (v3.4, docs/L10-v3.md)
@@ -594,6 +631,7 @@ def settings_block():
             prop(f"rule{r}Op{v}", "string", '""')
             prop(f"rule{r}Value{v}", "string", '""')
             prop(f"rule{r}Image{v}", "string", '""', filename=True)
+            and_props(prop, "rule", v, r)
         prop(f"pressCommand{v}", "string", '""')
         prop(f"pressHotkey{v}", "string", '""')
         prop(f"pressHotkeyText{v}", "string", '""')
@@ -632,6 +670,7 @@ def graph_settings_block():
             prop(f"colorRule{r}Op{s}", "string", '""')
             prop(f"colorRule{r}Value{s}", "string", '""')
             prop(f"colorRule{r}Color{s}", "string", "GraphConfig.DefaultRuleColor")
+            and_props(prop, "colorRule", v, r)
         prop(f"curvePoints{s}", "string", '"60"')
         prop(f"curveInterval{s}", "string", '"5"')
         prop(f"pressCommand{s}", "string", '""')

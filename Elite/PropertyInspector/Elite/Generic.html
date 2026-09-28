@@ -18,6 +18,8 @@
         .generic-rule select { flex: 0 0 45%; width: 45%; min-width: 0; box-sizing: border-box; }
         .generic-rule input { flex: 1 1 0; width: 0; min-width: 0; box-sizing: border-box; }
         .generic-rule input.generic-rule-color { flex: 0 0 30px; width: 30px; padding: 0; }
+        details.generic-and { margin: -2px 0 4px 0; }
+        details.generic-and > summary { font-size: 8pt; opacity: 0.7; cursor: pointer; margin-left: 110px; }
         select.generic-results { -webkit-appearance: listbox; appearance: listbox; background-image: none; height: auto; width: 0; min-width: 0; flex: 1 1 auto; }
         .generic-info-button { text-align: left; cursor: pointer; }
         .generic-info-panel { font-size: 9pt; line-height: 1.35; white-space: normal; }
@@ -479,6 +481,34 @@
                     <input class="sdProperty" id="rule1Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule1Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule1AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule1AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule1AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule1Image');">Image 1</div>
                 <div class="sdpi-item-group file">
@@ -504,6 +534,34 @@
                     <input class="sdProperty" id="rule2Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule2Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule2AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule2AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule2AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule2Image');">Image 2</div>
                 <div class="sdpi-item-group file">
@@ -529,6 +587,34 @@
                     <input class="sdProperty" id="rule3Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule3Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule3AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule3AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule3AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule3Image');">Image 3</div>
                 <div class="sdpi-item-group file">
@@ -554,6 +640,34 @@
                     <input class="sdProperty" id="rule4Value" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule4Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule4AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule4AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule4AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule4Image');">Image 4</div>
                 <div class="sdpi-item-group file">
@@ -589,6 +703,34 @@
                     <input class="sdProperty" id="rule1Value2" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule1Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule1AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule1AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule1AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule1Image2');">Image 1</div>
                 <div class="sdpi-item-group file">
@@ -614,6 +756,34 @@
                     <input class="sdProperty" id="rule2Value2" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule2Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule2AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule2AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule2AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule2Image2');">Image 2</div>
                 <div class="sdpi-item-group file">
@@ -639,6 +809,34 @@
                     <input class="sdProperty" id="rule3Value2" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule3Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule3AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule3AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule3AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule3Image2');">Image 3</div>
                 <div class="sdpi-item-group file">
@@ -664,6 +862,34 @@
                     <input class="sdProperty" id="rule4Value2" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule4Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule4AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule4AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule4AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule4Image2');">Image 4</div>
                 <div class="sdpi-item-group file">
@@ -699,6 +925,34 @@
                     <input class="sdProperty" id="rule1Value3" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule1Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule1AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule1AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule1AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule1Image3');">Image 1</div>
                 <div class="sdpi-item-group file">
@@ -724,6 +978,34 @@
                     <input class="sdProperty" id="rule2Value3" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule2Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule2AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule2AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule2AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule2Image3');">Image 2</div>
                 <div class="sdpi-item-group file">
@@ -749,6 +1031,34 @@
                     <input class="sdProperty" id="rule3Value3" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule3Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule3AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule3AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule3AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule3Image3');">Image 3</div>
                 <div class="sdpi-item-group file">
@@ -774,6 +1084,34 @@
                     <input class="sdProperty" id="rule4Value3" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule4Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule4AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule4AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule4AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule4Image3');">Image 4</div>
                 <div class="sdpi-item-group file">
@@ -809,6 +1147,34 @@
                     <input class="sdProperty" id="rule1Value4" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule1Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule1AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule1AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule1AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule1Image4');">Image 1</div>
                 <div class="sdpi-item-group file">
@@ -834,6 +1200,34 @@
                     <input class="sdProperty" id="rule2Value4" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule2Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule2AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule2AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule2AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule2Image4');">Image 2</div>
                 <div class="sdpi-item-group file">
@@ -859,6 +1253,34 @@
                     <input class="sdProperty" id="rule3Value4" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule3Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule3AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule3AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule3AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule3Image4');">Image 3</div>
                 <div class="sdpi-item-group file">
@@ -884,6 +1306,34 @@
                     <input class="sdProperty" id="rule4Value4" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="rule4Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="rule4AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="rule4AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="rule4AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('rule4Image4');">Image 4</div>
                 <div class="sdpi-item-group file">

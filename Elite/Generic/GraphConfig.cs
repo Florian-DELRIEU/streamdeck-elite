@@ -20,6 +20,12 @@ namespace Elite.Generic
         public ConditionOperator Operator { get; set; }
         public string Operand { get; set; } = "";
         public string Color { get; set; } = GraphConfig.DefaultRuleColor;
+
+        /// <summary>v3.5: own data (empty = the data of the view), second condition linked by AND.</summary>
+        public string Key { get; set; } = "";
+        public ConditionOperator AndOperator { get; set; }
+        public string AndOperand { get; set; } = "";
+        public string AndKey { get; set; } = "";
     }
 
     /// <summary>Graph of one view of a Graph key (v3.4, docs/L10-v3.md).</summary>
@@ -39,7 +45,7 @@ namespace Elite.Generic
             get
             {
                 return string.Join("|", Type, Min, Max, Color, CurvePoints, CurveInterval,
-                    string.Join(";", Rules.Select(r => r.Operator + "," + r.Operand + "," + r.Color)));
+                    string.Join(";", Rules.Select(r => string.Join(",", r.Operator, r.Operand, r.Color, r.Key, r.AndOperator, r.AndOperand, r.AndKey))));
             }
         }
     }
@@ -81,6 +87,11 @@ namespace Elite.Generic
                     Operator = op,
                     Operand = Text(settings, "colorRule" + r + "Value" + suffix),
                     Color = NonEmpty(Text(settings, "colorRule" + r + "Color" + suffix), DefaultRuleColor),
+                    // v3.5: own data and AND condition
+                    Key = Text(settings, "colorRule" + r + "Key" + suffix).Trim(),
+                    AndOperator = Condition.ParseOperator(Text(settings, "colorRule" + r + "AndOp" + suffix)),
+                    AndOperand = Text(settings, "colorRule" + r + "AndValue" + suffix),
+                    AndKey = Text(settings, "colorRule" + r + "AndKey" + suffix).Trim(),
                 });
             }
 
@@ -114,7 +125,7 @@ namespace Elite.Generic
             return History.Number(ImageRules.Displayed(read(text.Trim()), display));
         }
 
-        /// <summary>Keys used as bounds (to redraw when they change).</summary>
+        /// <summary>Keys used as bounds or by the colour rules (to redraw when they change).</summary>
         public static IEnumerable<string> BoundKeys(GraphView view)
         {
             double number;
@@ -123,14 +134,28 @@ namespace Elite.Generic
                 if (!string.IsNullOrWhiteSpace(bound) && !Condition.TryParseNumber(bound, out number))
                     yield return bound.Trim();
             }
+
+            foreach (var rule in view.Rules)
+            {
+                if (!string.IsNullOrEmpty(rule.Key))
+                    yield return rule.Key;
+                if (!string.IsNullOrEmpty(rule.AndKey))
+                    yield return rule.AndKey;
+            }
         }
 
         /// <summary>Colour of the first true rule on the tested (displayed) value, otherwise the colour of the view.</summary>
         public static string ColorOf(GraphView view, JToken tested)
         {
+            return ColorOf(view, tested, key => null);
+        }
+
+        /// <summary>Same, with the reader of the store for the rules that test their own data (v3.5).</summary>
+        public static string ColorOf(GraphView view, JToken tested, Func<string, JToken> read)
+        {
             foreach (var rule in view.Rules)
             {
-                if (Condition.Evaluate(tested, rule.Operator, rule.Operand))
+                if (ImageRules.IsTrue(read, tested, rule.Operator, rule.Operand, rule.Key, rule.AndOperator, rule.AndOperand, rule.AndKey))
                     return rule.Color;
             }
             return view.Color;

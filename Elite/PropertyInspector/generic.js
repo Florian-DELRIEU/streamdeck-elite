@@ -565,6 +565,12 @@ function genericShowValue(reply) {
 
 // ---------- image rules ----------
 
+// own data of a rule typed (v3.5): saved, and the tests of that rule are no longer limited by the type of the view data
+function genericRuleKeyTyped() {
+    genericUpdateRuleHelpers();
+    setSettings();
+}
+
 // image rules of the edited view: tests offered according to the type of its value, enum values proposed as operands
 function genericUpdateRuleHelpers() {
     if (!genericIndex)
@@ -581,9 +587,12 @@ function genericUpdateRuleHelpers() {
             var select = genericElement(prefix + i + 'Op' + suffix);
             if (!select)
                 continue;
+            // a rule testing its own data (v3.5): every test is offered
+            var own = genericElement(prefix + i + 'Key' + suffix);
+            var ruleAllowed = own && own.value.trim() ? null : allowed;
             Array.prototype.forEach.call(select.options, function (option) {
                 // never disable the current choice, so that a saved rule stays visible
-                option.disabled = option.value !== '' && allowed !== null && allowed.indexOf(option.value) < 0 && option.value !== select.value;
+                option.disabled = option.value !== '' && ruleAllowed !== null && ruleAllowed.indexOf(option.value) < 0 && option.value !== select.value;
             });
         }
     });

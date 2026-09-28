@@ -45,6 +45,23 @@ namespace Elite.Generic
             [JsonProperty(PropertyName = "rule4Value")] public string Rule4Value { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image")] public string Rule4Image { get; set; } = "";
+            // own data of a rule and AND condition (v3.5)
+            [JsonProperty(PropertyName = "rule1Key")] public string Rule1Key { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndOp")] public string Rule1AndOp { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndValue")] public string Rule1AndValue { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndKey")] public string Rule1AndKey { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Key")] public string Rule2Key { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndOp")] public string Rule2AndOp { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndValue")] public string Rule2AndValue { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndKey")] public string Rule2AndKey { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Key")] public string Rule3Key { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndOp")] public string Rule3AndOp { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndValue")] public string Rule3AndValue { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndKey")] public string Rule3AndKey { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Key")] public string Rule4Key { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndOp")] public string Rule4AndOp { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndValue")] public string Rule4AndValue { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndKey")] public string Rule4AndKey { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand")] public string PressCommand { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkey")] public string PressHotkey { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkeyText")] public string PressHotkeyText { get; set; } = "";
@@ -76,18 +93,34 @@ namespace Elite.Generic
             [JsonProperty(PropertyName = "rule1Value2")] public string Rule1Value2 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule1Image2")] public string Rule1Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Key2")] public string Rule1Key2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndOp2")] public string Rule1AndOp2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndValue2")] public string Rule1AndValue2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndKey2")] public string Rule1AndKey2 { get; set; } = "";
             [JsonProperty(PropertyName = "rule2Op2")] public string Rule2Op2 { get; set; } = "";
             [JsonProperty(PropertyName = "rule2Value2")] public string Rule2Value2 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule2Image2")] public string Rule2Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Key2")] public string Rule2Key2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndOp2")] public string Rule2AndOp2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndValue2")] public string Rule2AndValue2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndKey2")] public string Rule2AndKey2 { get; set; } = "";
             [JsonProperty(PropertyName = "rule3Op2")] public string Rule3Op2 { get; set; } = "";
             [JsonProperty(PropertyName = "rule3Value2")] public string Rule3Value2 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule3Image2")] public string Rule3Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Key2")] public string Rule3Key2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndOp2")] public string Rule3AndOp2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndValue2")] public string Rule3AndValue2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndKey2")] public string Rule3AndKey2 { get; set; } = "";
             [JsonProperty(PropertyName = "rule4Op2")] public string Rule4Op2 { get; set; } = "";
             [JsonProperty(PropertyName = "rule4Value2")] public string Rule4Value2 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image2")] public string Rule4Image2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Key2")] public string Rule4Key2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndOp2")] public string Rule4AndOp2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndValue2")] public string Rule4AndValue2 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndKey2")] public string Rule4AndKey2 { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand2")] public string PressCommand2 { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkey2")] public string PressHotkey2 { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkeyText2")] public string PressHotkeyText2 { get; set; } = "";
@@ -115,18 +148,34 @@ namespace Elite.Generic
             [JsonProperty(PropertyName = "rule1Value3")] public string Rule1Value3 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule1Image3")] public string Rule1Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Key3")] public string Rule1Key3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndOp3")] public string Rule1AndOp3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndValue3")] public string Rule1AndValue3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndKey3")] public string Rule1AndKey3 { get; set; } = "";
             [JsonProperty(PropertyName = "rule2Op3")] public string Rule2Op3 { get; set; } = "";
             [JsonProperty(PropertyName = "rule2Value3")] public string Rule2Value3 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule2Image3")] public string Rule2Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Key3")] public string Rule2Key3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndOp3")] public string Rule2AndOp3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndValue3")] public string Rule2AndValue3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndKey3")] public string Rule2AndKey3 { get; set; } = "";
             [JsonProperty(PropertyName = "rule3Op3")] public string Rule3Op3 { get; set; } = "";
             [JsonProperty(PropertyName = "rule3Value3")] public string Rule3Value3 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule3Image3")] public string Rule3Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Key3")] public string Rule3Key3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndOp3")] public string Rule3AndOp3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndValue3")] public string Rule3AndValue3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndKey3")] public string Rule3AndKey3 { get; set; } = "";
             [JsonProperty(PropertyName = "rule4Op3")] public string Rule4Op3 { get; set; } = "";
             [JsonProperty(PropertyName = "rule4Value3")] public string Rule4Value3 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image3")] public string Rule4Image3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Key3")] public string Rule4Key3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndOp3")] public string Rule4AndOp3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndValue3")] public string Rule4AndValue3 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndKey3")] public string Rule4AndKey3 { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand3")] public string PressCommand3 { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkey3")] public string PressHotkey3 { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkeyText3")] public string PressHotkeyText3 { get; set; } = "";
@@ -154,18 +203,34 @@ namespace Elite.Generic
             [JsonProperty(PropertyName = "rule1Value4")] public string Rule1Value4 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule1Image4")] public string Rule1Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1Key4")] public string Rule1Key4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndOp4")] public string Rule1AndOp4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndValue4")] public string Rule1AndValue4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule1AndKey4")] public string Rule1AndKey4 { get; set; } = "";
             [JsonProperty(PropertyName = "rule2Op4")] public string Rule2Op4 { get; set; } = "";
             [JsonProperty(PropertyName = "rule2Value4")] public string Rule2Value4 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule2Image4")] public string Rule2Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2Key4")] public string Rule2Key4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndOp4")] public string Rule2AndOp4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndValue4")] public string Rule2AndValue4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule2AndKey4")] public string Rule2AndKey4 { get; set; } = "";
             [JsonProperty(PropertyName = "rule3Op4")] public string Rule3Op4 { get; set; } = "";
             [JsonProperty(PropertyName = "rule3Value4")] public string Rule3Value4 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule3Image4")] public string Rule3Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3Key4")] public string Rule3Key4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndOp4")] public string Rule3AndOp4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndValue4")] public string Rule3AndValue4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule3AndKey4")] public string Rule3AndKey4 { get; set; } = "";
             [JsonProperty(PropertyName = "rule4Op4")] public string Rule4Op4 { get; set; } = "";
             [JsonProperty(PropertyName = "rule4Value4")] public string Rule4Value4 { get; set; } = "";
             [FilenameProperty]
             [JsonProperty(PropertyName = "rule4Image4")] public string Rule4Image4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4Key4")] public string Rule4Key4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndOp4")] public string Rule4AndOp4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndValue4")] public string Rule4AndValue4 { get; set; } = "";
+            [JsonProperty(PropertyName = "rule4AndKey4")] public string Rule4AndKey4 { get; set; } = "";
             [JsonProperty(PropertyName = "pressCommand4")] public string PressCommand4 { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkey4")] public string PressHotkey4 { get; set; } = "";
             [JsonProperty(PropertyName = "pressHotkeyText4")] public string PressHotkeyText4 { get; set; } = "";
@@ -218,7 +283,13 @@ namespace Elite.Generic
             var newConfig = DataKeyConfig.FromSettings(json);
             var newRules = newConfig.Views.ToDictionary(
                 v => v.Number,
-                v => v.Rules.Select(r => new ImageRule(r.Operator, r.Operand, KeyMedia.ExistingFile(r.Image))).ToList());
+                v => v.Rules.Select(r => new ImageRule(r.Operator, r.Operand, KeyMedia.ExistingFile(r.Image))
+                {
+                    Key = r.Key,
+                    AndOperator = r.AndOperator,
+                    AndOperand = r.AndOperand,
+                    AndKey = r.AndKey,
+                }).ToList());
 
             lock (renderLock)
                 validRules = newRules;
@@ -227,7 +298,11 @@ namespace Elite.Generic
         protected override IEnumerable<string> WatchedKeys(DataView view)
         {
             yield return view.Source;
-            yield return config.IconViewOf(view).Source;
+            var iconView = config.IconViewOf(view);
+            yield return iconView.Source;
+            // v3.5: data tested by the rules themselves
+            foreach (var key in iconView.Rules.SelectMany(r => r.Keys))
+                yield return key;
         }
 
         // caller holds renderLock
@@ -237,7 +312,7 @@ namespace Elite.Generic
             List<ImageRule> rules;
             if (!validRules.TryGetValue(iconView.Number, out rules))
                 rules = new List<ImageRule>();
-            var image = ImageRules.Choose(Read(iconView.Source), iconView.Display, rules) ?? KeyMedia.ExistingFile(iconView.DefaultImage);
+            var image = ImageRules.Choose(Read, Read(iconView.Source), iconView.Display, rules) ?? KeyMedia.ExistingFile(iconView.DefaultImage);
 
             if (drawnText == null)
                 return new KeyImage("file|" + image, () => image == null ? null : media.ImageBase64(image));

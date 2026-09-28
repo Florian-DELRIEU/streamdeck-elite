@@ -18,6 +18,8 @@
         .generic-rule select { flex: 0 0 45%; width: 45%; min-width: 0; box-sizing: border-box; }
         .generic-rule input { flex: 1 1 0; width: 0; min-width: 0; box-sizing: border-box; }
         .generic-rule input.generic-rule-color { flex: 0 0 30px; width: 30px; padding: 0; }
+        details.generic-and { margin: -2px 0 4px 0; }
+        details.generic-and > summary { font-size: 8pt; opacity: 0.7; cursor: pointer; margin-left: 110px; }
         select.generic-results { -webkit-appearance: listbox; appearance: listbox; background-image: none; height: auto; width: 0; min-width: 0; flex: 1 1 auto; }
         .generic-info-button { text-align: left; cursor: pointer; }
         .generic-info-panel { font-size: 9pt; line-height: 1.35; white-space: normal; }
@@ -493,6 +495,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule1Color" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule1Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule1AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule1AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule1AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 2</div>
                 <div class="sdpi-item-value generic-rule">
@@ -511,6 +541,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule2Color" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule2Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule2AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule2AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule2AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 3</div>
                 <div class="sdpi-item-value generic-rule">
@@ -529,6 +587,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule3Color" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule3Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule3AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule3AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule3AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 4</div>
                 <div class="sdpi-item-value generic-rule">
@@ -547,6 +633,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule4Color" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule4Key" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule4AndOp" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule4AndValue" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule4AndKey" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Points</div>
                 <input class="sdpi-item-value sdProperty" id="curvePoints" type="number" min="5" max="240" step="1" value="60" oninput="setSettings()">
@@ -596,6 +710,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule1Color2" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule1Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule1AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule1AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule1AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 2</div>
                 <div class="sdpi-item-value generic-rule">
@@ -614,6 +756,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule2Color2" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule2Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule2AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule2AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule2AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 3</div>
                 <div class="sdpi-item-value generic-rule">
@@ -632,6 +802,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule3Color2" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule3Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule3AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule3AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule3AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 4</div>
                 <div class="sdpi-item-value generic-rule">
@@ -650,6 +848,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule4Color2" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule4Key2" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule4AndOp2" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule4AndValue2" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule4AndKey2" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Points</div>
                 <input class="sdpi-item-value sdProperty" id="curvePoints2" type="number" min="5" max="240" step="1" value="60" oninput="setSettings()">
@@ -699,6 +925,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule1Color3" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule1Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule1AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule1AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule1AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 2</div>
                 <div class="sdpi-item-value generic-rule">
@@ -717,6 +971,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule2Color3" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule2Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule2AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule2AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule2AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 3</div>
                 <div class="sdpi-item-value generic-rule">
@@ -735,6 +1017,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule3Color3" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule3Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule3AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule3AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule3AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 4</div>
                 <div class="sdpi-item-value generic-rule">
@@ -753,6 +1063,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule4Color3" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule4Key3" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule4AndOp3" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule4AndValue3" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule4AndKey3" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Points</div>
                 <input class="sdpi-item-value sdProperty" id="curvePoints3" type="number" min="5" max="240" step="1" value="60" oninput="setSettings()">
@@ -802,6 +1140,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule1Color4" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 1 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule1Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule1AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule1AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule1AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 2</div>
                 <div class="sdpi-item-value generic-rule">
@@ -820,6 +1186,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule2Color4" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 2 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule2Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule2AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule2AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule2AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 3</div>
                 <div class="sdpi-item-value generic-rule">
@@ -838,6 +1232,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule3Color4" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 3 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule3Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule3AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule3AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule3AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Couleur 4</div>
                 <div class="sdpi-item-value generic-rule">
@@ -856,6 +1278,34 @@
                     <input class="sdProperty generic-rule-color" id="colorRule4Color4" type="color" value="#ff4646" oninput="setSettings()">
                 </div>
             </div>
+            <details class="generic-and">
+                <summary>règle 4 : autre donnée, condition ET</summary>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée</div>
+                    <input class="sdpi-item-value sdProperty generic-rule-key" id="colorRule4Key4" type="text" placeholder="vide = donnée de la vue" oninput="genericRuleKeyTyped()">
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">ET</div>
+                    <div class="sdpi-item-value generic-rule">
+                        <select class="select sdProperty" id="colorRule4AndOp4" onchange="setSettings()">
+                            <option value="">— aucune —</option>
+                            <option value="isTrue">est vrai / oui</option>
+                            <option value="isFalse">est faux / non</option>
+                            <option value="equals">=</option>
+                            <option value="notEquals">≠</option>
+                            <option value="lt">&lt;</option>
+                            <option value="lte">≤</option>
+                            <option value="gt">&gt;</option>
+                            <option value="gte">≥</option>
+                        </select>
+                        <input class="sdProperty" id="colorRule4AndValue4" type="text" placeholder="valeur" oninput="setSettings()">
+                    </div>
+                </div>
+                <div class="sdpi-item">
+                    <div class="sdpi-item-label">Donnée ET</div>
+                    <input class="sdpi-item-value sdProperty" id="colorRule4AndKey4" type="text" placeholder="vide = même donnée" oninput="setSettings()">
+                </div>
+            </details>
             <div class="sdpi-item">
                 <div class="sdpi-item-label">Points</div>
                 <input class="sdpi-item-value sdProperty" id="curvePoints4" type="number" min="5" max="240" step="1" value="60" oninput="setSettings()">

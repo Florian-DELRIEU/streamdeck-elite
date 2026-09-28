@@ -112,7 +112,14 @@ namespace Elite.Generic
                 {
                     var op = Condition.ParseOperator(Text(settings, "rule" + r + "Op" + suffix, ""));
                     if (op != ConditionOperator.None)
-                        view.Rules.Add(new ImageRule(op, Text(settings, "rule" + r + "Value" + suffix, ""), FileName(settings, "rule" + r + "Image" + suffix)));
+                        view.Rules.Add(new ImageRule(op, Text(settings, "rule" + r + "Value" + suffix, ""), FileName(settings, "rule" + r + "Image" + suffix))
+                        {
+                            // v3.5: own data and AND condition (absent = as before)
+                            Key = Text(settings, "rule" + r + "Key" + suffix, "").Trim(),
+                            AndOperator = Condition.ParseOperator(Text(settings, "rule" + r + "AndOp" + suffix, "")),
+                            AndOperand = Text(settings, "rule" + r + "AndValue" + suffix, ""),
+                            AndKey = Text(settings, "rule" + r + "AndKey" + suffix, "").Trim(),
+                        });
                 }
 
                 if (i == 1 || view.Source.Length > 0 || view.Command.Length > 0 || view.Hotkey.Length > 0 || view.HasOwnIcon)
