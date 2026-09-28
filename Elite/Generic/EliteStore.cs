@@ -94,7 +94,9 @@ namespace Elite.Generic
 
         internal static void UpdateStatus(JObject status)
         {
-            Replace(StoreKeys.StatusPrefix, StoreKeys.FromStatus(status));
+            var changed = Replace(StoreKeys.StatusPrefix, StoreKeys.FromStatus(status));
+            changed.UnionWith(UpdateDerived());
+            Raise(changed);
         }
 
         internal static void UpdateJournal(RawJournalEventArgs e)
@@ -109,7 +111,9 @@ namespace Elite.Generic
                 }
             }
 
-            Replace(StoreKeys.JournalSource(e.EventName), StoreKeys.FromJournalEvent(e.EventName, e.Event));
+            var changed = Replace(StoreKeys.JournalSource(e.EventName), StoreKeys.FromJournalEvent(e.EventName, e.Event));
+            changed.UnionWith(UpdateDerived());
+            Raise(changed);
 
             var handler = JournalEventReceived;
             if (handler == null)
@@ -154,9 +158,29 @@ namespace Elite.Generic
         }
 
         /// <summary>
-        /// Replaces all the keys of one source: new or modified keys are stored, keys missing from newValues are removed.
+        /// calc.* keys (DerivedKeys), recomputed after every status or journal update. Their changes are notified in the
+        /// same DataChanged as the update that caused them (one redraw).
         /// </summary>
-        private static void Replace(string source, Dictionary<string, JToken> newValues)
+        private static HashSet<string> UpdateDerived()
+        {
+            Dictionary<string, JToken> derived;
+            lock (Sync)
+                derived = DerivedKeys.Compute(ReadLocked);
+            return Replace(StoreKeys.CalcPrefix, derived);
+        }
+
+        // caller holds Sync
+        private static JToken ReadLocked(string key)
+        {
+            JToken value;
+            return Values.TryGetValue(key, out value) ? value : null;
+        }
+
+        /// <summary>
+        /// Replaces all the keys of one source: new or modified keys are stored, keys missing from newValues are removed.
+        /// Returns the keys that changed (DataChanged is raised by the caller, with Raise).
+        /// </summary>
+        private static HashSet<string> Replace(string source, Dictionary<string, JToken> newValues)
         {
             var changed = new HashSet<string>(StoreKeys.Comparer);
 
@@ -188,6 +212,11 @@ namespace Elite.Generic
                 KeysBySource[source] = new HashSet<string>(newValues.Keys, StoreKeys.Comparer);
             }
 
+            return changed;
+        }
+
+        private static void Raise(HashSet<string> changed)
+        {
             if (changed.Count > 0)
                 RaiseDataChanged(changed);
         }

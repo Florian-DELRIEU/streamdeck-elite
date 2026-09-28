@@ -374,6 +374,8 @@ namespace Elite
         public StandardBindingInfo BuggyPitchDownButton { get; set; }
         public StandardBindingInfo BuggyPrimaryFireButton { get; set; }
         public StandardBindingInfo BuggySecondaryFireButton { get; set; }
+        public StandardBindingInfo BuggyCycleFireGroupNext { get; set; } // ZV Stream Deck Elite v3.1 (FireGroupSender)
+        public StandardBindingInfo BuggyCycleFireGroupPrevious { get; set; }
         public ToggleBindingInfo AutoBreakBuggyButton { get; set; }
         public StandardBindingInfo HeadlightsBuggyButton { get; set; }
         public StandardBindingInfo ToggleBuggyTurretButton { get; set; }

@@ -108,31 +108,4 @@ namespace Elite.Tests
             Assert.That(codes.Where(c => !Hotkey.IsKnownCode(c)), Is.Empty);
         }
     }
-
-    [TestFixture]
-    public class CommandGuardTests
-    {
-        [Test]
-        public void FireGroup_BlockedInTheStatesOfEliteKeys()
-        {
-            Assert.That(CommandGuard.FireGroupBlockReason(false, false, false, false, false, false), Is.Null);
-            Assert.That(CommandGuard.FireGroupBlockReason(false, false, true, false, false, false), Is.EqualTo("docked"));
-            Assert.That(CommandGuard.FireGroupBlockReason(false, false, false, false, true, false), Is.EqualTo("landing gear down"));
-            Assert.That(CommandGuard.FireGroupBlockReason(true, false, false, false, false, false), Is.EqualTo("on foot"));
-            Assert.That(CommandGuard.FireGroupBlockReason(false, true, false, false, false, false), Is.EqualTo("in the SRV"));
-            Assert.That(CommandGuard.FireGroupBlockReason(false, false, false, true, false, false), Is.EqualTo("landed"));
-            Assert.That(CommandGuard.FireGroupBlockReason(false, false, false, false, false, true), Is.EqualTo("FSD jump"));
-        }
-
-        [Test]
-        public void OnlyFireGroupCommands_AreChecked()
-        {
-            var docked = new EliteData.Status { Docked = true };
-            Assert.That(CommandGuard.BlockReason("FireGroup-B", docked), Is.EqualTo("docked"));
-            Assert.That(CommandGuard.BlockReason("FireGroup-B", new EliteData.Status()), Is.Null, "in flight");
-            Assert.That(CommandGuard.BlockReason("LandingGearToggle", docked), Is.Null);
-            Assert.That(CommandGuard.BlockReason("CycleFireGroupNext", docked), Is.Null, "sent as is by EliteKeys");
-            Assert.That(CommandGuard.BlockReason(null, docked), Is.Null);
-        }
-    }
 }

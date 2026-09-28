@@ -53,6 +53,12 @@ namespace Elite.Tests
             var statusKeys = keys.Where(k => k.StartsWith("status.")).ToList();
             Assert.That(statusKeys.Count, Is.GreaterThanOrEqualTo(78));
             Assert.That(statusKeys.Where(k => !described.Contains(k)), Is.Empty, "status keys without description");
+
+            // keys produced by the plugin (v3.1+): each key and each group
+            var pluginKeys = keys.Where(k => k.StartsWith("calc.") || k.StartsWith("ship.")).ToList();
+            Assert.That(pluginKeys, Does.Contain("calc.Route.RemainingJumps"));
+            Assert.That(pluginKeys.Where(k => !described.Contains(k)), Is.Empty, "calc/ship keys without description");
+            Assert.That(prefixes.Where(p => (p.StartsWith("calc.") || p.StartsWith("ship.")) && !described.Contains(p)), Is.Empty, "calc/ship groups without description");
         }
 
         [Test]

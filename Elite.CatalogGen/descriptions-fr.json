@@ -1,5 +1,7 @@
 {
   "#comment": "Descriptions en francais affichees par le bouton i de la page de reglages (docs/L6-retours-d5.md). Cle = evenement (journal.X), groupe de statut ou cle complete. Traduction et correction de descriptions-en.json + statut ecrit en francais.",
+  "calc.Route": "Calculé par le plugin à partir du journal (FSDTarget, FSDJump, Location, CarrierJump, NavRouteClear), comme le bouton Route d'origine.",
+  "calc.Route.RemainingJumps": "Sauts restants de l'itinéraire, calculés comme le bouton Route : 0 à l'arrivée (système actuel = cible FSD) ou quand l'itinéraire est effacé ; sinon la valeur de FSDTarget.",
   "journal.AfmuRepairs": "Écrit quand tu répares des modules avec l'unité de maintenance de terrain (AFMU).",
   "journal.AfmuRepairs.FullyRepaired": "Vrai si le module est entièrement réparé.",
   "journal.AfmuRepairs.Module": "Module réparé (nom interne).",
@@ -174,7 +176,7 @@
   "journal.FSDJump.StarSystem": "Nom du système d'arrivée (système actuel après le saut).",
   "journal.FSDTarget": "Écrit quand tu sélectionnes un système cible pour le saut (y compris le prochain système d'un itinéraire).",
   "journal.FSDTarget.Name": "Nom du système ciblé pour le prochain saut.",
-  "journal.FSDTarget.RemainingJumpsInRoute": "Nombre de sauts restants sur l'itinéraire tracé.",
+  "journal.FSDTarget.RemainingJumpsInRoute": "Nombre de sauts restants sur l'itinéraire tracé, tel qu'écrit par le jeu : reste à 1 à l'arrivée (le jeu n'écrit plus de FSDTarget). Pour un compteur qui tombe à 0, utiliser calc.Route.RemainingJumps.",
   "journal.FSSAllBodiesFound": "Écrit quand le scan complet du système (FSS) a trouvé tous les corps célestes.",
   "journal.FSSDiscoveryScan": "Écrit quand tu fais l'impulsion de découverte (« honk ») du FSS.",
   "journal.FSSDiscoveryScan.BodyCount": "Nombre de corps célestes du système.",

@@ -62,7 +62,7 @@ namespace Elite.Tests
 
             var description = commands.First(c => (string)c[0] == "LandingGearToggle-ON")[2];
             Assert.That((string)description, Does.Contain("train d'atterrissage"));
-            Assert.That((string)commands.First(c => (string)c[0] == "FireGroup-C")[2], Does.Contain("à quai"));
+            Assert.That((string)commands.First(c => (string)c[0] == "FireGroup-C")[2], Does.Contain("SRV").And.Not.Contain("à quai"), "no more blocking (v3.1)");
         }
 
         [Test]

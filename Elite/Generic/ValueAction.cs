@@ -336,21 +336,7 @@ namespace Elite.Generic
                 return;
             }
 
-            if (view.Command.Length > 0)
-            {
-                var blocked = CommandGuard.BlockReason(view.Command, EliteData.StatusData);
-                if (blocked != null)
-                {
-                    // EliteKeys ignores it silently: the Stream Deck warning triangle says so
-                    Logger.Instance.LogMessage(TracingLevel.INFO, $"ValueAction[{view.Source}]: {view.Command} ignored ({blocked})");
-                    Watch(Connection.ShowAlert(), "ShowAlert");
-                }
-                else
-                    EliteKeys.SendKeypress(view.Command);
-            }
-
-            if (view.Hotkey.Length > 0)
-                Hotkey.Send(view.Hotkey, view.HotkeyText);
+            KeyCommands.Send(view.Command, view.Hotkey, view.HotkeyText, $"ValueAction[{view.Source}]");
 
             var sound = Sound(view.Sound);
             if (sound != null)

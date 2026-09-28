@@ -44,12 +44,12 @@ namespace Elite.Tests
         }
 
         [Test]
-        public void Identity_ZvStreamDeckElite_Version280()
+        public void Identity_ZvStreamDeckElite_Version()
         {
             // L9 (decisions D1 and of Florian, 2026-09-25): new name and category, UUIDs unchanged
             Assert.That((string)manifest["Name"], Is.EqualTo("ZV Stream Deck Elite"));
             Assert.That((string)manifest["Category"], Is.EqualTo("ZV Stream Deck Elite"));
-            Assert.That((string)manifest["Version"], Is.EqualTo("2.8.0"));
+            Assert.That((string)manifest["Version"], Is.EqualTo("3.1.0"));
         }
 
         [Test]

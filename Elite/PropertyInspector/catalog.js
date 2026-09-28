@@ -56,6 +56,8 @@ var ELITE_CATALOG = {
 "Vehicle": ["Unknown","Mothership","Fighter"]
 },
 "info": {
+"calc.Route": "Calcul\u00e9 par le plugin \u00e0 partir du journal (FSDTarget, FSDJump, Location, CarrierJump, NavRouteClear), comme le bouton Route d'origine.",
+"calc.Route.RemainingJumps": "Sauts restants de l'itin\u00e9raire, calcul\u00e9s comme le bouton Route : 0 \u00e0 l'arriv\u00e9e (syst\u00e8me actuel = cible FSD) ou quand l'itin\u00e9raire est effac\u00e9 ; sinon la valeur de FSDTarget.",
 "journal.AfmuRepairs": "\u00c9crit quand tu r\u00e9pares des modules avec l'unit\u00e9 de maintenance de terrain (AFMU).",
 "journal.AfmuRepairs.FullyRepaired": "Vrai si le module est enti\u00e8rement r\u00e9par\u00e9.",
 "journal.AfmuRepairs.Module": "Module r\u00e9par\u00e9 (nom interne).",
@@ -230,7 +232,7 @@ var ELITE_CATALOG = {
 "journal.FSDJump.StarSystem": "Nom du syst\u00e8me d'arriv\u00e9e (syst\u00e8me actuel apr\u00e8s le saut).",
 "journal.FSDTarget": "\u00c9crit quand tu s\u00e9lectionnes un syst\u00e8me cible pour le saut (y compris le prochain syst\u00e8me d'un itin\u00e9raire).",
 "journal.FSDTarget.Name": "Nom du syst\u00e8me cibl\u00e9 pour le prochain saut.",
-"journal.FSDTarget.RemainingJumpsInRoute": "Nombre de sauts restants sur l'itin\u00e9raire trac\u00e9.",
+"journal.FSDTarget.RemainingJumpsInRoute": "Nombre de sauts restants sur l'itin\u00e9raire trac\u00e9, tel qu'\u00e9crit par le jeu : reste \u00e0 1 \u00e0 l'arriv\u00e9e (le jeu n'\u00e9crit plus de FSDTarget). Pour un compteur qui tombe \u00e0 0, utiliser calc.Route.RemainingJumps.",
 "journal.FSSAllBodiesFound": "\u00c9crit quand le scan complet du syst\u00e8me (FSS) a trouv\u00e9 tous les corps c\u00e9lestes.",
 "journal.FSSDiscoveryScan": "\u00c9crit quand tu fais l'impulsion de d\u00e9couverte (\u00ab honk \u00bb) du FSS.",
 "journal.FSSDiscoveryScan.BodyCount": "Nombre de corps c\u00e9lestes du syst\u00e8me.",
@@ -699,6 +701,7 @@ var ELITE_CATALOG = {
 {"id":"status.odyssey","prefix":"status","label":"Status.json (Odyssey)","category":"status-values","odyssey":true,"fields":[["Gravity","number"],["Health","number"],["Oxygen","number"],["SelectedWeapon","text"],["SelectedWeapon_Localised","text"],["Temperature","number"]]},
 {"id":"journal.ApproachBody","prefix":"journal.ApproachBody","label":"ApproachBody","category":"travel","odyssey":false,"fields":[["Body","text"],["BodyID","integer"],["StarSystem","text"],["SystemAddress","integer"],["timestamp","date"]]},
 {"id":"journal.ApproachSettlement","prefix":"journal.ApproachSettlement","label":"ApproachSettlement","category":"travel","odyssey":false,"fields":[["BodyID","integer"],["BodyName","text"],["Latitude","number"],["Longitude","number"],["MarketID","integer"],["Name","text"],["StationAllegiance","text"],["StationEconomies.#count","integer"],["StationEconomy","text"],["StationEconomy_Localised","text"],["StationFaction.FactionState","text"],["StationFaction.Name","text"],["StationGovernment","text"],["StationGovernment_Localised","text"],["StationServices.#count","integer"],["SystemAddress","integer"],["timestamp","date"]]},
+{"id":"calc.Route","prefix":"calc.Route","label":"Calcul\u00e9 \u2014 route","category":"travel","odyssey":false,"fields":[["RemainingJumps","integer"]]},
 {"id":"journal.Docked","prefix":"journal.Docked","label":"Docked","category":"travel","odyssey":false,"fields":[["ActiveFine","bool"],["CockpitBreach","bool"],["DistFromStarLS","number"],["LandingPads.Large","integer"],["LandingPads.Medium","integer"],["LandingPads.Small","integer"],["MarketID","integer"],["Multicrew","bool"],["StarSystem","text"],["StationAllegiance","text"],["StationEconomies.#count","integer"],["StationEconomy","text"],["StationEconomy_Localised","text"],["StationFaction.ActiveStates.#count","integer"],["StationFaction.Allegiance","text"],["StationFaction.FactionState","text"],["StationFaction.Government","text"],["StationFaction.Government_Localised","text"],["StationFaction.HappiestSystem","bool"],["StationFaction.HomeSystem","bool"],["StationFaction.Influence","number"],["StationFaction.MyReputation","text"],["StationFaction.Name","text"],["StationFaction.PendingStates.#count","integer"],["StationFaction.RecoveringStates.#count","integer"],["StationFaction.SquadronFaction","bool"],["StationGovernment","text"],["StationGovernment_Localised","text"],["StationName","text"],["StationServices.#count","integer"],["StationType","text"],["SystemAddress","integer"],["Taxi","bool"],["timestamp","date"],["Wanted","bool"]]},
 {"id":"journal.DockFighter","prefix":"journal.DockFighter","label":"DockFighter","category":"travel","odyssey":false,"fields":[["ID","integer"],["timestamp","date"]]},
 {"id":"journal.DockingCancelled","prefix":"journal.DockingCancelled","label":"DockingCancelled","category":"travel","odyssey":false,"fields":[["MarketID","integer"],["StationName","text"],["StationType","text"],["timestamp","date"]]},

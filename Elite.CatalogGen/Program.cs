@@ -128,6 +128,7 @@ namespace Elite.CatalogGen
             var catalog = new Catalog();
             StatusCatalog.AddTo(catalog);
             EventCatalog.AddTo(catalog);
+            PluginCatalog.AddTo(catalog);
             return catalog;
         }
 

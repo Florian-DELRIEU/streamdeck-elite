@@ -14,6 +14,8 @@ namespace Elite.Generic
     {
         public const string StatusPrefix = "status";
         public const string JournalPrefix = "journal";
+        public const string CalcPrefix = "calc";   // computed by the plugin (DerivedKeys)
+        public const string ShipPrefix = "ship";   // remembered values of the current ship (ShipMemory)
         public const string CountSuffix = "#count";
 
         public static readonly StringComparer Comparer = StringComparer.OrdinalIgnoreCase;
