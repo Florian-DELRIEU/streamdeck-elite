@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlarmConfigTests.cs" />
+    <Compile Include="AlarmSetTests.cs" />
     <Compile Include="AlarmStateTests.cs" />
     <Compile Include="CatalogTests.cs" />
     <Compile Include="CommandsTests.cs" />

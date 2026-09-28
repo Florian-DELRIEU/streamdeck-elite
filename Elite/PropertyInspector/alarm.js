@@ -3,11 +3,22 @@
 // The real settings are the sdProperty elements (event, filterField, filterOp, filterValue, duration, idleImage,
 // activeImage, alarmSound, pressCommand, pressHotkey, pressHotkeyText, clickSound); the category / search / event lists
 // only help to fill "event". generic.js calls alarmInit, alarmBeforeLoad, alarmSettingsLoaded and alarmShowValue.
+// Up to 4 alarms per key (v3.6, docs/L10-v3.md): alarm 1 keeps the names above, alarms 2 to 4 add their number
+// (event2, filterField2...); the lists of this page work on the edited alarm (alarmActive), whose blocks are marked
+// data-view like the views of "Donnee" (genericActiveView follows alarmActive for the command and the shortcut).
 // Keep this file ASCII-only (non-ASCII characters are written as \u escapes).
 
 var ALARM_PREFIX = 'journal.';
+var ALARM_COUNT = 4;
 var alarmEvents = null;    // built once from the journal groups of the catalog (genericIndex)
 var alarmInfoOpen = false; // "i" panel shown
+var alarmActive = 1;       // edited alarm
+
+// id of a setting of an alarm (the edited one by default): event, event2...
+function alarmId(name, alarm) {
+    var n = alarm || alarmActive;
+    return name + (n === 1 ? '' : n);
+}
 
 // ---------- events of the catalog (pure functions) ----------
 
@@ -80,7 +91,7 @@ function alarmEventLabel(event) {
 // ---------- user interface ----------
 
 function alarmCurrentEvent() {
-    return alarmEventNameOf(genericElement('event').value);
+    return alarmEventNameOf(genericElement(alarmId('event')).value);
 }
 
 function alarmInit() {
@@ -95,7 +106,8 @@ function alarmInit() {
         select.appendChild(genericOption(category.id, category.emoji + ' ' + category.label + ' (' + alarmEvents.byCategory[category.id].length + ')'));
     });
     alarmFillEvents(null);
-    alarmFillFilterFields(alarmCurrentEvent(), genericElement('filterField').value, true);
+    for (var a = 1; a <= ALARM_COUNT; a++)
+        alarmFillFilterFields(alarmEventNameOf(genericElement(alarmId('event', a)).value), genericElement(alarmId('filterField', a)).value, true, a);
     alarmSyncFromEvent();
 }
 
@@ -117,8 +129,8 @@ function alarmShowEvent(event) {
 
 // fields of the event (except timestamp) in the filter list. A saved field is kept when keepUnknown (loading) or for
 // an event outside the catalog; otherwise a field that the new event does not have is dropped (no filter).
-function alarmFillFilterFields(eventName, current, keepUnknown) {
-    var select = genericElement('filterField');
+function alarmFillFilterFields(eventName, current, keepUnknown, alarm) {
+    var select = genericElement(alarmId('filterField', alarm));
     var event = alarmFindEvent(eventName);
     var wanted = String(current || '');
     var found = false;
@@ -175,9 +187,9 @@ function alarmSyncFromEvent() {
 function alarmChooseEvent(name) {
     if (!name)
         return;
-    genericElement('event').value = name;
+    genericElement(alarmId('event')).value = name;
     alarmShowEvent(alarmFindEvent(name));
-    alarmFillFilterFields(name, genericElement('filterField').value, false);
+    alarmFillFilterFields(name, genericElement(alarmId('filterField')).value, false);
     alarmEventChanged();
     setSettings();
 }
@@ -239,7 +251,7 @@ function alarmEventListChanged() {
 // manual entry of the event name (any name, even outside the catalog)
 function alarmEventTyped() {
     alarmShowEvent(alarmFindEvent(alarmCurrentEvent()));
-    alarmFillFilterFields(alarmCurrentEvent(), genericElement('filterField').value, false);
+    alarmFillFilterFields(alarmCurrentEvent(), genericElement(alarmId('filterField')).value, false);
     alarmEventChanged();
     setSettings();
 }
@@ -247,18 +259,18 @@ function alarmEventTyped() {
 // ---------- filter ----------
 
 function alarmFilterEntry() {
-    var field = genericElement('filterField').value;
+    var field = genericElement(alarmId('filterField')).value;
     return field && genericIndex ? genericFindEntry(genericIndex, alarmFieldKey(alarmCurrentEvent(), field)) : null;
 }
 
 // tests offered according to the type of the field, values of an enumeration proposed, meaning of the field
 function alarmUpdateFilterHelpers() {
-    var field = genericElement('filterField').value;
+    var field = genericElement(alarmId('filterField')).value;
     var entry = alarmFilterEntry();
     var allowed = entry ? GENERIC_RULE_OPERATORS[entry.type] : null;
     if (entry && /#count$/.test(entry.path))
         allowed = GENERIC_NUMBER_OPERATORS;
-    var select = genericElement('filterOp');
+    var select = genericElement(alarmId('filterOp'));
     Array.prototype.forEach.call(select.options, function (option) {
         // never disable the current choice, so that a saved filter stays visible
         option.disabled = option.value !== '' && allowed !== null && allowed.indexOf(option.value) < 0 && option.value !== select.value;
@@ -345,7 +357,7 @@ function alarmTest() {
         action: actionInfo.action,
         event: 'sendToPlugin',
         context: uuid,
-        payload: { alarmTest: true }
+        payload: { alarmTest: true, alarmIndex: alarmActive }
     }));
     info.textContent = 'Envoy\u00e9 : la touche passe en alerte (image d\'alerte ou \u26a0, son d\'alerte) pour la dur\u00e9e r\u00e9gl\u00e9e ; dur\u00e9e 0 = jusqu\'\u00e0 un appui.';
 }
@@ -357,10 +369,31 @@ function alarmBeforeLoad(settings) {
     if (!alarmEvents || !settings)
         return;
     var has = function (name) { return Object.prototype.hasOwnProperty.call(settings, name); };
-    alarmFillFilterFields(has('event') ? alarmEventNameOf(settings.event) : alarmCurrentEvent(),
-        has('filterField') ? settings.filterField : genericElement('filterField').value, true);
+    for (var a = 1; a <= ALARM_COUNT; a++) {
+        var eventId = alarmId('event', a), fieldId = alarmId('filterField', a);
+        alarmFillFilterFields(has(eventId) ? alarmEventNameOf(settings[eventId]) : alarmEventNameOf(genericElement(eventId).value),
+            has(fieldId) ? settings[fieldId] : genericElement(fieldId).value, true, a);
+    }
 }
 
 function alarmSettingsLoaded() {
+    alarmShowAlarm();
     alarmSyncFromEvent();
+}
+
+// ---------- edited alarm (v3.6) ----------
+
+// only the blocks of the edited alarm are shown; the command and the shortcut of generic.js follow it
+function alarmShowAlarm() {
+    genericActiveView = alarmActive;
+    genericShowView();
+    genericShowCommandInfo();
+}
+
+function alarmIndexChanged() {
+    alarmActive = parseInt(genericElement('alarmIndex').value, 10) || 1;
+    alarmShowAlarm();
+    alarmSyncFromEvent();
+    if (genericElement('genericCommandResultsRow').style.display !== 'none')
+        genericCommandSearchChanged();
 }

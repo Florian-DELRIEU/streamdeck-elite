@@ -15,6 +15,7 @@ ALARM_HTML = os.path.join(ROOT, "Elite", "PropertyInspector", "Elite", "EventAla
 ACTION = os.path.join(ROOT, "Elite", "Generic", "ValueAction.cs")
 GRAPH_HTML = os.path.join(ROOT, "Elite", "PropertyInspector", "Elite", "Graph.html")
 GRAPH_ACTION = os.path.join(ROOT, "Elite", "Generic", "GraphAction.cs")
+ALARM_ACTION = os.path.join(ROOT, "Elite", "Generic", "EventAlarmAction.cs")
 VIEWS = 4
 RULES = 4
 
@@ -494,11 +495,68 @@ def page(kind="value"):
 '''
 
 
+ALARMS = 4
+
+
+# v3.6 (docs/L10-v3.md): up to 4 alarms per key; alarm 1 keeps the names of L8, alarms 2 to 4 add their number
+# (idleImage is common). The blocks of an alarm are marked data-view, like the views of "Donnee", so that the command
+# search and the free shortcut of generic.js work on the edited alarm.
+def alarm_event_rows():
+    return "\n".join(f'''        <div class="sdpi-item" data-view="{a}">
+            <div class="sdpi-item-label">Nom (avancé)</div>
+            <input class="sdpi-item-value sdProperty" id="event{sfx(a)}" type="text" placeholder="ex. UnderAttack" oninput="alarmEventTyped()">
+        </div>''' for a in range(1, ALARMS + 1))
+
+
+def alarm_filter_rows():
+    return "\n".join(f'''        <div data-view="{a}">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Champ</div>
+                <select class="sdpi-item-value select sdProperty" id="filterField{sfx(a)}" onchange="alarmFilterFieldChanged()"></select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Test</div>
+                <div class="sdpi-item-value generic-rule">
+                    <select class="select sdProperty generic-rule-op" id="filterOp{sfx(a)}" onchange="setSettings()">
+{operator_options(" " * 24)}
+                    </select>
+                    <input class="sdProperty" id="filterValue{sfx(a)}" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
+                </div>
+            </div>
+        </div>''' for a in range(1, ALARMS + 1))
+
+
+def alarm_alert_rows():
+    return "\n".join(f'''        <div data-view="{a}">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Durée (s)</div>
+                <input class="sdpi-item-value sdProperty" id="duration{sfx(a)}" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
+            </div>
+{file_picker(f"activeImage{sfx(a)}", "En alerte", IMAGES)}
+{file_picker(f"alarmSound{sfx(a)}", "Son d'alerte", ".wav")}
+        </div>''' for a in range(1, ALARMS + 1))
+
+
 def alarm_page():
+    commands = "\n".join(command_block(a) for a in range(1, ALARMS + 1))
+    presses = "\n".join(press_block(a, "Son (appui)") for a in range(1, ALARMS + 1))
+    alarm_options = "\n".join(f'                <option value="{a}">Alarme {a}{" (principale)" if a == 1 else ""}</option>' for a in range(1, ALARMS + 1))
     return head("ZV Elite - alarme", "docs/L8-alarme.md",
                 ["sdtools.common.js", "catalog.js", "commands.js", "generic.js", "alarm.js"]) + f'''
     <!-- "Alarme" key (com.mhwlng.elite.eventalarm): alert when a journal event is written live -->
     <div data-actions="alarm">
+        <div class="sdpi-heading">Alarme éditée</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Alarme</div>
+            <select class="sdpi-item-value select" id="alarmIndex" onchange="alarmIndexChanged()">
+{alarm_options}
+            </select>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Jusqu'à 4 alarmes par touche, chacune avec son événement, son filtre, sa durée, son image d'alerte, son son et sa commande (l'image au repos est commune). Seule l'alarme active compte : la plus récente s'affiche, et l'appui l'acquitte et envoie sa commande. Au repos, l'appui envoie la commande de l'alarme 1.</div>
+        </div>
+
         <div class="sdpi-heading">Événement du journal</div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Catégorie</div>
@@ -520,10 +578,7 @@ def alarm_page():
             <div class="sdpi-item-label">Événement</div>
             <select class="sdpi-item-value select" id="alarmEventList" onchange="alarmEventListChanged()"></select>
         </div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Nom (avancé)</div>
-            <input class="sdpi-item-value sdProperty" id="event" type="text" placeholder="ex. UnderAttack" oninput="alarmEventTyped()">
-        </div>
+{alarm_event_rows()}
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
             <div class="sdpi-item-value generic-hint">Nom = identifiant de l'événement, rempli par le menu. À taper seulement pour un événement absent du menu (nom exact écrit par le jeu).</div>
@@ -542,19 +597,7 @@ def alarm_page():
         </div>
 
         <div class="sdpi-heading">Filtre (optionnel)</div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Champ</div>
-            <select class="sdpi-item-value select sdProperty" id="filterField" onchange="alarmFilterFieldChanged()"></select>
-        </div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Test</div>
-            <div class="sdpi-item-value generic-rule">
-                <select class="select sdProperty generic-rule-op" id="filterOp" onchange="setSettings()">
-{operator_options(" " * 20)}
-                </select>
-                <input class="sdProperty" id="filterValue" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
-            </div>
-        </div>
+{alarm_filter_rows()}
         <datalist id="alarmEnumValues"></datalist>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
@@ -566,17 +609,12 @@ def alarm_page():
         </div>
 
         <div class="sdpi-heading">Alerte</div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Durée (s)</div>
-            <input class="sdpi-item-value sdProperty" id="duration" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
-        </div>
+{alarm_alert_rows()}
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">Temps d'affichage de l'image d'alerte ; un nouvel événement relance la durée. 0 = jusqu'à un appui sur la touche.</div>
+            <div class="sdpi-item-value generic-hint">Durée : temps d'affichage de l'image d'alerte ; un nouvel événement relance la durée. 0 = jusqu'à un appui sur la touche.</div>
         </div>
 {file_picker("idleImage", "Au repos", IMAGES)}
-{file_picker("activeImage", "En alerte", IMAGES)}
-{file_picker("alarmSound", "Son d'alerte", ".wav")}
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
             <div class="sdpi-item-value generic-hint">Sans image d'alerte, Stream Deck affiche son triangle ⚠. Les événements relus au lancement du plugin ne déclenchent jamais l'alarme. Clic sur un libellé d'image ou de son = l'effacer.</div>
@@ -593,15 +631,15 @@ def alarm_page():
         <div class="sdpi-heading">Action (appui)</div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">Un appui acquitte l'alerte en cours, puis envoie la commande, le raccourci et le son d'appui.</div>
+            <div class="sdpi-item-value generic-hint">Un appui acquitte l'alerte en cours, puis envoie la commande, le raccourci et le son d'appui de cette alarme.</div>
         </div>
 {command_search_block()}
-{command_block(1)}
+{commands}
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
             <div class="sdpi-item-value generic-info" id="genericCommandInfo"></div>
         </div>
-{press_block(1, "Son (appui)")}
+{presses}
 {PRESS_HINT}
     </div>
 
@@ -683,6 +721,23 @@ def graph_settings_block():
     return "\n".join(lines)
 
 
+# settings of alarms 2 to 4 (alarm 1 = the 12 names of L8, written by hand; idleImage is common)
+def alarm_settings_block():
+    lines = []
+    prop = property_writer(lines)
+    for a in range(2, ALARMS + 1):
+        for name in ("event", "filterField", "filterOp", "filterValue"):
+            prop(f"{name}{a}", "string", '""')
+        prop(f"duration{a}", "string", '"5"')
+        prop(f"activeImage{a}", "string", '""', filename=True)
+        prop(f"alarmSound{a}", "string", '""', filename=True)
+        prop(f"pressCommand{a}", "string", '""')
+        prop(f"pressHotkey{a}", "string", '""')
+        prop(f"pressHotkeyText{a}", "string", '""')
+        prop(f"clickSound{a}", "string", '""', filename=True)
+    return "\n".join(lines)
+
+
 def replace_block(path, start, end, content):
     with open(path, encoding="utf-8-sig") as f:
         source = f.read()
@@ -705,8 +760,9 @@ def main():
 
     with open(ALARM_HTML, "w", encoding="utf-8", newline="\n") as f:
         f.write(alarm_page())
+    replace_block(ALARM_ACTION, "// <generated-alarms-2-4>", "// </generated-alarms-2-4>", alarm_settings_block())
 
-    print("written:", ", ".join(os.path.relpath(p, ROOT) for p in (HTML, ACTION, GRAPH_HTML, GRAPH_ACTION, ALARM_HTML)))
+    print("written:", ", ".join(os.path.relpath(p, ROOT) for p in (HTML, ACTION, GRAPH_HTML, GRAPH_ACTION, ALARM_HTML, ALARM_ACTION)))
 
 
 if __name__ == "__main__":

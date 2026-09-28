@@ -40,6 +40,21 @@
 
     <!-- "Alarme" key (com.mhwlng.elite.eventalarm): alert when a journal event is written live -->
     <div data-actions="alarm">
+        <div class="sdpi-heading">Alarme éditée</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label">Alarme</div>
+            <select class="sdpi-item-value select" id="alarmIndex" onchange="alarmIndexChanged()">
+                <option value="1">Alarme 1 (principale)</option>
+                <option value="2">Alarme 2</option>
+                <option value="3">Alarme 3</option>
+                <option value="4">Alarme 4</option>
+            </select>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Jusqu'à 4 alarmes par touche, chacune avec son événement, son filtre, sa durée, son image d'alerte, son son et sa commande (l'image au repos est commune). Seule l'alarme active compte : la plus récente s'affiche, et l'appui l'acquitte et envoie sa commande. Au repos, l'appui envoie la commande de l'alarme 1.</div>
+        </div>
+
         <div class="sdpi-heading">Événement du journal</div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Catégorie</div>
@@ -61,9 +76,21 @@
             <div class="sdpi-item-label">Événement</div>
             <select class="sdpi-item-value select" id="alarmEventList" onchange="alarmEventListChanged()"></select>
         </div>
-        <div class="sdpi-item">
+        <div class="sdpi-item" data-view="1">
             <div class="sdpi-item-label">Nom (avancé)</div>
             <input class="sdpi-item-value sdProperty" id="event" type="text" placeholder="ex. UnderAttack" oninput="alarmEventTyped()">
+        </div>
+        <div class="sdpi-item" data-view="2">
+            <div class="sdpi-item-label">Nom (avancé)</div>
+            <input class="sdpi-item-value sdProperty" id="event2" type="text" placeholder="ex. UnderAttack" oninput="alarmEventTyped()">
+        </div>
+        <div class="sdpi-item" data-view="3">
+            <div class="sdpi-item-label">Nom (avancé)</div>
+            <input class="sdpi-item-value sdProperty" id="event3" type="text" placeholder="ex. UnderAttack" oninput="alarmEventTyped()">
+        </div>
+        <div class="sdpi-item" data-view="4">
+            <div class="sdpi-item-label">Nom (avancé)</div>
+            <input class="sdpi-item-value sdProperty" id="event4" type="text" placeholder="ex. UnderAttack" oninput="alarmEventTyped()">
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
@@ -83,25 +110,96 @@
         </div>
 
         <div class="sdpi-heading">Filtre (optionnel)</div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Champ</div>
-            <select class="sdpi-item-value select sdProperty" id="filterField" onchange="alarmFilterFieldChanged()"></select>
+        <div data-view="1">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Champ</div>
+                <select class="sdpi-item-value select sdProperty" id="filterField" onchange="alarmFilterFieldChanged()"></select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Test</div>
+                <div class="sdpi-item-value generic-rule">
+                    <select class="select sdProperty generic-rule-op" id="filterOp" onchange="setSettings()">
+                        <option value="">— aucune —</option>
+                        <option value="isTrue">est vrai / oui</option>
+                        <option value="isFalse">est faux / non</option>
+                        <option value="equals">=</option>
+                        <option value="notEquals">≠</option>
+                        <option value="lt">&lt;</option>
+                        <option value="lte">≤</option>
+                        <option value="gt">&gt;</option>
+                        <option value="gte">≥</option>
+                    </select>
+                    <input class="sdProperty" id="filterValue" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
+                </div>
+            </div>
         </div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Test</div>
-            <div class="sdpi-item-value generic-rule">
-                <select class="select sdProperty generic-rule-op" id="filterOp" onchange="setSettings()">
-                    <option value="">— aucune —</option>
-                    <option value="isTrue">est vrai / oui</option>
-                    <option value="isFalse">est faux / non</option>
-                    <option value="equals">=</option>
-                    <option value="notEquals">≠</option>
-                    <option value="lt">&lt;</option>
-                    <option value="lte">≤</option>
-                    <option value="gt">&gt;</option>
-                    <option value="gte">≥</option>
-                </select>
-                <input class="sdProperty" id="filterValue" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
+        <div data-view="2">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Champ</div>
+                <select class="sdpi-item-value select sdProperty" id="filterField2" onchange="alarmFilterFieldChanged()"></select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Test</div>
+                <div class="sdpi-item-value generic-rule">
+                    <select class="select sdProperty generic-rule-op" id="filterOp2" onchange="setSettings()">
+                        <option value="">— aucune —</option>
+                        <option value="isTrue">est vrai / oui</option>
+                        <option value="isFalse">est faux / non</option>
+                        <option value="equals">=</option>
+                        <option value="notEquals">≠</option>
+                        <option value="lt">&lt;</option>
+                        <option value="lte">≤</option>
+                        <option value="gt">&gt;</option>
+                        <option value="gte">≥</option>
+                    </select>
+                    <input class="sdProperty" id="filterValue2" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
+                </div>
+            </div>
+        </div>
+        <div data-view="3">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Champ</div>
+                <select class="sdpi-item-value select sdProperty" id="filterField3" onchange="alarmFilterFieldChanged()"></select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Test</div>
+                <div class="sdpi-item-value generic-rule">
+                    <select class="select sdProperty generic-rule-op" id="filterOp3" onchange="setSettings()">
+                        <option value="">— aucune —</option>
+                        <option value="isTrue">est vrai / oui</option>
+                        <option value="isFalse">est faux / non</option>
+                        <option value="equals">=</option>
+                        <option value="notEquals">≠</option>
+                        <option value="lt">&lt;</option>
+                        <option value="lte">≤</option>
+                        <option value="gt">&gt;</option>
+                        <option value="gte">≥</option>
+                    </select>
+                    <input class="sdProperty" id="filterValue3" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
+                </div>
+            </div>
+        </div>
+        <div data-view="4">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Champ</div>
+                <select class="sdpi-item-value select sdProperty" id="filterField4" onchange="alarmFilterFieldChanged()"></select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Test</div>
+                <div class="sdpi-item-value generic-rule">
+                    <select class="select sdProperty generic-rule-op" id="filterOp4" onchange="setSettings()">
+                        <option value="">— aucune —</option>
+                        <option value="isTrue">est vrai / oui</option>
+                        <option value="isFalse">est faux / non</option>
+                        <option value="equals">=</option>
+                        <option value="notEquals">≠</option>
+                        <option value="lt">&lt;</option>
+                        <option value="lte">≤</option>
+                        <option value="gt">&gt;</option>
+                        <option value="gte">≥</option>
+                    </select>
+                    <input class="sdProperty" id="filterValue4" type="text" list="alarmEnumValues" placeholder="valeur" oninput="setSettings()">
+                </div>
             </div>
         </div>
         <datalist id="alarmEnumValues"></datalist>
@@ -115,21 +213,10 @@
         </div>
 
         <div class="sdpi-heading">Alerte</div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label">Durée (s)</div>
-            <input class="sdpi-item-value sdProperty" id="duration" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
-        </div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">Temps d'affichage de l'image d'alerte ; un nouvel événement relance la durée. 0 = jusqu'à un appui sur la touche.</div>
-        </div>
+        <div data-view="1">
             <div class="sdpi-item">
-                <div class="sdpi-item-label" onclick="clearFileName('idleImage');">Au repos</div>
-                <div class="sdpi-item-group file">
-                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="idleImage" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
-                    <label class="sdpi-file-info " for="idleImage" id="idleImageFilename">No file...</label>
-                    <label class="sdpi-file-label" for="idleImage">Choose file...</label>
-                </div>
+                <div class="sdpi-item-label">Durée (s)</div>
+                <input class="sdpi-item-value sdProperty" id="duration" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
             </div>
             <div class="sdpi-item">
                 <div class="sdpi-item-label" onclick="clearFileName('activeImage');">En alerte</div>
@@ -145,6 +232,85 @@
                     <input class="sdpi-item-value sdProperty sdFile" type="file" id="alarmSound" accept=".wav" oninput="setSettings()">
                     <label class="sdpi-file-info " for="alarmSound" id="alarmSoundFilename">No file...</label>
                     <label class="sdpi-file-label" for="alarmSound">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="2">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Durée (s)</div>
+                <input class="sdpi-item-value sdProperty" id="duration2" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('activeImage2');">En alerte</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="activeImage2" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="activeImage2" id="activeImage2Filename">No file...</label>
+                    <label class="sdpi-file-label" for="activeImage2">Choose file...</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('alarmSound2');">Son d'alerte</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="alarmSound2" accept=".wav" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="alarmSound2" id="alarmSound2Filename">No file...</label>
+                    <label class="sdpi-file-label" for="alarmSound2">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="3">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Durée (s)</div>
+                <input class="sdpi-item-value sdProperty" id="duration3" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('activeImage3');">En alerte</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="activeImage3" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="activeImage3" id="activeImage3Filename">No file...</label>
+                    <label class="sdpi-file-label" for="activeImage3">Choose file...</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('alarmSound3');">Son d'alerte</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="alarmSound3" accept=".wav" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="alarmSound3" id="alarmSound3Filename">No file...</label>
+                    <label class="sdpi-file-label" for="alarmSound3">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="4">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Durée (s)</div>
+                <input class="sdpi-item-value sdProperty" id="duration4" type="number" min="0" step="1" placeholder="5" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('activeImage4');">En alerte</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="activeImage4" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="activeImage4" id="activeImage4Filename">No file...</label>
+                    <label class="sdpi-file-label" for="activeImage4">Choose file...</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('alarmSound4');">Son d'alerte</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="alarmSound4" accept=".wav" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="alarmSound4" id="alarmSound4Filename">No file...</label>
+                    <label class="sdpi-file-label" for="alarmSound4">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Durée : temps d'affichage de l'image d'alerte ; un nouvel événement relance la durée. 0 = jusqu'à un appui sur la touche.</div>
+        </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('idleImage');">Au repos</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="idleImage" accept=".jpg, .jpeg, .png, .ico, .gif, .bmp, .tiff" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="idleImage" id="idleImageFilename">No file...</label>
+                    <label class="sdpi-file-label" for="idleImage">Choose file...</label>
                 </div>
             </div>
         <div class="sdpi-item">
@@ -163,7 +329,7 @@
         <div class="sdpi-heading">Action (appui)</div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">Un appui acquitte l'alerte en cours, puis envoie la commande, le raccourci et le son d'appui.</div>
+            <div class="sdpi-item-value generic-hint">Un appui acquitte l'alerte en cours, puis envoie la commande, le raccourci et le son d'appui de cette alarme.</div>
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Recherche</div>
@@ -185,6 +351,18 @@
             <div class="sdpi-item-label">Commande</div>
             <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand" onchange="genericCommandChanged()"></select>
         </div>
+        <div class="sdpi-item" data-view="2">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand2" onchange="genericCommandChanged()"></select>
+        </div>
+        <div class="sdpi-item" data-view="3">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand3" onchange="genericCommandChanged()"></select>
+        </div>
+        <div class="sdpi-item" data-view="4">
+            <div class="sdpi-item-label">Commande</div>
+            <select class="sdpi-item-value select sdProperty generic-command" id="pressCommand4" onchange="genericCommandChanged()"></select>
+        </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
             <div class="sdpi-item-value generic-info" id="genericCommandInfo"></div>
@@ -201,6 +379,51 @@
                     <input class="sdpi-item-value sdProperty sdFile" type="file" id="clickSound" accept=".wav" oninput="setSettings()">
                     <label class="sdpi-file-info " for="clickSound" id="clickSoundFilename">No file...</label>
                     <label class="sdpi-file-label" for="clickSound">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="2">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(2)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText2" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(2)" onblur="genericHotkeyBlur(2)" onkeydown="genericHotkeyKeyDown(event, 2)" onkeyup="genericHotkeyKeyUp(event, 2)">
+                <input class="sdProperty" id="pressHotkey2" type="hidden">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('clickSound2');">Son (appui)</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="clickSound2" accept=".wav" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="clickSound2" id="clickSound2Filename">No file...</label>
+                    <label class="sdpi-file-label" for="clickSound2">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="3">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(3)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText3" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(3)" onblur="genericHotkeyBlur(3)" onkeydown="genericHotkeyKeyDown(event, 3)" onkeyup="genericHotkeyKeyUp(event, 3)">
+                <input class="sdProperty" id="pressHotkey3" type="hidden">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('clickSound3');">Son (appui)</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="clickSound3" accept=".wav" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="clickSound3" id="clickSound3Filename">No file...</label>
+                    <label class="sdpi-file-label" for="clickSound3">Choose file...</label>
+                </div>
+            </div>
+        </div>
+        <div data-view="4">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label generic-clickable" onclick="genericHotkeyClear(4)" title="clic = effacer le raccourci">Raccourci</div>
+                <input class="sdpi-item-value sdProperty generic-hotkey" id="pressHotkeyText4" type="text" readonly placeholder="clic ici, puis appuie sur les touches" onfocus="genericHotkeyFocus(4)" onblur="genericHotkeyBlur(4)" onkeydown="genericHotkeyKeyDown(event, 4)" onkeyup="genericHotkeyKeyUp(event, 4)">
+                <input class="sdProperty" id="pressHotkey4" type="hidden">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label" onclick="clearFileName('clickSound4');">Son (appui)</div>
+                <div class="sdpi-item-group file">
+                    <input class="sdpi-item-value sdProperty sdFile" type="file" id="clickSound4" accept=".wav" oninput="setSettings()">
+                    <label class="sdpi-file-info " for="clickSound4" id="clickSound4Filename">No file...</label>
+                    <label class="sdpi-file-label" for="clickSound4">Choose file...</label>
                 </div>
             </div>
         </div>

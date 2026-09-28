@@ -44,11 +44,16 @@ namespace Elite.Tests
             var fields = PageFields("EventAlarm.html");
 
             Assert.That(fields, Is.EqualTo(ActionSettings(typeof(EventAlarmAction))));
-            Assert.That(fields, Is.EquivalentTo(new[]
+            var alarm1 = new[]
             {
                 "event", "filterField", "filterOp", "filterValue", "duration", "idleImage", "activeImage", "alarmSound",
                 "pressCommand", "pressHotkey", "pressHotkeyText", "clickSound",
-            }), "names of docs/L8-alarme.md");
+            };
+            Assert.That(fields, Is.SupersetOf(alarm1), "names of docs/L8-alarme.md, kept by alarm 1");
+
+            // v3.6: alarms 2 to 4 = the same names + their number, idleImage common
+            var others = Enumerable.Range(2, 3).SelectMany(a => alarm1.Where(n => n != "idleImage").Select(n => n + a)).ToArray();
+            Assert.That(fields, Is.EquivalentTo(alarm1.Concat(others)));
         }
 
         [Test]

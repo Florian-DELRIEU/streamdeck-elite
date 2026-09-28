@@ -185,6 +185,7 @@
     <Compile Include="Buttons\Alarm.cs" />
     <Compile Include="FifoExecution.cs" />
     <Compile Include="Generic\AlarmConfig.cs" />
+    <Compile Include="Generic\AlarmSet.cs" />
     <Compile Include="Generic\AlarmState.cs" />
     <Compile Include="Generic\BackpackTracker.cs" />
     <Compile Include="Generic\Condition.cs" />

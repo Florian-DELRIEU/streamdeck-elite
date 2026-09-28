@@ -40,25 +40,30 @@ namespace Elite.Generic
             get { return FilterField.Length > 0 && FilterOperator != ConditionOperator.None; }
         }
 
-        public static AlarmConfig FromSettings(JObject settings, Action<string> warn = null)
+        /// <summary>
+        /// Settings of one alarm: alarm 1 uses the names of L8 (event, filterField...), alarms 2 to 4 the same names
+        /// followed by their number (event2, filterField2..., v3.6); idleImage is common (always the one of alarm 1).
+        /// </summary>
+        public static AlarmConfig FromSettings(JObject settings, Action<string> warn = null, int alarm = 1)
         {
             settings = settings ?? new JObject();
+            var s = alarm <= 1 ? "" : alarm.ToString();
             var config = new AlarmConfig
             {
-                Event = EventName(Text(settings, "event")),
-                FilterOperator = Condition.ParseOperator(Text(settings, "filterOp")),
-                FilterValue = Text(settings, "filterValue"),
+                Event = EventName(Text(settings, "event" + s)),
+                FilterOperator = Condition.ParseOperator(Text(settings, "filterOp" + s)),
+                FilterValue = Text(settings, "filterValue" + s),
                 IdleImage = FileName(settings, "idleImage"),
-                ActiveImage = FileName(settings, "activeImage"),
-                AlarmSound = FileName(settings, "alarmSound"),
-                Command = Text(settings, "pressCommand").Trim(),
-                Hotkey = Text(settings, "pressHotkey").Trim(),
-                HotkeyText = Text(settings, "pressHotkeyText").Trim(),
-                ClickSound = FileName(settings, "clickSound"),
+                ActiveImage = FileName(settings, "activeImage" + s),
+                AlarmSound = FileName(settings, "alarmSound" + s),
+                Command = Text(settings, "pressCommand" + s).Trim(),
+                Hotkey = Text(settings, "pressHotkey" + s).Trim(),
+                HotkeyText = Text(settings, "pressHotkeyText" + s).Trim(),
+                ClickSound = FileName(settings, "clickSound" + s),
             };
-            config.FilterField = FieldPath(Text(settings, "filterField"), config.Event);
+            config.FilterField = FieldPath(Text(settings, "filterField" + s), config.Event);
 
-            var duration = Text(settings, "duration").Trim();
+            var duration = Text(settings, "duration" + s).Trim();
             double seconds;
             if (duration.Length == 0)
                 config.DurationSeconds = DefaultDurationSeconds;
