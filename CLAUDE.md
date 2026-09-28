@@ -6,11 +6,12 @@ Fork personnel de Florian (`origin` = github.com/Florian-DELRIEU/streamdeck-elit
 
 Chantier L0–L9 (terminé) : exposer **toute l'API du jeu** (`Status.json` + ~250 événements du Journal) via des actions paramétrables — **Donnée** (ex-Valeur/État) et **Alarme** — pour ne plus avoir à écrire de C# à chaque nouvelle donnée. **Version publiée : v3.0** (tag `V3.0` = `0d8bb66`).
 
-**➜ Point de reprise (2026-09-28) : `docs/feuille-de-route-v3.md`** — nouveautés d'après la v3.0 demandées dans les issues #1, #2, #3 (décisions de Florian, feuille de route v3.1 → v3.7, compilation dans le cloud). Prochaine étape : **v3.1 (L10)**, en commençant par un plan court à faire valider.
+**➜ Point de reprise (2026-09-28) : `docs/L10-v3.md`** — la feuille de route v3.1 → v3.7 (issues #1, #2, #3, `docs/feuille-de-route-v3.md`) a été réalisée **en une seule étape** (lot L10, 7 commits, manifeste 3.7.0). Prochaine étape : **test D10 par Florian**, puis corrections (et retrait de v3.7 si l'essai des pages échoue).
 
 ## Documents à lire avant de coder
 
-0. `docs/feuille-de-route-v3.md` — **point de reprise** : issues #1–#3, décisions de Florian du 2026-09-28, feuille de route v3.1 → v3.7 (lots L10 → L16), compilation et tests dans le cloud.
+0. `docs/L10-v3.md` — **point de reprise** : v3.1 → v3.7 réalisées en une étape (sauts restants, groupes de tir, texte dessiné, mémoire du vaisseau `ship.*`, `calc.*`, action Graphique, règles ET, alarmes multiples, essai des pages), **mode d'emploi D10**.
+0. `docs/feuille-de-route-v3.md` — issues #1–#3, décisions de Florian du 2026-09-28, feuille de route d'origine (L10 → L16, regroupés en L10), compilation et tests dans le cloud.
 1. `docs/cahier-des-charges-streamdeck-elite.md` — **spécification figée, source de vérité** : décisions validées (§0), architecture (§4), spec des actions (§5), Property Inspector (§6), exigences (§7), critères d'acceptation (§8), lots (§9), risques (§10).
 2. `docs/L0-baseline-build.md` — baseline de compilation et recette d'environnement.
 3. `docs/L1-socle-donnees.md` — **conventions de clés et API d'`EliteStore`** telles qu'implémentées (complète le §4.3).
@@ -48,13 +49,8 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 | L8 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) : événement + filtre sur un champ, durée (0 = jusqu'à l'appui), images repos/alerte, son, commande + raccourci, bouton « Tester » | ✅ terminé le 2026-09-25, avec L9 à la demande de Florian (session cloud : compilation Roslyn C# 7.3 sous Mono + 125 tests OK, PI vérifiée dans Chromium en frappe lettre par lettre ; non vérifié sous Windows ni sur le Stream Deck → D8) |
 | L9 | Version 2.8.0, nom et catégorie « ZV Stream Deck Elite », `pack.ps1` (zip ou DistributionTool), README (section FR en tête), liste de non-régression | ✅ terminé le 2026-09-25, avec L8 (126 tests OK dans le cloud ; `pack.ps1` exécuté sous PowerShell 7 Linux, archive vérifiée ; non vérifié sous Windows PowerShell 5.1) |
 | D8 | Test unique L7b + L8 + L9 — mode d'emploi : `docs/L9-finalisation.md` (D7b, nom, Alarme, non-régression des 12 actions, paquet) | ✅ fait par Florian : **v3.0 publiée** (tag `V3.0` sur `0d8bb66`). Retours et demandes suivantes → issues #1–#3 |
-| L10 | **v3.1** — correctifs #3 : `calc.Route.RemainingJumps` (comme le bouton Route), groupes de tir libérés (Donnée/Alarme), `manifest.json` → 3.1.0 | ⏭️ **prochain** — voir `docs/feuille-de-route-v3.md` §3 |
-| L11 | **v3.2** — texte dessiné dans « Donnée » : taille libre, police Rubik, couleur, position, retour à la ligne auto, réduction pour tenir | à faire |
-| L12 | **v3.3** — mémoire du vaisseau (`ship.*`, par ShipID, fichier `%APPDATA%\ZV Stream Deck Elite\memoire.json`) + `calc.*` % + historique | à faire |
-| L13 | **v3.4** — action « Graphique » (`com.mhwlng.elite.graph`) : barre / cadran / courbe à la place des images, commande conservée | à faire |
-| L14 | **v3.5** — règles ET (donnée propre par règle + 2ᵉ condition) ; le OU = plusieurs règles | à faire |
-| L15 | **v3.6** — jusqu'à 4 alarmes par touche, seule l'alarme active est contrôlable | à faire |
-| L16 | **v3.7** — pages d'un profil fourni avec le plugin au lieu des dossiers (essai d'abord) | à faire |
+| L10 | **v3.1 → v3.7 en une étape** (Florian : « le moins d'étapes possible ») : v3.1 sauts restants `calc.Route.RemainingJumps` + groupes de tir libérés (touches du SRV en SRV) ; v3.2 texte dessiné (Rubik) ; v3.3 mémoire du vaisseau `ship.*`, `calc.*` (%, portée chargée, sac à dos, FSD surchargé), historique ; v3.4 action « Graphique » `com.mhwlng.elite.graph` ; v3.5 règles ET ; v3.6 4 alarmes par touche ; v3.7 essai des pages (profil « ZV Elite ») | ✅ terminé le 2026-09-28 (7 commits, 169 tests OK, 3 pages vérifiées dans le navigateur, rendus PNG vérifiés ; non vérifié sur le Stream Deck ni en jeu) |
+| D10 | Test unique v3.1 → v3.7 + essai des pages — mode d'emploi : `docs/L10-v3.md` | ⏭️ **prochain** (Florian) |
 | — | Icônes : plan dans `docs/icones-plan.md` | **ignorées pour l'instant** (Florian, 2026-09-28) |
 
 ### Décisions postérieures au cahier des charges (Florian, 2026-09-23)
@@ -76,7 +72,9 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 - **Alarmes multiples** : seule l'alarme active est contrôlable.
 - **Dossiers** : impossibles via le SDK ; piste = pages d'un profil fourni avec le plugin, après essai.
 - **Icônes** : ignorées pour l'instant.
-- **Nouvelles conventions de clés** (à partir de v3.1/v3.3) : `calc.*` = données calculées par le plugin, `ship.*` = valeurs mémorisées du vaisseau actuel.
+- **Nouvelles conventions de clés** (à partir de v3.1/v3.3) : `calc.*` = données calculées par le plugin, `ship.*` = valeurs mémorisées du vaisseau actuel (détail : `docs/L1-socle-donnees.md`).
+- **Réalisation en une étape** (2026-09-28) : v3.1 → v3.7 dans le lot L10 ; police Rubik (fichier variable de Google Fonts, OFL) ; 4 types de graphiques ; portée chargée faite ; en SRV, touches de groupe de tir du SRV (`UserBindings.cs` : + `BuggyCycleFireGroupNext/Previous`, seul fichier d'origine modifié, avec l'accord de Florian) ; plusieurs alarmes actives = la plus récente s'affiche.
+- **Données FSD** (`Elite/Generic/FsdTables.cs`) : données de jeu de Frontier publiées par EDCD/coriolis-data (pas sous MIT) : **à valider par Florian avant tout push public**.
 
 → **Mettre à jour ce tableau à la fin de chaque lot**, dans le commit du lot.
 
@@ -148,7 +146,7 @@ Retour arrière : même procédure en copiant le dossier de sauvegarde. Les rég
 - Décomposition des flags par `Enum.GetValues` : **ignorer `None = 0`** (`HasFlag(None)` est toujours vrai).
 - `MoreStatusFlags.BreathableAtmosphere` valait `0x00010001` (bug) : **corrigé en L1** à `0x00010000`. Effet de bord assumé : le Toggle historique « atmosphère respirable » (`EliteData.cs`, test `(Flags2 & BreathableAtmosphere) != 0`) ne s'allume plus dès qu'on est à pied — à vérifier en D3.
 - Newtonsoft (`JObject.Parse`, `JToken.ReadFrom`) convertit les chaînes ISO (`timestamp`…) en `JTokenType.Date` (UTC).
-- `manifest.json` : 12 actions historiques (10 Keypad sans clé `Controllers` + `dial` et `firegroupdial` en `Encoder`), chacune 1 `State` ; depuis L8, **14 actions** avec « Donnée » (`com.mhwlng.elite.value`) et « Alarme » (`com.mhwlng.elite.eventalarm`). Pas de champ `UUID` racine (SDKVersion 2 : l'identifiant vient du dossier `.sdPlugin`). L'action Toggle a pour UUID `com.mhwlng.elite`. Depuis L9 : `Version` 2.8.0, `Name` et `Category` « ZV Stream Deck Elite » (avant : 2.7.4, « Elite Dangerous ») ; `CodePath`, UUID et dossier inchangés.
+- `manifest.json` : 12 actions historiques (10 Keypad sans clé `Controllers` + `dial` et `firegroupdial` en `Encoder`), chacune 1 `State` ; depuis L8, **14 actions** avec « Donnée » (`com.mhwlng.elite.value`) et « Alarme » (`com.mhwlng.elite.eventalarm`) ; depuis v3.4, **15** avec « Graphique » (`com.mhwlng.elite.graph`, UUID définitif) ; depuis v3.7, `Version` 3.7.0 et un profil fourni (`Profiles` : « ZV Elite », fichier `Elite/ZV Elite.streamDeckProfile` fabriqué par `python tools/make-test-profile.py`). Pas de champ `UUID` racine (SDKVersion 2 : l'identifiant vient du dossier `.sdPlugin`). L'action Toggle a pour UUID `com.mhwlng.elite`. Depuis L9 : `Version` 2.8.0, `Name` et `Category` « ZV Stream Deck Elite » (avant : 2.7.4, « Elite Dangerous ») ; `CodePath`, UUID et dossier inchangés.
 - Rafraîchissement historique : Toggle et Alarm s'abonnent à `JournalWatcher.AllEventHandler` et redessinent aussi à chaque `OnTick` (~1 s) en relisant `EliteData` — un changement de `Status.json` y apparaît donc avec ≤ 1 s de retard.
 - `UserBindings.cs` : 316 `StandardBindingInfo` + 21 `ToggleBindingInfo` + 35 `AxisBindingInfo`, liste plate sans notion de contexte. Fichiers de bindings lus dans `%LOCALAPPDATA%\Frontier Developments\Elite Dangerous\Options\Bindings\`.
 - `EliteKeys.SendKeypress(string function)` (`Elite/Buttons/EliteKeys.cs`) sait envoyer **366 commandes** par leur nom : 336 bindings (tous sauf `SelectTargetBuggy`), chacun avec son contexte `Program.Binding[BindingType.X]` (Ship 153, Srv 42, OnFoot 60, General 81), + 30 commandes « selon l'état » (`LandingGearToggle-ON/OFF`, `FireGroup-A…H`…). C'est la source de `commands.js` et le moyen d'envoyer une commande en L4 (aucune modification nécessaire).
@@ -166,9 +164,9 @@ Projet `Elite.Tests` (csproj classique net48, `LangVersion` 7.3), NUnit 3.14.0 +
 powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1
 ```
 
-Critère : `== TESTS OK` (code de sortie 0) ; 126 tests à la fin de L9 (125 à la fin de L8) (magasin, clés, événements bruts, catalogue, commandes et leurs descriptions, mise en forme et facteurs, conditions, règles d'image, gestes, réglages de « Donnée » dont compatibilité L3/L4 et `currentView`, manifeste, descriptions, raccourci, groupe de tir bloqué ; Alarme : réglages, filtre, durée, **garde `IsLive` sur le vrai `JournalWatcher`** ; champs des pages = réglages C#).
+Critère : `== TESTS OK` (code de sortie 0) ; 169 tests à la fin de L10 (+ 2 aperçus PNG `[Explicit]` : `--where "test =~ Write"` avec la variable `ZV_RENDER_PREVIEW` = dossier de sortie) ; 126 à la fin de L9 (125 à la fin de L8) (magasin, clés, événements bruts, catalogue, commandes et leurs descriptions, mise en forme et facteurs, conditions, règles d'image, gestes, réglages de « Donnée » dont compatibilité L3/L4 et `currentView`, manifeste, descriptions, raccourci, groupe de tir bloqué ; Alarme : réglages, filtre, durée, **garde `IsLive` sur le vrai `JournalWatcher`** ; champs des pages = réglages C#).
 
-`Generic.html`, `EventAlarm.html` (depuis L8) et le bloc des réglages des vues 2 à 4 de `ValueAction.cs` sont **générés** par `python tools/make-generic-html.py` : ne pas les éditer à la main (voir `docs/L5-tiroir.md`, `docs/L8-alarme.md`).
+`Generic.html`, `EventAlarm.html` (depuis L8), `Graph.html` (depuis v3.4) et les blocs de réglages marqués `<generated-...>` de `ValueAction.cs` (vues 2 à 4), `GraphAction.cs` (tout) et `EventAlarmAction.cs` (alarmes 2 à 4) sont **générés** par `python tools/make-generic-html.py` : ne pas les éditer à la main (voir `docs/L5-tiroir.md`, `docs/L8-alarme.md`, `docs/L10-v3.md`).
 
 Piège : l'outil Write de Claude Code convertit les séquences `é` écrites dans un fichier en vrais caractères (constaté aussi dans un heredoc bash le 2026-09-25). Pour `generic.js` et `alarm.js` (qui doivent rester ASCII), repasser un petit script d'échappement (caractère non ASCII → `\uXXXX`) ; `ManifestTests` échoue sinon. NUnit.ConsoleRunner 3.22.0 ignore `--noresult` : `test.ps1` passe `--work=Elite.Tests\bin\Debug` pour que `TestResult.xml` et `nunit-agent_*.log` restent dans `bin/`. Tout nouveau fichier de test : `<Compile Include>` dans `Elite.Tests.csproj` ; tout fichier de données : `<None Include>` + `CopyToOutputDirectory`.
 

@@ -45,6 +45,8 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlarmConfigTests.cs" />
@@ -64,6 +66,7 @@
     <Compile Include="KeyRendererTests.cs" />
     <Compile Include="ManifestTests.cs" />
     <Compile Include="PressGestureTests.cs" />
+    <Compile Include="ProfilePagesTests.cs" />
     <Compile Include="ValueFormatterTests.cs" />
     <Compile Include="RawEventTests.cs" />
     <Compile Include="ReferenceKeysTests.cs" />

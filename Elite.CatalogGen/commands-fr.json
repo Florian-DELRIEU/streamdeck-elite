@@ -371,5 +371,12 @@
   "ToggleCargoScoop-OFF": "Rentre l'écope de cargaison, seulement si elle est sortie.",
   "ToggleCargoScoop-ON": "Sort l'écope de cargaison, seulement si elle est rentrée.",
   "ToggleFlightAssist-OFF": "Coupe l'assistance de vol, seulement si elle est active.",
-  "ToggleFlightAssist-ON": "Active l'assistance de vol, seulement si elle est coupée."
+  "ToggleFlightAssist-ON": "Active l'assistance de vol, seulement si elle est coupée.",
+
+  "ZV-Page-1": "Va à la page 1 du profil « ZV Elite » fourni avec le plugin (à la place d'un dossier). Essai de la v3.7.",
+  "ZV-Page-2": "Va à la page 2 du profil « ZV Elite » fourni avec le plugin (à la place d'un dossier). Essai de la v3.7.",
+  "ZV-Page-3": "Va à la page 3 du profil « ZV Elite » fourni avec le plugin (à la place d'un dossier). Essai de la v3.7.",
+  "ZV-Page-4": "Va à la page 4 du profil « ZV Elite » fourni avec le plugin (à la place d'un dossier). Essai de la v3.7.",
+  "ZV-Page-5": "Va à la page 5 du profil « ZV Elite » fourni avec le plugin (à la place d'un dossier). Essai de la v3.7.",
+  "ZV-ProfileBack": "Revient au profil affiché avant le passage au profil « ZV Elite ». Essai de la v3.7."
 }

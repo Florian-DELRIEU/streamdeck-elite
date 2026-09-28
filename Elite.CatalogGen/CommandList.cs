@@ -30,6 +30,8 @@ namespace Elite.CatalogGen
     {
         private const string Signature = "public static void SendKeypress(string function)";
         private const string SmartGroup = "smart";
+        private const string PagesGroup = "pages";
+        private const int Pages = 5; // Elite.Generic.ProfilePages.Pages
 
         private static readonly Regex CaseLabel = new Regex("case \"([^\"]+)\":", RegexOptions.Compiled);
         private static readonly Regex BindingTypeUse = new Regex(@"BindingType\.(\w+)", RegexOptions.Compiled);
@@ -82,6 +84,14 @@ namespace Elite.CatalogGen
 
             foreach (var group in groups)
                 group.Commands.Sort((a, b) => string.Compare(a.Value, b.Value, StringComparison.OrdinalIgnoreCase));
+
+            // v3.7 (trial, docs/L10-v3.md): pages of the profile delivered with the plugin, handled by
+            // Elite.Generic.ProfilePages (not by EliteKeys)
+            var pages = new CommandGroup(PagesGroup, "Pages ZV Elite");
+            for (int page = 1; page <= Pages; page++)
+                pages.Commands.Add(new KeyValuePair<string, string>("ZV-Page-" + page, "ZV Elite : page " + page));
+            pages.Commands.Add(new KeyValuePair<string, string>("ZV-ProfileBack", "Retour au profil précédent"));
+            groups.Add(pages);
 
             return groups;
         }

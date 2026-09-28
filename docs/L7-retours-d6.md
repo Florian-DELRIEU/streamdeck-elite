@@ -76,6 +76,9 @@ Statut : **terminé** le 2026-09-25 (code). Le test **D7 reste à faire avec Flo
 - **À l'ouverture, la page de réglages se place sur la vue affichée.** Cela ne se fait qu'au premier chargement, pour ne pas changer de vue pendant l'édition. `generic.js` retire `currentView` avant de remplir les champs.
 
 ### Groupe de tir bloqué : ⚠
+
+> **Remplacé en v3.1 (2026-09-28, issue #3, `docs/L10-v3.md`)** : à la demande de Florian, le blocage est **levé** sur les touches Donnée, Graphique et Alarme (`FireGroupSender`, touches du SRV en SRV) ; `CommandGuard` est retiré. `EliteKeys` et le bouton Firegroup d'origine gardent le comportement de mhwlng.
+
 - **`Elite/Generic/CommandGuard.cs`** reprend les conditions de `EliteKeys.HandleFireGroup` : à pied, en SRV, à quai, posé, train sorti, saut FSD. `EliteKeys` et l'action Firegroup historique ne sont **pas modifiés**.
 - **Si une commande `FireGroup-X` d'une touche « Donnée » est bloquée :**
   - la touche affiche le triangle ⚠ de Stream Deck (`ShowAlert`) ;

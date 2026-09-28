@@ -377,6 +377,14 @@ var ELITE_COMMANDS = {
 ["ToggleCargoScoop-ON","Toggle Cargo Scoop (ON)","Sort l'\u00e9cope de cargaison, seulement si elle est rentr\u00e9e."],
 ["ToggleFlightAssist-OFF","Toggle Flight Assist (OFF)","Coupe l'assistance de vol, seulement si elle est active."],
 ["ToggleFlightAssist-ON","Toggle Flight Assist (ON)","Active l'assistance de vol, seulement si elle est coup\u00e9e."]
+]},
+{"id": "pages", "label": "Pages ZV Elite", "commands": [
+["ZV-Page-1","ZV Elite : page 1","Va \u00e0 la page 1 du profil \u00ab ZV Elite \u00bb fourni avec le plugin (\u00e0 la place d'un dossier). Essai de la v3.7."],
+["ZV-Page-2","ZV Elite : page 2","Va \u00e0 la page 2 du profil \u00ab ZV Elite \u00bb fourni avec le plugin (\u00e0 la place d'un dossier). Essai de la v3.7."],
+["ZV-Page-3","ZV Elite : page 3","Va \u00e0 la page 3 du profil \u00ab ZV Elite \u00bb fourni avec le plugin (\u00e0 la place d'un dossier). Essai de la v3.7."],
+["ZV-Page-4","ZV Elite : page 4","Va \u00e0 la page 4 du profil \u00ab ZV Elite \u00bb fourni avec le plugin (\u00e0 la place d'un dossier). Essai de la v3.7."],
+["ZV-Page-5","ZV Elite : page 5","Va \u00e0 la page 5 du profil \u00ab ZV Elite \u00bb fourni avec le plugin (\u00e0 la place d'un dossier). Essai de la v3.7."],
+["ZV-ProfileBack","Retour au profil pr\u00e9c\u00e9dent","Revient au profil affich\u00e9 avant le passage au profil \u00ab ZV Elite \u00bb. Essai de la v3.7."]
 ]}
 ]
 };

@@ -40,6 +40,18 @@ Statut : **terminé** le 2026-09-23. Ce document précise, sans le contredire, l
 - **Un champ absent donne une clé absente.** Par exemple, `status.Oxygen` n'existe qu'à pied. Ce sera « — » pour Valeur et l'image « faux » pour État.
 - **Remplacement par source** : un nouveau statut, ou un nouvel événement d'un type donné, remplace **toutes** les clés de cette source. Une clé disparue est retirée et signalée dans `DataChanged`.
 
+### Clés produites par le plugin (v3.1 à v3.3, `docs/L10-v3.md`)
+
+| Préfixe | Source dans le magasin | Rôle |
+|---|---|---|
+| `calc.*` | `calc` : `DerivedKeys.Compute` (fonction pure), recalculé après **chaque** statut et **chaque** événement | données calculées : `calc.Route.RemainingJumps`, `calc.Fuel.Percent`, `calc.Cargo.Percent`, `calc.Jump.Range`, `calc.Fsd.Supercharged` |
+| `calc.Hull.Percent` | `calc.Hull` : `HullTracker` (à état) | coque en % ; le magasin ne garde que le dernier `HullDamage`, qui peut être celui du chasseur |
+| `calc.Backpack.<nom>` | `calc.Backpack` : `BackpackTracker` (à état) | contenu du sac à dos Odyssey (`Backpack` + `BackpackChange`) |
+| `ship.*` | `ship` : `ShipMemory` (fichier `memoire.json`) | valeurs du **vaisseau actuel**, mémorisées par `ShipID` depuis son dernier `Loadout` |
+
+- **Une seule notification** : les changements des sources `ship`, `calc*` et de la source mise à jour partent dans le **même** `DataChanged` (une seule mise à jour des touches).
+- **Catalogue** : les groupes sont déclarés à la main dans `Elite.CatalogGen/PluginCatalog.cs`, et chaque clé et chaque groupe doivent avoir leur description dans `descriptions-fr.json` (`DescriptionsTests`).
+
 ## API `EliteStore` (namespace `Elite.Generic`)
 
 | Membre | Rôle |

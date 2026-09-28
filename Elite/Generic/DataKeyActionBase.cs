@@ -220,7 +220,7 @@ namespace Elite.Generic
                 return;
             }
 
-            KeyCommands.Send(view.Command, view.Hotkey, view.HotkeyText, $"{Owner}[{view.Source}]");
+            KeyCommands.Send(Connection, view.Command, view.Hotkey, view.HotkeyText, $"{Owner}[{view.Source}]");
             media.Play(view.Sound);
         }
 

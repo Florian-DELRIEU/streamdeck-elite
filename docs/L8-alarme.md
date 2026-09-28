@@ -48,6 +48,8 @@ Le cahier des charges (§5.3) prévoit une troisième action générique : une t
 
 ## Réglages JSON — noms **définitifs** (UUID `com.mhwlng.elite.eventalarm`)
 
+> **v3.6 (2026-09-28, `docs/L10-v3.md`)** : ces 12 noms sont ceux de l'**alarme 1**. Les alarmes 2 à 4 reprennent les mêmes noms suivis de leur numéro (`event2`, `filterField2`… `clickSound4`), sauf `idleImage`, commune : 45 réglages au total.
+
 | Nom | Rôle | Défaut |
 |---|---|---|
 | `event` | événement, nom écrit par le jeu (`UnderAttack`) | `""` = jamais d'alerte |

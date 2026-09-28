@@ -26,9 +26,10 @@ namespace Elite.Tests
         [Test]
         public void Groups_AndCounts()
         {
-            Assert.That(commandsByGroup.Keys, Is.EqualTo(new[] { "ship", "srv", "onfoot", "general", "smart" }));
+            Assert.That(commandsByGroup.Keys, Is.EqualTo(new[] { "ship", "srv", "onfoot", "general", "smart", "pages" }));
             Assert.That(commandsByGroup.Values.All(c => c.Count > 0), Is.True);
-            Assert.That(commandsByGroup.Values.Sum(c => c.Count), Is.EqualTo(366));
+            Assert.That(commandsByGroup.Values.Sum(c => c.Count), Is.EqualTo(366 + 6), "366 of EliteKeys + 6 pages of the ZV Elite profile (v3.7)");
+            Assert.That(commandsByGroup["pages"], Is.EqualTo(new[] { "ZV-Page-1", "ZV-Page-2", "ZV-Page-3", "ZV-Page-4", "ZV-Page-5", "ZV-ProfileBack" }));
             Assert.That(commandsByGroup["smart"].Count, Is.EqualTo(30));
             Assert.That(commandsByGroup.Values.SelectMany(c => c), Is.Unique);
         }
@@ -36,7 +37,7 @@ namespace Elite.Tests
         [Test]
         public void EveryPlainCommand_IsAUserBinding()
         {
-            var notBindings = commandsByGroup.Where(g => g.Key != "smart")
+            var notBindings = commandsByGroup.Where(g => g.Key != "smart" && g.Key != "pages")
                 .SelectMany(g => g.Value)
                 .Where(name =>
                 {

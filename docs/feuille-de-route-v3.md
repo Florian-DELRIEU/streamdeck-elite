@@ -1,6 +1,8 @@
 # Feuille de route après la v3.0 — issues #1, #2 et #3
 
-Statut : **document de référence** du 2026-09-28. Rien n'est encore commencé. Ce document reprend les issues [#1 TODO](https://github.com/Florian-DELRIEU/streamdeck-elite/issues/1), [#2 Question](https://github.com/Florian-DELRIEU/streamdeck-elite/issues/2) et [#3 BUG REPORT](https://github.com/Florian-DELRIEU/streamdeck-elite/issues/3), mes avis, et les décisions de Florian.
+Statut : **réalisé** le 2026-09-28, à la demande de Florian **en une seule étape** (lot L10 : v3.1 à v3.7, 7 commits, un seul test en jeu D10) : voir `docs/L10-v3.md`. Les questions ouvertes du §4 y sont tranchées (police Rubik, 4 types de graphiques, portée chargée faite, touches de groupe de tir du SRV, alarme la plus récente). Correction du §1 : le SRV **a** des groupes de tir (`BuggyCycleFireGroupNext/Previous` dans les réglages du jeu). Le reste de ce document est l'état du 2026-09-28 au matin, pour l'historique.
+
+Statut d'origine : **document de référence** du 2026-09-28. Rien n'est encore commencé. Ce document reprend les issues [#1 TODO](https://github.com/Florian-DELRIEU/streamdeck-elite/issues/1), [#2 Question](https://github.com/Florian-DELRIEU/streamdeck-elite/issues/2) et [#3 BUG REPORT](https://github.com/Florian-DELRIEU/streamdeck-elite/issues/3), mes avis, et les décisions de Florian.
 
 > ## Reprise dans une autre discussion
 > - **État :**

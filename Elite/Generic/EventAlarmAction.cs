@@ -137,7 +137,7 @@ namespace Elite.Generic
                     Render(false);
                 }
 
-                KeyCommands.Send(current.Command, current.Hotkey, current.HotkeyText, $"EventAlarm[{current.Event}]");
+                KeyCommands.Send(Connection, current.Command, current.Hotkey, current.HotkeyText, $"EventAlarm[{current.Event}]");
 
                 media.Play(current.ClickSound);
             }
