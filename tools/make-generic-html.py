@@ -13,6 +13,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 HTML = os.path.join(ROOT, "Elite", "PropertyInspector", "Elite", "Generic.html")
 ALARM_HTML = os.path.join(ROOT, "Elite", "PropertyInspector", "Elite", "EventAlarm.html")
 ACTION = os.path.join(ROOT, "Elite", "Generic", "ValueAction.cs")
+GRAPH_HTML = os.path.join(ROOT, "Elite", "PropertyInspector", "Elite", "Graph.html")
+GRAPH_ACTION = os.path.join(ROOT, "Elite", "Generic", "GraphAction.cs")
 VIEWS = 4
 RULES = 4
 
@@ -43,7 +45,7 @@ def key_block(v):
         </div>'''
 
 
-def text_block(v):
+def text_block(v, position="middle"):
     s = sfx(v)
     return f'''        <div data-view="{v}">
             <div class="sdpi-item">
@@ -80,7 +82,7 @@ def text_block(v):
                     <label for="compact{s}" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
                 </div>
             </div>
-{drawn_text_rows(v)}
+{drawn_text_rows(v, position)}
         </div>'''
 
 
@@ -88,9 +90,9 @@ POSITIONS = (("top", "en haut"), ("middle", "au milieu"), ("bottom", "en bas"))
 
 
 # text drawn into the image by the plugin (v3.2, docs/L10-v3.md): shared by "Donnee" and "Graphique"
-def drawn_text_rows(v):
+def drawn_text_rows(v, position="middle"):
     s = sfx(v)
-    positions = "\n".join(f'                    <option value="{value}"{" selected" if value == "middle" else ""}>{text}</option>'
+    positions = "\n".join(f'                    <option value="{value}"{" selected" if value == position else ""}>{text}</option>'
                           for value, text in POSITIONS)
     return f'''            <div class="sdpi-item">
                 <div class="sdpi-item-label">Dessiner</div>
@@ -141,14 +143,14 @@ def drawn_text_rows(v):
 
 
 # C# settings of drawn_text_rows (view 1 is written by hand in the action, views 2 to 4 are generated)
-def drawn_text_props(prop, v):
+def drawn_text_props(prop, v, position="middle"):
     s = "" if v == 1 else str(v)
     prop(f"drawText{s}", "bool", None)
     prop(f"fontSize{s}", "string", '"18"')
     prop(f"fontName{s}", "string", "TextStyle.DefaultFont")
     prop(f"fontColor{s}", "string", "TextStyle.DefaultColor")
     prop(f"fontBold{s}", "bool", None)
-    prop(f"textPosition{s}", "string", '"middle"')
+    prop(f"textPosition{s}", "string", f'"{position}"')
     prop(f"textWrap{s}", "bool", "true")
     prop(f"textFit{s}", "bool", "true")
 
@@ -227,6 +229,7 @@ def head(title, doc, scripts):
         .generic-rule {{ display: flex; gap: 4px; min-width: 0; box-sizing: border-box; }}
         .generic-rule select {{ flex: 0 0 45%; width: 45%; min-width: 0; box-sizing: border-box; }}
         .generic-rule input {{ flex: 1 1 0; width: 0; min-width: 0; box-sizing: border-box; }}
+        .generic-rule input.generic-rule-color {{ flex: 0 0 30px; width: 30px; padding: 0; }}
         select.generic-results {{ -webkit-appearance: listbox; appearance: listbox; background-image: none; height: auto; width: 0; min-width: 0; flex: 1 1 auto; }}
         .generic-info-button {{ text-align: left; cursor: pointer; }}
         .generic-info-panel {{ font-size: 9pt; line-height: 1.35; white-space: normal; }}
@@ -269,15 +272,97 @@ PRESS_HINT = '''        <div class="sdpi-item">
         </div>'''
 
 
-def page():
-    keys = "\n".join(key_block(v) for v in range(1, VIEWS + 1))
-    texts = "\n".join(text_block(v) for v in range(1, VIEWS + 1))
+def icon_section():
     icons = "\n".join(icon_block(v) for v in range(1, VIEWS + 1))
+    return f'''        <div class="sdpi-heading">Icône</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Règles testées dans l'ordre sur la donnée de la vue (après facteur et décalage) : la première vraie choisit l'image. Sinon, ou si la donnée est absente : image par défaut. Clic sur un libellé d'image = l'effacer.</div>
+        </div>
+{icons}'''
+
+
+GRAPH_TYPES = (("hbar", "barre horizontale"), ("vbar", "barre verticale"), ("dial", "cadran"), ("curve", "courbe (historique)"))
+
+
+def color_rule_row(v, r):
+    s = sfx(v)
+    return f'''            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur {r}</div>
+                <div class="sdpi-item-value generic-rule">
+                    <select class="select sdProperty generic-rule-op" id="colorRule{r}Op{s}" onchange="setSettings()">
+{operator_options(" " * 24)}
+                    </select>
+                    <input class="sdProperty" id="colorRule{r}Value{s}" type="text" list="genericEnumValues" placeholder="valeur" oninput="setSettings()">
+                    <input class="sdProperty generic-rule-color" id="colorRule{r}Color{s}" type="color" value="#ff4646" oninput="setSettings()">
+                </div>
+            </div>'''
+
+
+# graph of a view of the "Graphique" key (v3.4, docs/L10-v3.md)
+def graph_block(v):
+    s = sfx(v)
+    types = "\n".join(f'                    <option value="{value}"{" selected" if value == "hbar" else ""}>{text}</option>' for value, text in GRAPH_TYPES)
+    rules = "\n".join(color_rule_row(v, r) for r in range(1, RULES + 1))
+    return f'''        <div data-view="{v}">
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Type</div>
+                <select class="sdpi-item-value select sdProperty" id="graphType{s}" onchange="setSettings()">
+{types}
+                </select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Minimum</div>
+                <input class="sdpi-item-value sdProperty" id="graphMin{s}" type="text" value="0" placeholder="0, ou une clé" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Maximum</div>
+                <input class="sdpi-item-value sdProperty" id="graphMax{s}" type="text" value="100" placeholder="100, ou une clé : ship.FuelCapacity.Main" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur</div>
+                <input class="sdpi-item-value sdProperty generic-color" id="graphColor{s}" type="color" value="#a7d7d6" oninput="setSettings()">
+            </div>
+{rules}
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Points</div>
+                <input class="sdpi-item-value sdProperty" id="curvePoints{s}" type="number" min="5" max="240" step="1" value="60" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Toutes les</div>
+                <input class="sdpi-item-value sdProperty" id="curveInterval{s}" type="number" min="1" max="3600" step="1" value="5" oninput="setSettings()">
+            </div>
+        </div>'''
+
+
+def graph_section():
+    graphs = "\n".join(graph_block(v) for v in range(1, VIEWS + 1))
+    return f'''        <div class="sdpi-heading">Graphique</div>
+        <div class="sdpi-item">
+            <div class="sdpi-item-label empty"></div>
+            <div class="sdpi-item-value generic-hint">Le plugin dessine la donnée de la vue (après facteur et décalage) entre le minimum et le maximum : un nombre, ou une clé (même facteur et décalage). Couleurs : la première règle vraie, sinon « Couleur ». Courbe : historique de la donnée, « Points » valeurs relevées « Toutes les » N secondes, même touche non affichée ; minimum ou maximum vide = automatique.</div>
+        </div>
+{graphs}'''
+
+
+def page(kind="value"):
+    graph = kind == "graph"
+    keys = "\n".join(key_block(v) for v in range(1, VIEWS + 1))
+    texts = "\n".join(text_block(v, "top" if graph else "middle") for v in range(1, VIEWS + 1))
+    visuals = graph_section() if graph else icon_section()
     commands = "\n".join(command_block(v) for v in range(1, VIEWS + 1))
     presses = "\n".join(press_block(v) for v in range(1, VIEWS + 1))
-    return head("ZV Elite - donnée du jeu", "docs/L5-tiroir.md", ["sdtools.common.js", "catalog.js", "commands.js", "generic.js"]) + f'''
-    <!-- "Donnee" key (com.mhwlng.elite.value): every section below the view selector belongs to the edited view -->
-    <div data-actions="value">
+    if graph:
+        title, doc = "ZV Elite - graphique", "docs/L10-v3.md"
+        comment = '"Graphique" key (com.mhwlng.elite.graph)'
+        view_hint = "Chaque vue a sa donnée, son texte, son graphique et sa commande. Le geste (réglages de la touche, en bas) fait passer d'une vue à l'autre."
+    else:
+        title, doc = "ZV Elite - donnée du jeu", "docs/L5-tiroir.md"
+        comment = '"Donnee" key (com.mhwlng.elite.value)'
+        view_hint = "Chaque vue a sa donnée, son texte, son icône et sa commande. Une vue sans icône propre reprend l'icône de la vue 1. Le geste (réglages de la touche, en bas) fait passer d'une vue à l'autre."
+    return head(title, doc, ["sdtools.common.js", "catalog.js", "commands.js", "generic.js"]) + f'''
+    <!-- {comment}: every section below the view selector belongs to the edited view -->
+    <div data-actions="{kind}">
         <div class="sdpi-heading">Vue éditée</div>
         <div class="sdpi-item">
             <div class="sdpi-item-label">Vue</div>
@@ -290,7 +375,7 @@ def page():
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">Chaque vue a sa donnée, son texte, son icône et sa commande. Une vue sans icône propre reprend l'icône de la vue 1. Le geste (réglages de la touche, en bas) fait passer d'une vue à l'autre.</div>
+            <div class="sdpi-item-value generic-hint">{view_hint}</div>
         </div>
 
         <div class="sdpi-heading">Donnée du jeu</div>
@@ -339,12 +424,7 @@ def page():
             <div class="sdpi-item-value generic-hint">\\n dans le préfixe ou le suffixe = retour à la ligne. Sans « Dessiner » : texte du logiciel Stream Deck (taille : icône « T », 18 au plus). Avec « Dessiner » : le plugin écrit la valeur dans l'image, taille libre en pixels (touche de 72), retour à la ligne et réduction automatiques ; le titre du logiciel est alors vidé.</div>
         </div>
 
-        <div class="sdpi-heading">Icône</div>
-        <div class="sdpi-item">
-            <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">Règles testées dans l'ordre sur la donnée de la vue (après facteur et décalage) : la première vraie choisit l'image. Sinon, ou si la donnée est absente : image par défaut. Clic sur un libellé d'image = l'effacer.</div>
-        </div>
-{icons}
+{visuals}
         <datalist id="genericEnumValues"></datalist>
 
         <div class="sdpi-heading">Action (appui)</div>
@@ -522,24 +602,72 @@ def settings_block():
     return "\n".join(lines)
 
 
+def property_writer(lines):
+    def prop(json_name, cs_type, default, filename=False):
+        name = json_name[0].upper() + json_name[1:]
+        if filename:
+            lines.append("            [FilenameProperty]")
+        init = "" if default is None else f" = {default};"
+        lines.append(f'            [JsonProperty(PropertyName = "{json_name}")] public {cs_type} {name} {{ get; set; }}{init}')
+    return prop
+
+
+# every setting of Graph.html (the page has no hand-written field): views 1 to 4, then the whole key
+def graph_settings_block():
+    lines = []
+    prop = property_writer(lines)
+    for v in range(1, VIEWS + 1):
+        s = sfx(v)
+        lines.append(f"            // ---- view {v}")
+        for base, default in (("source", '""'), ("prefix", '""'), ("suffix", '""'), ("decimals", '"0"'), ("scale", '"1"'), ("offset", '"0"')):
+            prop(f"{base}{s}", "string", default)
+        prop(f"compact{s}", "bool", None)
+        prop(f"showText{s}", "bool", "true")
+        drawn_text_props(prop, v, "top")
+        prop(f"graphType{s}", "string", '"hbar"')
+        prop(f"graphMin{s}", "string", '"0"')
+        prop(f"graphMax{s}", "string", '"100"')
+        prop(f"graphColor{s}", "string", "GraphConfig.DefaultColor")
+        for r in range(1, RULES + 1):
+            prop(f"colorRule{r}Op{s}", "string", '""')
+            prop(f"colorRule{r}Value{s}", "string", '""')
+            prop(f"colorRule{r}Color{s}", "string", "GraphConfig.DefaultRuleColor")
+        prop(f"curvePoints{s}", "string", '"60"')
+        prop(f"curveInterval{s}", "string", '"5"')
+        prop(f"pressCommand{s}", "string", '""')
+        prop(f"pressHotkey{s}", "string", '""')
+        prop(f"pressHotkeyText{s}", "string", '""')
+        prop(f"clickSound{s}", "string", '""', filename=True)
+    lines.append("            // ---- whole key")
+    prop("emptyText", "string", "ValueSettings.DefaultEmptyText")
+    prop("pressMode", "string", "PressGesture.ShortActLongViewName")
+    return "\n".join(lines)
+
+
+def replace_block(path, start, end, content):
+    with open(path, encoding="utf-8-sig") as f:
+        source = f.read()
+    pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
+    if not pattern.search(source):
+        raise SystemExit("markers not found in " + path)
+    source = pattern.sub(lambda m: start + "\n" + content + "\n            " + end, source)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(source)
+
+
 def main():
     with open(HTML, "w", encoding="utf-8", newline="\n") as f:
         f.write(page())
+    replace_block(ACTION, "// <generated-views-2-4>", "// </generated-views-2-4>", settings_block())
 
-    with open(ACTION, encoding="utf-8-sig") as f:
-        source = f.read()
-    start, end = "// <generated-views-2-4>", "// </generated-views-2-4>"
-    pattern = re.compile(re.escape(start) + r".*?" + re.escape(end), re.S)
-    if not pattern.search(source):
-        raise SystemExit("markers not found in " + ACTION)
-    source = pattern.sub(lambda m: start + "\n" + settings_block() + "\n            " + end, source)
-    with open(ACTION, "w", encoding="utf-8", newline="\n") as f:
-        f.write(source)
+    with open(GRAPH_HTML, "w", encoding="utf-8", newline="\n") as f:
+        f.write(page("graph"))
+    replace_block(GRAPH_ACTION, "// <generated-graph-settings>", "// </generated-graph-settings>", graph_settings_block())
 
     with open(ALARM_HTML, "w", encoding="utf-8", newline="\n") as f:
         f.write(alarm_page())
 
-    print("written:", ", ".join(os.path.relpath(p, ROOT) for p in (HTML, ACTION, ALARM_HTML)))
+    print("written:", ", ".join(os.path.relpath(p, ROOT) for p in (HTML, ACTION, GRAPH_HTML, GRAPH_ACTION, ALARM_HTML)))
 
 
 if __name__ == "__main__":

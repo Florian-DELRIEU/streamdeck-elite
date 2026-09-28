@@ -58,6 +58,7 @@
     <Compile Include="ImageRulesTests.cs" />
     <Compile Include="InspectorFieldsTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
+    <Compile Include="GraphTests.cs" />
     <Compile Include="HotkeyTests.cs" />
     <Compile Include="KeyRendererTests.cs" />
     <Compile Include="ManifestTests.cs" />

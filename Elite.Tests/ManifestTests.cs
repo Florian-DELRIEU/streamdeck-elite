@@ -49,7 +49,7 @@ namespace Elite.Tests
             // L9 (decisions D1 and of Florian, 2026-09-25): new name and category, UUIDs unchanged
             Assert.That((string)manifest["Name"], Is.EqualTo("ZV Stream Deck Elite"));
             Assert.That((string)manifest["Category"], Is.EqualTo("ZV Stream Deck Elite"));
-            Assert.That((string)manifest["Version"], Is.EqualTo("3.3.0"));
+            Assert.That((string)manifest["Version"], Is.EqualTo("3.4.0"));
         }
 
         [Test]
@@ -78,8 +78,21 @@ namespace Elite.Tests
             Assert.That((string)alarm["PropertyInspectorPath"], Is.EqualTo("PropertyInspector/Elite/EventAlarm.html"));
 
             var uuids = manifest["Actions"].Select(a => (string)a["UUID"]).ToList();
-            Assert.That(uuids.Count, Is.EqualTo(HistoricActions.Length + 2), "12 historic actions + Donnee + Alarme");
+            Assert.That(uuids.Count, Is.EqualTo(HistoricActions.Length + 3), "12 historic actions + Donnee + Graphique + Alarme");
             Assert.That(uuids, Has.No.Member("com.mhwlng.elite.counter"), "reserved, never declared");
+        }
+
+        [Test]
+        public void GraphAction_OneStateKeypadOnly()
+        {
+            // v3.4 (docs/L10-v3.md): UUID definitive once a key uses it
+            var graph = Action("com.mhwlng.elite.graph");
+
+            Assert.That((string)graph["Name"], Is.EqualTo("Graphique"));
+            Assert.That(graph["States"].Count(), Is.EqualTo(1));
+            Assert.That(graph["Controllers"].Values<string>(), Is.EqualTo(new[] { "Keypad" }));
+            Assert.That((bool)graph["SupportedInMultiActions"], Is.False);
+            Assert.That((string)graph["PropertyInspectorPath"], Is.EqualTo("PropertyInspector/Elite/Graph.html"));
         }
 
         [Test]

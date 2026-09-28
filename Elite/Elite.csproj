@@ -194,6 +194,9 @@
     <Compile Include="Generic\EliteStore.cs" />
     <Compile Include="Generic\FireGroupSender.cs" />
     <Compile Include="Generic\FsdTables.cs" />
+    <Compile Include="Generic\GraphAction.cs" />
+    <Compile Include="Generic\GraphConfig.cs" />
+    <Compile Include="Generic\GraphRenderer.cs" />
     <Compile Include="Generic\History.cs" />
     <Compile Include="Generic\HullTracker.cs" />
     <Compile Include="Generic\EventAlarmAction.cs" />
@@ -331,6 +334,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="PropertyInspector\Elite\Generic.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="PropertyInspector\Elite\Graph.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="PropertyInspector\Elite\EventAlarm.html">

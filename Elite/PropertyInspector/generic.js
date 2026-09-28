@@ -8,6 +8,7 @@
 
 var GENERIC_ACTION_KINDS = {
     'com.mhwlng.elite.value': 'value',
+    'com.mhwlng.elite.graph': 'graph',
     'com.mhwlng.elite.eventalarm': 'alarm'
 };
 
@@ -574,15 +575,18 @@ function genericUpdateRuleHelpers() {
     var allowed = entry ? GENERIC_RULE_OPERATORS[entry.type] : null;
     if (entry && /#count$/.test(entry.path))
         allowed = GENERIC_NUMBER_OPERATORS;
-    for (var i = 1; i <= GENERIC_RULES; i++) {
-        var select = genericElement('rule' + i + 'Op' + suffix);
-        if (!select)
-            continue;
-        Array.prototype.forEach.call(select.options, function (option) {
-            // never disable the current choice, so that a saved rule stays visible
-            option.disabled = option.value !== '' && allowed !== null && allowed.indexOf(option.value) < 0 && option.value !== select.value;
-        });
-    }
+    // image rules (Donnee) and colour rules (Graphique)
+    ['rule', 'colorRule'].forEach(function (prefix) {
+        for (var i = 1; i <= GENERIC_RULES; i++) {
+            var select = genericElement(prefix + i + 'Op' + suffix);
+            if (!select)
+                continue;
+            Array.prototype.forEach.call(select.options, function (option) {
+                // never disable the current choice, so that a saved rule stays visible
+                option.disabled = option.value !== '' && allowed !== null && allowed.indexOf(option.value) < 0 && option.value !== select.value;
+            });
+        }
+    });
 
     var list = genericElement('genericEnumValues');
     if (!list)

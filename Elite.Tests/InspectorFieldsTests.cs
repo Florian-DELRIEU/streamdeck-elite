@@ -52,6 +52,16 @@ namespace Elite.Tests
         }
 
         [Test]
+        public void GraphPage_SendsTheSettingsOfTheGraphAction_ExceptTheDisplayedView()
+        {
+            var settings = ActionSettings(typeof(GraphAction)).Where(name => name != "currentView").ToArray();
+
+            Assert.That(PageFields("Graph.html"), Is.EqualTo(settings));
+            Assert.That(settings, Does.Contain("graphType").And.Contain("colorRule4Color4").And.Contain("curveInterval3"));
+            Assert.That(settings, Does.Not.Contain("rule1Image"), "no image rules on a Graph key");
+        }
+
+        [Test]
         public void DataPage_SendsTheSettingsOfTheDataAction_ExceptTheDisplayedView()
         {
             // currentView is saved by the plugin only (docs/L7-retours-d6.md)
