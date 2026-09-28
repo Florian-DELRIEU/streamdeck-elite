@@ -49,7 +49,7 @@ namespace Elite.Tests
             // L9 (decisions D1 and of Florian, 2026-09-25): new name and category, UUIDs unchanged
             Assert.That((string)manifest["Name"], Is.EqualTo("ZV Stream Deck Elite"));
             Assert.That((string)manifest["Category"], Is.EqualTo("ZV Stream Deck Elite"));
-            Assert.That((string)manifest["Version"], Is.EqualTo("3.2.0"));
+            Assert.That((string)manifest["Version"], Is.EqualTo("3.3.0"));
         }
 
         [Test]

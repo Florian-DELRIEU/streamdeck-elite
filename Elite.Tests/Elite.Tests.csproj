@@ -65,6 +65,7 @@
     <Compile Include="ValueFormatterTests.cs" />
     <Compile Include="RawEventTests.cs" />
     <Compile Include="ReferenceKeysTests.cs" />
+    <Compile Include="ShipMemoryTests.cs" />
     <Compile Include="StoreKeysTests.cs" />
     <Compile Include="TestSupport.cs" />
   </ItemGroup>

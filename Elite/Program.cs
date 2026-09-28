@@ -510,6 +510,10 @@ namespace Elite
             //defaultFilter = @"JournalAlpha.*.log";
 //#endif
 
+                // ZV Stream Deck Elite v3.3: remembered ships and history (%APPDATA%\ZV Stream Deck Elite\memoire.json)
+                PluginMemory.Configure(PluginMemory.DefaultPath);
+                EliteStore.RefreshShipMemory();
+
                 StatusWatcher = new StatusWatcher(journalPath);
 
                 StatusWatcher.StatusUpdated += EliteData.HandleStatusEvents;
@@ -527,6 +531,8 @@ namespace Elite
                 JournalWatcher.StartWatching().Wait();
 
                 Logger.Instance.LogMessage(TracingLevel.INFO, $"EliteStore: {EliteStore.KeyCount} keys after journal replay");
+
+                History.Start();
 
                 CargoWatcher = new CargoWatcher(journalPath);
 

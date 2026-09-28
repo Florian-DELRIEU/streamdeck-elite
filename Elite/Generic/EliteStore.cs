@@ -112,6 +112,12 @@ namespace Elite.Generic
             }
 
             var changed = Replace(StoreKeys.JournalSource(e.EventName), StoreKeys.FromJournalEvent(e.EventName, e.Event));
+            if (ShipMemory.Observe(e.EventName, e.Event))
+                changed.UnionWith(Replace(StoreKeys.ShipPrefix, ShipMemory.Keys()));
+            if (BackpackTracker.Observe(e.EventName, e.Event))
+                changed.UnionWith(Replace(BackpackTracker.Source, BackpackTracker.Keys()));
+            if (HullTracker.Observe(e.EventName, e.Event))
+                changed.UnionWith(Replace(HullTracker.Source, HullTracker.Keys()));
             changed.UnionWith(UpdateDerived());
             Raise(changed);
 
@@ -142,7 +148,17 @@ namespace Elite.Generic
         }
 
         /// <summary>
-        /// For unit tests: empty store, no subscribers.
+        /// ship.* keys of the remembered current ship (after PluginMemory.Configure, before the journal replay).
+        /// </summary>
+        public static void RefreshShipMemory()
+        {
+            var changed = Replace(StoreKeys.ShipPrefix, ShipMemory.Keys());
+            changed.UnionWith(UpdateDerived());
+            Raise(changed);
+        }
+
+        /// <summary>
+        /// For unit tests: empty store, no subscribers, nothing remembered (no file).
         /// </summary>
         internal static void Reset()
         {
@@ -155,6 +171,9 @@ namespace Elite.Generic
 
             DataChanged = null;
             JournalEventReceived = null;
+            PluginMemory.Reset();
+            BackpackTracker.Reset();
+            HullTracker.Reset();
         }
 
         /// <summary>
