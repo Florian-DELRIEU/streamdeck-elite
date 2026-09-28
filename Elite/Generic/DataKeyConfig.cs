@@ -28,6 +28,8 @@ namespace Elite.Generic
         public string Hotkey { get; internal set; } = "";
         public string HotkeyText { get; internal set; } = "";
         public string Sound { get; internal set; } = "";
+        /// <summary>Text drawn into the image by the plugin (v3.2); Draw = false: title of the Stream Deck software.</summary>
+        public TextStyle Text { get; internal set; } = new TextStyle();
 
         /// <summary>A view without default image and without rule uses the icon of view 1.</summary>
         public bool HasOwnIcon
@@ -103,6 +105,7 @@ namespace Elite.Generic
                     Hotkey = Text(settings, "pressHotkey" + suffix, "").Trim(),
                     HotkeyText = Text(settings, "pressHotkeyText" + suffix, "").Trim(),
                     Sound = FileName(settings, "clickSound" + suffix),
+                    Text = TextStyleOf(settings, suffix),
                 };
 
                 for (int r = 1; r <= MaxRules; r++)
@@ -122,6 +125,33 @@ namespace Elite.Generic
             if (int.TryParse(Text(settings, "currentView", "1"), out current) && current >= 1 && current <= MaxViews)
                 config.CurrentViewNumber = current;
             return config;
+        }
+
+        /// <summary>
+        /// drawText, fontSize, fontName, fontColor, fontBold, textPosition, textWrap, textFit (+ view number), v3.2.
+        /// Absent (keys created before v3.2) = not drawn, as before.
+        /// </summary>
+        internal static TextStyle TextStyleOf(JObject settings, string suffix)
+        {
+            var style = new TextStyle
+            {
+                Draw = Flag(settings, "drawText" + suffix, false),
+                FontName = Text(settings, "fontName" + suffix, TextStyle.DefaultFont).Trim(),
+                Color = Text(settings, "fontColor" + suffix, TextStyle.DefaultColor).Trim(),
+                Bold = Flag(settings, "fontBold" + suffix, false),
+                Position = TextStyle.ParsePosition(Text(settings, "textPosition" + suffix, "")),
+                Wrap = Flag(settings, "textWrap" + suffix, true),
+                Fit = Flag(settings, "textFit" + suffix, true),
+            };
+
+            double size;
+            if (Condition.TryParseNumber(Text(settings, "fontSize" + suffix, ""), out size))
+                style.Size = (float)Math.Max(TextStyle.MinSize, Math.Min(TextStyle.MaxSize, size));
+            if (style.FontName.Length == 0)
+                style.FontName = TextStyle.DefaultFont;
+            if (style.Color.Length == 0)
+                style.Color = TextStyle.DefaultColor;
+            return style;
         }
 
         private static string Text(JObject settings, string name, string defaultValue)

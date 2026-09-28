@@ -7,12 +7,13 @@ namespace Elite.Generic
 {
     /// <summary>
     /// Images (base64) and sounds of a key, read once then cached. A missing or unreadable file gives null and a WARN.
-    /// Used by the Alarm key (ValueAction keeps its own copy, unchanged since L7).
+    /// Used by the Data, Graph and Alarm keys.
     /// </summary>
-    internal class KeyMedia
+    public class KeyMedia
     {
         private readonly string owner;
         private readonly Dictionary<string, string> images = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, byte[]> bytes = new Dictionary<string, byte[]>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, CachedSound> sounds = new Dictionary<string, CachedSound>(StringComparer.OrdinalIgnoreCase);
 
         public KeyMedia(string owner)
@@ -46,6 +47,31 @@ namespace Elite.Generic
                 }
 
                 return base64;
+            }
+        }
+
+        /// <summary>Content of an image file, for the images drawn by the plugin (KeyRenderer); null if unreadable.</summary>
+        public byte[] ImageBytes(string path)
+        {
+            lock (bytes)
+            {
+                byte[] content;
+                if (!bytes.TryGetValue(path, out content))
+                {
+                    try
+                    {
+                        content = File.ReadAllBytes(path);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Instance.LogMessage(TracingLevel.WARN, $"{owner}: cannot read image {path}: {ex.Message}");
+                        content = null;
+                    }
+
+                    bytes[path] = content;
+                }
+
+                return content;
             }
         }
 

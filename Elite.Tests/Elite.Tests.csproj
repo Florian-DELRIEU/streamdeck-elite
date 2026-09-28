@@ -44,6 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Drawing" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AlarmConfigTests.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="InspectorFieldsTests.cs" />
     <Compile Include="EliteStoreTests.cs" />
     <Compile Include="HotkeyTests.cs" />
+    <Compile Include="KeyRendererTests.cs" />
     <Compile Include="ManifestTests.cs" />
     <Compile Include="PressGestureTests.cs" />
     <Compile Include="ValueFormatterTests.cs" />

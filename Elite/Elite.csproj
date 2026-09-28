@@ -187,6 +187,7 @@
     <Compile Include="Generic\AlarmConfig.cs" />
     <Compile Include="Generic\AlarmState.cs" />
     <Compile Include="Generic\Condition.cs" />
+    <Compile Include="Generic\DataKeyActionBase.cs" />
     <Compile Include="Generic\DataKeyConfig.cs" />
     <Compile Include="Generic\DerivedKeys.cs" />
     <Compile Include="Generic\EliteStore.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Generic\ImageRules.cs" />
     <Compile Include="Generic\KeyCommands.cs" />
     <Compile Include="Generic\KeyMedia.cs" />
+    <Compile Include="Generic\KeyRenderer.cs" />
     <Compile Include="Generic\PressGesture.cs" />
     <Compile Include="Generic\StoreKeys.cs" />
     <Compile Include="Generic\ValueAction.cs" />
@@ -230,6 +232,12 @@
     <Content Include="Images\cargo scoop off.png" />
     <Content Include="Images\cargo scoop on.png" />
     <Content Include="Images\categoryIcon%402x.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\Rubik-Variable.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Fonts\OFL.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\categoryIcon.png">

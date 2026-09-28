@@ -80,7 +80,77 @@ def text_block(v):
                     <label for="compact{s}" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
                 </div>
             </div>
+{drawn_text_rows(v)}
         </div>'''
+
+
+POSITIONS = (("top", "en haut"), ("middle", "au milieu"), ("bottom", "en bas"))
+
+
+# text drawn into the image by the plugin (v3.2, docs/L10-v3.md): shared by "Donnee" and "Graphique"
+def drawn_text_rows(v):
+    s = sfx(v)
+    positions = "\n".join(f'                    <option value="{value}"{" selected" if value == "middle" else ""}>{text}</option>'
+                          for value, text in POSITIONS)
+    return f'''            <div class="sdpi-item">
+                <div class="sdpi-item-label">Dessiner</div>
+                <div class="sdpi-item-value">
+                    <input id="drawText{s}" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="drawText{s}" class="sdpi-item-label"><span></span>le texte dans l'image (réglages ci-dessous)</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Taille</div>
+                <input class="sdpi-item-value sdProperty" id="fontSize{s}" type="number" min="6" max="72" step="1" value="18" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Police</div>
+                <input class="sdpi-item-value sdProperty" id="fontName{s}" type="text" value="Rubik" placeholder="Rubik, Tahoma, Arial..." oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur</div>
+                <input class="sdpi-item-value sdProperty generic-color" id="fontColor{s}" type="color" value="#d18105" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Gras</div>
+                <div class="sdpi-item-value">
+                    <input id="fontBold{s}" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="fontBold{s}" class="sdpi-item-label"><span></span>texte en gras</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Position</div>
+                <select class="sdpi-item-value select sdProperty" id="textPosition{s}" onchange="setSettings()">
+{positions}
+                </select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Lignes</div>
+                <div class="sdpi-item-value">
+                    <input id="textWrap{s}" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textWrap{s}" class="sdpi-item-label"><span></span>retour à la ligne automatique</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Ajuster</div>
+                <div class="sdpi-item-value">
+                    <input id="textFit{s}" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textFit{s}" class="sdpi-item-label"><span></span>réduire la taille pour que tout tienne</label>
+                </div>
+            </div>'''
+
+
+# C# settings of drawn_text_rows (view 1 is written by hand in the action, views 2 to 4 are generated)
+def drawn_text_props(prop, v):
+    s = "" if v == 1 else str(v)
+    prop(f"drawText{s}", "bool", None)
+    prop(f"fontSize{s}", "string", '"18"')
+    prop(f"fontName{s}", "string", "TextStyle.DefaultFont")
+    prop(f"fontColor{s}", "string", "TextStyle.DefaultColor")
+    prop(f"fontBold{s}", "bool", None)
+    prop(f"textPosition{s}", "string", '"middle"')
+    prop(f"textWrap{s}", "bool", "true")
+    prop(f"textFit{s}", "bool", "true")
 
 
 # tests of Elite/Generic/Condition.cs (image rules of "Donnee", filter of "Alarme")
@@ -266,7 +336,7 @@ def page():
 {texts}
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">\\n dans le préfixe ou le suffixe = retour à la ligne. Taille du texte : icône « T » du logiciel Stream Deck.</div>
+            <div class="sdpi-item-value generic-hint">\\n dans le préfixe ou le suffixe = retour à la ligne. Sans « Dessiner » : texte du logiciel Stream Deck (taille : icône « T », 18 au plus). Avec « Dessiner » : le plugin écrit la valeur dans l'image, taille libre en pixels (touche de 72), retour à la ligne et réduction automatiques ; le titre du logiciel est alors vidé.</div>
         </div>
 
         <div class="sdpi-heading">Icône</div>
@@ -448,6 +518,7 @@ def settings_block():
         prop(f"pressHotkey{v}", "string", '""')
         prop(f"pressHotkeyText{v}", "string", '""')
         prop(f"clickSound{v}", "string", '""', filename=True)
+        drawn_text_props(prop, v)
     return "\n".join(lines)
 
 

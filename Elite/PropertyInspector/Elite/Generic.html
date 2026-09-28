@@ -141,6 +141,54 @@
                     <label for="compact" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
                 </div>
             </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Dessiner</div>
+                <div class="sdpi-item-value">
+                    <input id="drawText" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="drawText" class="sdpi-item-label"><span></span>le texte dans l'image (réglages ci-dessous)</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Taille</div>
+                <input class="sdpi-item-value sdProperty" id="fontSize" type="number" min="6" max="72" step="1" value="18" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Police</div>
+                <input class="sdpi-item-value sdProperty" id="fontName" type="text" value="Rubik" placeholder="Rubik, Tahoma, Arial..." oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur</div>
+                <input class="sdpi-item-value sdProperty generic-color" id="fontColor" type="color" value="#d18105" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Gras</div>
+                <div class="sdpi-item-value">
+                    <input id="fontBold" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="fontBold" class="sdpi-item-label"><span></span>texte en gras</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Position</div>
+                <select class="sdpi-item-value select sdProperty" id="textPosition" onchange="setSettings()">
+                    <option value="top">en haut</option>
+                    <option value="middle" selected>au milieu</option>
+                    <option value="bottom">en bas</option>
+                </select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Lignes</div>
+                <div class="sdpi-item-value">
+                    <input id="textWrap" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textWrap" class="sdpi-item-label"><span></span>retour à la ligne automatique</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Ajuster</div>
+                <div class="sdpi-item-value">
+                    <input id="textFit" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textFit" class="sdpi-item-label"><span></span>réduire la taille pour que tout tienne</label>
+                </div>
+            </div>
         </div>
         <div data-view="2">
             <div class="sdpi-item">
@@ -175,6 +223,54 @@
                 <div class="sdpi-item-value">
                     <input id="compact2" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
                     <label for="compact2" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Dessiner</div>
+                <div class="sdpi-item-value">
+                    <input id="drawText2" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="drawText2" class="sdpi-item-label"><span></span>le texte dans l'image (réglages ci-dessous)</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Taille</div>
+                <input class="sdpi-item-value sdProperty" id="fontSize2" type="number" min="6" max="72" step="1" value="18" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Police</div>
+                <input class="sdpi-item-value sdProperty" id="fontName2" type="text" value="Rubik" placeholder="Rubik, Tahoma, Arial..." oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur</div>
+                <input class="sdpi-item-value sdProperty generic-color" id="fontColor2" type="color" value="#d18105" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Gras</div>
+                <div class="sdpi-item-value">
+                    <input id="fontBold2" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="fontBold2" class="sdpi-item-label"><span></span>texte en gras</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Position</div>
+                <select class="sdpi-item-value select sdProperty" id="textPosition2" onchange="setSettings()">
+                    <option value="top">en haut</option>
+                    <option value="middle" selected>au milieu</option>
+                    <option value="bottom">en bas</option>
+                </select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Lignes</div>
+                <div class="sdpi-item-value">
+                    <input id="textWrap2" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textWrap2" class="sdpi-item-label"><span></span>retour à la ligne automatique</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Ajuster</div>
+                <div class="sdpi-item-value">
+                    <input id="textFit2" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textFit2" class="sdpi-item-label"><span></span>réduire la taille pour que tout tienne</label>
                 </div>
             </div>
         </div>
@@ -213,6 +309,54 @@
                     <label for="compact3" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
                 </div>
             </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Dessiner</div>
+                <div class="sdpi-item-value">
+                    <input id="drawText3" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="drawText3" class="sdpi-item-label"><span></span>le texte dans l'image (réglages ci-dessous)</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Taille</div>
+                <input class="sdpi-item-value sdProperty" id="fontSize3" type="number" min="6" max="72" step="1" value="18" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Police</div>
+                <input class="sdpi-item-value sdProperty" id="fontName3" type="text" value="Rubik" placeholder="Rubik, Tahoma, Arial..." oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur</div>
+                <input class="sdpi-item-value sdProperty generic-color" id="fontColor3" type="color" value="#d18105" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Gras</div>
+                <div class="sdpi-item-value">
+                    <input id="fontBold3" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="fontBold3" class="sdpi-item-label"><span></span>texte en gras</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Position</div>
+                <select class="sdpi-item-value select sdProperty" id="textPosition3" onchange="setSettings()">
+                    <option value="top">en haut</option>
+                    <option value="middle" selected>au milieu</option>
+                    <option value="bottom">en bas</option>
+                </select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Lignes</div>
+                <div class="sdpi-item-value">
+                    <input id="textWrap3" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textWrap3" class="sdpi-item-label"><span></span>retour à la ligne automatique</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Ajuster</div>
+                <div class="sdpi-item-value">
+                    <input id="textFit3" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textFit3" class="sdpi-item-label"><span></span>réduire la taille pour que tout tienne</label>
+                </div>
+            </div>
         </div>
         <div data-view="4">
             <div class="sdpi-item">
@@ -249,10 +393,58 @@
                     <label for="compact4" class="sdpi-item-label"><span></span>12 345 678 → 12,3 M</label>
                 </div>
             </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Dessiner</div>
+                <div class="sdpi-item-value">
+                    <input id="drawText4" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="drawText4" class="sdpi-item-label"><span></span>le texte dans l'image (réglages ci-dessous)</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Taille</div>
+                <input class="sdpi-item-value sdProperty" id="fontSize4" type="number" min="6" max="72" step="1" value="18" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Police</div>
+                <input class="sdpi-item-value sdProperty" id="fontName4" type="text" value="Rubik" placeholder="Rubik, Tahoma, Arial..." oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Couleur</div>
+                <input class="sdpi-item-value sdProperty generic-color" id="fontColor4" type="color" value="#d18105" oninput="setSettings()">
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Gras</div>
+                <div class="sdpi-item-value">
+                    <input id="fontBold4" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()">
+                    <label for="fontBold4" class="sdpi-item-label"><span></span>texte en gras</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Position</div>
+                <select class="sdpi-item-value select sdProperty" id="textPosition4" onchange="setSettings()">
+                    <option value="top">en haut</option>
+                    <option value="middle" selected>au milieu</option>
+                    <option value="bottom">en bas</option>
+                </select>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Lignes</div>
+                <div class="sdpi-item-value">
+                    <input id="textWrap4" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textWrap4" class="sdpi-item-label"><span></span>retour à la ligne automatique</label>
+                </div>
+            </div>
+            <div class="sdpi-item">
+                <div class="sdpi-item-label">Ajuster</div>
+                <div class="sdpi-item-value">
+                    <input id="textFit4" class="sdProperty sdCheckbox" type="checkbox" value="" oninput="setSettings()" checked>
+                    <label for="textFit4" class="sdpi-item-label"><span></span>réduire la taille pour que tout tienne</label>
+                </div>
+            </div>
         </div>
         <div class="sdpi-item">
             <div class="sdpi-item-label empty"></div>
-            <div class="sdpi-item-value generic-hint">\n dans le préfixe ou le suffixe = retour à la ligne. Taille du texte : icône « T » du logiciel Stream Deck.</div>
+            <div class="sdpi-item-value generic-hint">\n dans le préfixe ou le suffixe = retour à la ligne. Sans « Dessiner » : texte du logiciel Stream Deck (taille : icône « T », 18 au plus). Avec « Dessiner » : le plugin écrit la valeur dans l'image, taille libre en pixels (touche de 72), retour à la ligne et réduction automatiques ; le titre du logiciel est alors vidé.</div>
         </div>
 
         <div class="sdpi-heading">Icône</div>
