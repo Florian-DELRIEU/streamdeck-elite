@@ -4,10 +4,13 @@
 
 Fork personnel de Florian (`origin` = github.com/Florian-DELRIEU/streamdeck-elite, **dépôt public**) du plugin Stream Deck « Elite Dangerous » de mhwlng (`upstream` = github.com/mhwlng/streamdeck-elite). C# / .NET Framework 4.8, SDK BarRaider `StreamDeck-Tools` 6.3.1 + `streamdeck-client-csharp` 4.3.0. Matériel cible : Stream Deck MK.2 (touches 72×72 px).
 
-Chantier en cours : exposer **toute l'API du jeu** (`Status.json` + ~250 événements du Journal) via trois nouveaux types d'action paramétrables — **Valeur**, **État**, **Alarme** — pour ne plus avoir à écrire de C# à chaque nouvelle donnée.
+Chantier L0–L9 (terminé) : exposer **toute l'API du jeu** (`Status.json` + ~250 événements du Journal) via des actions paramétrables — **Donnée** (ex-Valeur/État) et **Alarme** — pour ne plus avoir à écrire de C# à chaque nouvelle donnée. **Version publiée : v3.0** (tag `V3.0` = `0d8bb66`).
+
+**➜ Point de reprise (2026-09-28) : `docs/feuille-de-route-v3.md`** — nouveautés d'après la v3.0 demandées dans les issues #1, #2, #3 (décisions de Florian, feuille de route v3.1 → v3.7, compilation dans le cloud). Prochaine étape : **v3.1 (L10)**, en commençant par un plan court à faire valider.
 
 ## Documents à lire avant de coder
 
+0. `docs/feuille-de-route-v3.md` — **point de reprise** : issues #1–#3, décisions de Florian du 2026-09-28, feuille de route v3.1 → v3.7 (lots L10 → L16), compilation et tests dans le cloud.
 1. `docs/cahier-des-charges-streamdeck-elite.md` — **spécification figée, source de vérité** : décisions validées (§0), architecture (§4), spec des actions (§5), Property Inspector (§6), exigences (§7), critères d'acceptation (§8), lots (§9), risques (§10).
 2. `docs/L0-baseline-build.md` — baseline de compilation et recette d'environnement.
 3. `docs/L1-socle-donnees.md` — **conventions de clés et API d'`EliteStore`** telles qu'implémentées (complète le §4.3).
@@ -44,8 +47,15 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 | L7b | Retours D7 : résultats de commande sans infobulle native, ligne de description à hauteur fixe (plus de mouvement au survol) | ✅ terminé le 2026-09-25 (session cloud : compilation Roslyn C# 7.3 sous Mono + 106 tests OK, PI vérifiée dans Chromium ; non vérifié sur le Stream Deck → D7b, inclus dans D8) |
 | L8 | Alarme (`com.mhwlng.elite.eventalarm`, garde `IsLive`) : événement + filtre sur un champ, durée (0 = jusqu'à l'appui), images repos/alerte, son, commande + raccourci, bouton « Tester » | ✅ terminé le 2026-09-25, avec L9 à la demande de Florian (session cloud : compilation Roslyn C# 7.3 sous Mono + 125 tests OK, PI vérifiée dans Chromium en frappe lettre par lettre ; non vérifié sous Windows ni sur le Stream Deck → D8) |
 | L9 | Version 2.8.0, nom et catégorie « ZV Stream Deck Elite », `pack.ps1` (zip ou DistributionTool), README (section FR en tête), liste de non-régression | ✅ terminé le 2026-09-25, avec L8 (126 tests OK dans le cloud ; `pack.ps1` exécuté sous PowerShell 7 Linux, archive vérifiée ; non vérifié sous Windows PowerShell 5.1) |
-| D8 | Test unique L7b + L8 + L9 — mode d'emploi : `docs/L9-finalisation.md` (D7b, nom, Alarme, non-régression des 12 actions, paquet) | ⏭️ **prochain** (Florian) |
-| — | Icônes des nouvelles actions dans la charte du pack de Florian : plan dans `docs/icones-plan.md` (2026-09-25) | plus tard, à sa demande |
+| D8 | Test unique L7b + L8 + L9 — mode d'emploi : `docs/L9-finalisation.md` (D7b, nom, Alarme, non-régression des 12 actions, paquet) | ✅ fait par Florian : **v3.0 publiée** (tag `V3.0` sur `0d8bb66`). Retours et demandes suivantes → issues #1–#3 |
+| L10 | **v3.1** — correctifs #3 : `calc.Route.RemainingJumps` (comme le bouton Route), groupes de tir libérés (Donnée/Alarme), `manifest.json` → 3.1.0 | ⏭️ **prochain** — voir `docs/feuille-de-route-v3.md` §3 |
+| L11 | **v3.2** — texte dessiné dans « Donnée » : taille libre, police Rubik, couleur, position, retour à la ligne auto, réduction pour tenir | à faire |
+| L12 | **v3.3** — mémoire du vaisseau (`ship.*`, par ShipID, fichier `%APPDATA%\ZV Stream Deck Elite\memoire.json`) + `calc.*` % + historique | à faire |
+| L13 | **v3.4** — action « Graphique » (`com.mhwlng.elite.graph`) : barre / cadran / courbe à la place des images, commande conservée | à faire |
+| L14 | **v3.5** — règles ET (donnée propre par règle + 2ᵉ condition) ; le OU = plusieurs règles | à faire |
+| L15 | **v3.6** — jusqu'à 4 alarmes par touche, seule l'alarme active est contrôlable | à faire |
+| L16 | **v3.7** — pages d'un profil fourni avec le plugin au lieu des dossiers (essai d'abord) | à faire |
+| — | Icônes : plan dans `docs/icones-plan.md` | **ignorées pour l'instant** (Florian, 2026-09-28) |
 
 ### Décisions postérieures au cahier des charges (Florian, 2026-09-23)
 
@@ -57,6 +67,17 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 - **Descriptions** (2026-09-25) : tout en français, dans `Elite.CatalogGen/descriptions-fr.json` (éditable à la main, UTF-8), fusionnées dans `catalog.js` au build.
 - Ces décisions priment sur le cahier des charges (§0, §5.1–5.2, §9), qui reste inchangé pour l'historique.
 
+### Décisions du 2026-09-28 (après la v3.0, issues #1–#3 — détail dans `docs/feuille-de-route-v3.md`)
+
+- **Sauts restants** : donnée calculée `calc.Route.RemainingJumps`, même règle que le bouton Route (0 si système actuel = cible FSD ou route effacée).
+- **Groupes de tir** : **libérés** sur Donnée/Alarme (plus de blocage ni de ⚠) — revient sur la décision du 2026-09-25 ; `EliteKeys` et le bouton Firegroup d'origine inchangés.
+- **Graphique** : action distincte, comme « Donnée » mais image = graphique dynamique ; commande conservée.
+- **Mémoire** : valeurs caractéristiques du vaisseau et historique **sauvegardés dans un fichier**. Pas de bouclier en % (le jeu ne l'écrit pas).
+- **Alarmes multiples** : seule l'alarme active est contrôlable.
+- **Dossiers** : impossibles via le SDK ; piste = pages d'un profil fourni avec le plugin, après essai.
+- **Icônes** : ignorées pour l'instant.
+- **Nouvelles conventions de clés** (à partir de v3.1/v3.3) : `calc.*` = données calculées par le plugin, `ship.*` = valeurs mémorisées du vaisseau actuel.
+
 → **Mettre à jour ce tableau à la fin de chaque lot**, dans le commit du lot.
 
 ## Git
@@ -67,6 +88,7 @@ Ces documents existent aussi dans un Projet claude.ai de Florian ; pour Claude C
 - Nouveautés de mhwlng : `git fetch upstream` puis `git merge upstream/master`. Ne jamais installer sa version officielle (même UUID : elle écraserait celle-ci).
 - Commits atomiques par lot. **Jamais** de push, force-push, `reset --hard` ou suppression de branche sans accord explicite de Florian.
 - **Session Claude Code dans le cloud** (conteneur Linux, depuis le 2026-09-25) : le travail se fait sur la branche de session `claude/...` (partie de `feature/generic-api`), poussée à la fin de chaque lot avec l'accord de Florian ; il la fusionne en avance rapide sur sa machine (`git fetch`, puis `git merge --ff-only origin/claude/<branche>` sur `feature/generic-api`), puis lance `build.ps1` / `test.ps1`. Dans le cloud : pas de MSBuild ni de déploiement, mais pré-compilation Roslyn (C# 7.3) sous Mono avec les paquets NuGet de nuget.org, tests NUnit sous Mono, et pages de réglages testées dans Chromium (Playwright). Cette vérification ne remplace pas `build.ps1` / `test.ps1` sous Windows.
+- Outils de la session cloud dans le dépôt : `bash tools/cloud/cloudtest.sh` (restauration NuGet + compilation Roslyn C# 7.3 sous Mono + tests NUnit ; prérequis `apt-get install -y mono-complete`) — mode d'emploi et pièges : `docs/feuille-de-route-v3.md` §5.
 - Avant chaque push de la branche de session : `git fetch origin feature/generic-api` et fusionner ce que Florian y a poussé entre-temps (ex. `1021d1c` « add plan », le 2026-09-25), sinon son `git merge --ff-only` échoue (« Diverging branches »).
 - `.gitignore` exclut déjà `bin/`, `obj/`, `packages/`, `.vs/`, `*.log`, `TestResult.xml`, et `Claude outputs/` (notes de travail locales de Florian, retirées du suivi le 2026-09-23).
 
