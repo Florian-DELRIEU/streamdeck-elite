@@ -74,7 +74,8 @@ function genericNormalize(text) {
 
 function genericBuildIndex(catalog) {
     var info = catalog.info || {};
-    var index = { categories: [], categoryById: {}, groupsByCategory: {}, byKey: {}, entries: [], enums: catalog.enums || {}, info: info };
+    var labels = catalog.labels || {};
+    var index = { categories: [], categoryById: {}, groupsByCategory: {}, byKey: {}, entries: [], enums: catalog.enums || {}, info: info, labels: labels };
 
     catalog.categories.forEach(function (category, order) {
         category.order = order;
@@ -88,27 +89,53 @@ function genericBuildIndex(catalog) {
             return;
         index.groupsByCategory[group.category].push(group);
         var category = index.categoryById[group.category];
+        // French name of the group (labels-fr.json, v3.8); the name of the game (event) stays searchable
+        if (group.gameLabel === undefined) {
+            group.gameLabel = group.label;
+            group.label = labels[group.id] || group.label;
+        }
         // the description of an event (when it is written) helps the search, not the general text of status.json
         var groupText = group.prefix.indexOf('journal.') === 0 ? (info[group.prefix] || '') : '';
         group.entries = group.fields.map(function (field) {
             var entry = {
                 key: group.prefix + '.' + field[0],
                 path: field[0],
+                label: labels[group.prefix + '.' + field[0]] || null,
                 type: field[1],
                 enumName: field[2] || null,
                 group: group,
                 category: group.category
             };
             // words found here rank first; words only found in the event description rank second
-            entry.ownText = genericNormalize(entry.key + ' ' + group.label + ' ' + (info[entry.key] || ''));
+            entry.ownText = genericNormalize(entry.key + ' ' + (entry.label || '') + ' ' + group.label + ' ' + group.gameLabel + ' ' + (info[entry.key] || ''));
             entry.groupText = genericNormalize(category.label + ' ' + groupText);
             index.byKey[entry.key.toLowerCase()] = entry;
             index.entries.push(entry);
             return entry;
         });
+        // menus in the alphabetical order of the names shown
+        group.entries.sort(function (a, b) { return genericCompareNames(genericEntryName(a), genericEntryName(b)); });
+    });
+
+    index.categories.forEach(function (category) {
+        index.groupsByCategory[category.id].sort(function (a, b) {
+            return genericCompareNames(a.label, b.label) || genericCompare(a.id, b.id);
+        });
     });
 
     return index;
+}
+
+// name shown in the menus: French name (labels-fr.json) or, for a field of a journal event, its name in the game
+function genericEntryName(entry) {
+    if (entry.label)
+        return entry.label;
+    return entry.path === 'timestamp' ? 'Heure de l\'\u00e9v\u00e9nement' : entry.path;
+}
+
+// alphabetical order, accents and case ignored ("Etoile" with "E")
+function genericCompareNames(a, b) {
+    return genericCompare(genericNormalize(a), genericNormalize(b));
 }
 
 function genericFindEntry(index, key) {
@@ -143,8 +170,8 @@ function genericSearch(index, text, max) {
         var ca = index.categoryById[a.entry.category].order, cb = index.categoryById[b.entry.category].order;
         if (ca !== cb)
             return ca - cb;
-        return genericCompare(a.entry.group.label, b.entry.group.label) || genericCompare(a.entry.group.id, b.entry.group.id)
-            || genericCompare(a.entry.path, b.entry.path);
+        return genericCompareNames(a.entry.group.label, b.entry.group.label) || genericCompare(a.entry.group.id, b.entry.group.id)
+            || genericCompareNames(genericEntryName(a.entry), genericEntryName(b.entry));
     });
 
     return { entries: matches.slice(0, max).map(function (m) { return m.entry; }), total: matches.length };
@@ -223,7 +250,7 @@ function genericDescribe(index, key) {
     if (!entry)
         return { text: '\u26a0 Cl\u00e9 hors catalogue (saisie manuelle) : elle fonctionnera si le jeu l\'\u00e9crit.', warning: true };
 
-    return { text: 'Type : ' + genericTypeLabel(entry) + ' \u00b7 ' + genericGroupLabel(entry.group), warning: false };
+    return { text: (entry.label ? entry.label + ' \u00b7 ' : '') + 'Type : ' + genericTypeLabel(entry) + ' \u00b7 ' + genericGroupLabel(entry.group), warning: false };
 }
 
 // "i" panel: expected values of an entry
@@ -305,7 +332,7 @@ function genericOption(value, text) {
 }
 
 function genericFieldOption(entry) {
-    return genericOption(entry.key, entry.path + ' \u2014 ' + genericTypeLabel(entry));
+    return genericOption(entry.key, genericEntryName(entry) + ' \u2014 ' + genericTypeLabel(entry));
 }
 
 // keyboard commands (commands.js), grouped by binding file, in the command list of every view
@@ -520,6 +547,8 @@ function genericRenderInfo() {
 
     var entry = genericFindEntry(genericIndex, key);
     var info = genericIndex.info;
+    if (entry && entry.label)
+        genericInfoLine(panel, 'Nom', entry.label);
     genericInfoLine(panel, 'Cl\u00e9', key);
     if (!entry) {
         genericInfoLine(panel, null, 'Cl\u00e9 hors catalogue (saisie manuelle) : pas de description. Elle fonctionnera si le jeu l\'\u00e9crit.');

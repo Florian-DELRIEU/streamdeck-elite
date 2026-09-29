@@ -62,6 +62,11 @@ namespace Elite.CatalogGen
             if (orphans.Count > 0)
                 Console.WriteLine("Elite.CatalogGen: " + orphans.Count + " description(s) without catalog key ignored: " + string.Join(", ", orphans.Take(5)));
 
+            var labels = Descriptions.Load(Path.Combine(root, "Elite.CatalogGen", Labels.FrenchFile));
+            var labelOrphans = Labels.Merge(catalog, labels);
+            if (labelOrphans.Count > 0)
+                Console.WriteLine("Elite.CatalogGen: " + labelOrphans.Count + " label(s) without catalog key or group ignored: " + string.Join(", ", labelOrphans.Take(5)));
+
             if (catalog.KeyCount < MinimumKeys)
                 throw new InvalidOperationException("catalog: only " + catalog.KeyCount + " keys (expected at least " + MinimumKeys + ")");
 
@@ -80,7 +85,8 @@ namespace Elite.CatalogGen
             bool catalogWritten = WriteIfChanged(Path.Combine(inspector, "catalog.js"), CatalogJs(catalog));
             bool commandsWritten = WriteIfChanged(Path.Combine(inspector, "commands.js"), CommandsJs(commands, commandDescriptions));
 
-            Console.WriteLine("Elite.CatalogGen: catalog.js " + catalog.Groups.Count + " groups, " + catalog.KeyCount + " keys, " + catalog.Info.Count + " descriptions ("
+            Console.WriteLine("Elite.CatalogGen: catalog.js " + catalog.Groups.Count + " groups, " + catalog.KeyCount + " keys, " + catalog.Info.Count + " descriptions, "
+                + catalog.Labels.Count + " labels ("
                 + (catalogWritten ? "written" : "unchanged") + "); commands.js " + commandCount + " commands, "
                 + commandNames.Count(commandDescriptions.ContainsKey) + " descriptions (" + (commandsWritten ? "written" : "unchanged") + ")");
             return 0;
@@ -161,6 +167,11 @@ namespace Elite.CatalogGen
             // French descriptions shown by the "i" button: key = event ("journal.FSDJump") or full key
             sb.Append("\"info\": {\r\n");
             sb.Append(string.Join(",\r\n", catalog.Info.Select(i => Json(i.Key) + ": " + Json(i.Value))));
+            sb.Append("\r\n},\r\n");
+
+            // French names of the menus (labels-fr.json): key = full key or group id; the settings keep the technical key
+            sb.Append("\"labels\": {\r\n");
+            sb.Append(string.Join(",\r\n", catalog.Labels.Select(i => Json(i.Key) + ": " + Json(i.Value))));
             sb.Append("\r\n},\r\n");
 
             sb.Append("\"groups\": [\r\n");

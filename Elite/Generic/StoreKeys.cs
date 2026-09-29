@@ -16,6 +16,8 @@ namespace Elite.Generic
         public const string JournalPrefix = "journal";
         public const string CalcPrefix = "calc";   // computed by the plugin (DerivedKeys)
         public const string ShipPrefix = "ship";   // remembered values of the current ship (ShipMemory)
+        public const string SystemPrefix = "system"; // current star system (SystemTracker, v3.8)
+        public const string TargetPrefix = "target"; // target star system and its last visit (SystemTracker, SystemMemory, v3.8)
         public const string CountSuffix = "#count";
 
         public static readonly StringComparer Comparer = StringComparer.OrdinalIgnoreCase;

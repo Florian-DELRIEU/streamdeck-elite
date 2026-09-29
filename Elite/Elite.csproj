@@ -212,6 +212,8 @@
     <Compile Include="Generic\IllegalItems.cs" />
     <Compile Include="Generic\ProfilePages.cs" />
     <Compile Include="Generic\ShipMemory.cs" />
+    <Compile Include="Generic\SystemMemory.cs" />
+    <Compile Include="Generic\SystemTracker.cs" />
     <Compile Include="Generic\StoreKeys.cs" />
     <Compile Include="Generic\ValueAction.cs" />
     <Compile Include="Generic\ValueFormatter.cs" />

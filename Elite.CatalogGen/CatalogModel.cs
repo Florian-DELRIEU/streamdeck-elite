@@ -80,6 +80,9 @@ namespace Elite.CatalogGen
         // French descriptions of events and keys ("i" button), see Descriptions
         public SortedDictionary<string, string> Info { get; } = new SortedDictionary<string, string>(StringComparer.Ordinal);
 
+        // French names shown in the menus (v3.8): key = full key ("status.Flags.Docked") or group id ("journal.FSDJump"), see Labels
+        public SortedDictionary<string, string> Labels { get; } = new SortedDictionary<string, string>(StringComparer.Ordinal);
+
         // enum name -> values as written by the game
         public SortedDictionary<string, List<string>> Enums { get; } = new SortedDictionary<string, List<string>>(StringComparer.Ordinal);
 

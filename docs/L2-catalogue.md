@@ -65,6 +65,8 @@ Statut : **terminé** le 2026-09-23. Ce document précise le §4.4 et le §6 du 
   - les propriétés calculées (sans setter public), `JToken` et les dictionnaires sont ignorés ;
   - `timestamp` est ajouté à chaque événement.
 - **Écriture du jeu prioritaire** : `journal.DropshipDeploy`, et non `DropShipDeploy` comme dans la bibliothèque.
+- **Descriptions** (L6) : section `info`, fusionnée depuis `descriptions-fr.json`.
+- **Noms français** (v3.8, `docs/L11-v3.8.md`) : section `labels` = `{ clé complète ou id de groupe : nom }`, fusionnée depuis `Elite.CatalogGen/labels-fr.json` (40 caractères au plus, `LabelsTests`). `generic.js` affiche `labels[clé]` (sinon `field[0]`) et `labels[group.id]` (sinon `group.label`) ; le réglage enregistré reste la clé complète.
 
 ## Format de `commands.js` (`var ELITE_COMMANDS`)
 

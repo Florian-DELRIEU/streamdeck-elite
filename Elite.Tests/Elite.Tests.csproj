@@ -71,6 +71,8 @@
     <Compile Include="RawEventTests.cs" />
     <Compile Include="FireGroupCycleTests.cs" />
     <Compile Include="IllegalItemsTests.cs" />
+    <Compile Include="LabelsTests.cs" />
+    <Compile Include="SystemTrackerTests.cs" />
     <Compile Include="ReferenceKeysTests.cs" />
     <Compile Include="ShipMemoryTests.cs" />
     <Compile Include="StoreKeysTests.cs" />
@@ -79,6 +81,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+    <None Include="Data\journal-systeme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="Data\journal-extrait.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -102,6 +107,10 @@
     </None>
     <None Include="..\Elite.CatalogGen\descriptions-fr.json">
       <Link>Data\descriptions-fr.json</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Elite.CatalogGen\labels-fr.json">
+      <Link>Data\labels-fr.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="..\Elite.CatalogGen\commands-fr.json">

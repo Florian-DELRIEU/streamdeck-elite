@@ -118,6 +118,11 @@ namespace Elite.Generic
                 changed.UnionWith(Replace(BackpackTracker.Source, BackpackTracker.Keys()));
             if (HullTracker.Observe(e.EventName, e.Event))
                 changed.UnionWith(Replace(HullTracker.Source, HullTracker.Keys()));
+            if (SystemTracker.Observe(e.EventName, e.Event))
+            {
+                changed.UnionWith(Replace(StoreKeys.SystemPrefix, SystemTracker.SystemKeys()));
+                changed.UnionWith(Replace(StoreKeys.TargetPrefix, SystemTracker.TargetKeys()));
+            }
             changed.UnionWith(UpdateDerived());
             Raise(changed);
 
@@ -174,6 +179,7 @@ namespace Elite.Generic
             PluginMemory.Reset();
             BackpackTracker.Reset();
             HullTracker.Reset();
+            SystemTracker.Reset();
         }
 
         /// <summary>

@@ -54,11 +54,14 @@ namespace Elite.Tests
             Assert.That(statusKeys.Count, Is.GreaterThanOrEqualTo(78));
             Assert.That(statusKeys.Where(k => !described.Contains(k)), Is.Empty, "status keys without description");
 
-            // keys produced by the plugin (v3.1+): each key and each group
-            var pluginKeys = keys.Where(k => k.StartsWith("calc.") || k.StartsWith("ship.")).ToList();
+            // keys produced by the plugin (v3.1+, system/target v3.8): each key and each group
+            var pluginPrefixes = new[] { "calc", "ship", "system", "target" };
+            Func<string, bool> isPlugin = k => pluginPrefixes.Any(p => k == p || k.StartsWith(p + "."));
+            var pluginKeys = keys.Where(isPlugin).ToList();
             Assert.That(pluginKeys, Does.Contain("calc.Route.RemainingJumps"));
-            Assert.That(pluginKeys.Where(k => !described.Contains(k)), Is.Empty, "calc/ship keys without description");
-            Assert.That(prefixes.Where(p => (p.StartsWith("calc.") || p.StartsWith("ship.")) && !described.Contains(p)), Is.Empty, "calc/ship groups without description");
+            Assert.That(pluginKeys, Does.Contain("system.Star.Scoopable"));
+            Assert.That(pluginKeys.Where(k => !described.Contains(k)), Is.Empty, "calc/ship/system/target keys without description");
+            Assert.That(prefixes.Where(p => isPlugin(p) && !described.Contains(p)), Is.Empty, "calc/ship/system/target groups without description");
         }
 
         [Test]

@@ -46,11 +46,13 @@ Statut : **terminé** le 2026-09-23. Ce document précise, sans le contredire, l
 |---|---|---|
 | `calc.*` | `calc` : `DerivedKeys.Compute` (fonction pure), recalculé après **chaque** statut et **chaque** événement | données calculées : `calc.Route.RemainingJumps`, `calc.Fuel.Percent`, `calc.Cargo.Percent`, `calc.Jump.Range`, `calc.Fsd.Supercharged` |
 | `calc.Hull.Percent` | `calc.Hull` : `HullTracker` (à état) | coque en % ; le magasin ne garde que le dernier `HullDamage`, qui peut être celui du chasseur |
-| `calc.Backpack.<nom>` | `calc.Backpack` : `BackpackTracker` (à état) | contenu du sac à dos Odyssey (`Backpack` + `BackpackChange`) |
+| `calc.Backpack.<nom>` | `calc.Backpack` : `BackpackTracker` (à état) | contenu du sac à dos Odyssey (`Backpack` + `BackpackChange`) ; depuis v3.8, `calc.Backpack.Illegal` / `IllegalCount` / `Stolen` (liste `objets-illegaux.json` + objets volés de `CollectItems`) |
 | `ship.*` | `ship` : `ShipMemory` (fichier `memoire.json`) | valeurs du **vaisseau actuel**, mémorisées par `ShipID` depuis son dernier `Loadout` |
+| `system.*` | `system` : `SystemTracker` (à état, v3.8) | **système actuel**, depuis l'événement brut d'arrivée (`FSDJump`, `Location`, `CarrierJump`) : faction dominante et ta relation, conflits, étoile et `Star.Scoopable` (`docs/L11-v3.8.md`) |
+| `target.*` | `target` : `SystemTracker` + `SystemMemory` (section `systems` de `memoire.json`) | **système cible** (`FSDTarget`) jusqu'à l'arrivée ou `NavRouteClear` ; `target.Known` et les valeurs de la dernière visite si le système est connu |
 
-- **Une seule notification** : les changements des sources `ship`, `calc*` et de la source mise à jour partent dans le **même** `DataChanged` (une seule mise à jour des touches).
-- **Catalogue** : les groupes sont déclarés à la main dans `Elite.CatalogGen/PluginCatalog.cs`, et chaque clé et chaque groupe doivent avoir leur description dans `descriptions-fr.json` (`DescriptionsTests`).
+- **Une seule notification** : les changements des sources `ship`, `calc*`, `system`, `target` et de la source mise à jour partent dans le **même** `DataChanged` (une seule mise à jour des touches).
+- **Catalogue** : les groupes sont déclarés à la main dans `Elite.CatalogGen/PluginCatalog.cs`, et chaque clé et chaque groupe doivent avoir leur description dans `descriptions-fr.json` (`DescriptionsTests`) ; depuis v3.8, chaque clé a aussi un nom français dans `labels-fr.json` (`LabelsTests`).
 
 ## API `EliteStore` (namespace `Elite.Generic`)
 

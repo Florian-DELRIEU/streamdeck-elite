@@ -33,13 +33,15 @@ function alarmBuildEvents(index) {
             var description = index.info[group.prefix] || '';
             // the descriptions of its fields help too ("attaque" finds UnderAttack through "Qui est attaque" of Target)
             var fieldsText = group.entries.map(function (entry) { return entry.path + ' ' + (index.info[entry.key] || ''); }).join(' ');
+            // group.label = French name of the event (labels-fr.json, v3.8), otherwise its name in the game
             var event = {
                 name: name,
+                label: group.label,
                 group: group,
                 category: category,
                 description: description,
-                ownText: genericNormalize(name + ' ' + description),
-                allText: genericNormalize(name + ' ' + description + ' ' + category.label + ' ' + fieldsText)
+                ownText: genericNormalize(name + ' ' + group.label + ' ' + description),
+                allText: genericNormalize(name + ' ' + group.label + ' ' + description + ' ' + category.label + ' ' + fieldsText)
             };
             list.push(event);
             events.list.push(event);
@@ -65,7 +67,7 @@ function alarmSearchEvents(events, text) {
             matches.push({ event: event, score: words.every(function (w) { return event.ownText.indexOf(w) >= 0; }) ? 0 : 1 });
     });
     matches.sort(function (a, b) {
-        return (a.score - b.score) || (a.event.category.order - b.event.category.order) || genericCompare(a.event.name, b.event.name);
+        return (a.score - b.score) || (a.event.category.order - b.event.category.order) || genericCompareNames(a.event.label, b.event.label);
     });
     return matches.map(function (m) { return m.event; });
 }
@@ -85,7 +87,7 @@ function alarmFieldKey(eventName, field) {
 }
 
 function alarmEventLabel(event) {
-    return event.name + (event.group.odyssey ? ' (Odyssey)' : '');
+    return event.label + (event.group.odyssey ? ' (Odyssey)' : '');
 }
 
 // ---------- user interface ----------
@@ -140,7 +142,7 @@ function alarmFillFilterFields(eventName, current, keepUnknown, alarm) {
         event.group.entries.forEach(function (entry) {
             if (entry.path === 'timestamp')
                 return;
-            select.appendChild(genericOption(entry.path, entry.path + ' \u2014 ' + genericTypeLabel(entry)));
+            select.appendChild(genericOption(entry.path, genericEntryName(entry) + ' \u2014 ' + genericTypeLabel(entry)));
             if (wanted && entry.path.toLowerCase() === wanted.toLowerCase())
                 found = true;
         });
@@ -320,7 +322,7 @@ function alarmRenderInfo() {
     }
 
     var event = alarmFindEvent(name);
-    genericInfoLine(panel, '\u00c9v\u00e9nement', name);
+    genericInfoLine(panel, '\u00c9v\u00e9nement', event && event.label !== event.name ? event.label + ' (' + event.name + ')' : name);
     if (!event)
         genericInfoLine(panel, null, '\u00c9v\u00e9nement hors catalogue (saisie manuelle) : pas de description.');
     else {

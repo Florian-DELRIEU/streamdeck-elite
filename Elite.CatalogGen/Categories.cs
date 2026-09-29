@@ -19,8 +19,8 @@ namespace Elite.CatalogGen
         // menu order
         public static readonly Category[] All =
         {
-            new Category(StatusFlags, "Statut — vaisseau (Flags)", "\U0001F6A6"),
-            new Category(StatusFlags2, "Statut — Odyssey (Flags2)", "\U0001F9CD"),
+            new Category(StatusFlags, "Statut — vaisseau (oui/non)", "\U0001F6A6"),
+            new Category(StatusFlags2, "Statut — à pied et SCO (oui/non)", "\U0001F9CD"),
             new Category(StatusValues, "Statut — valeurs", "\U0001F4CA"),
             new Category("travel", "Déplacement & accostage", "\U0001F9ED"),
             new Category("combat", "Combat & dangers", "⚔️"),

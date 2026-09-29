@@ -49,6 +49,7 @@
     <Compile Include="CommandList.cs" />
     <Compile Include="Descriptions.cs" />
     <Compile Include="EventCatalog.cs" />
+    <Compile Include="Labels.cs" />
     <Compile Include="ObservedKeys.cs" />
     <Compile Include="PluginCatalog.cs" />
     <Compile Include="Program.cs" />
@@ -58,6 +59,7 @@
     <None Include="descriptions-en.json" />
     <None Include="descriptions-fr.json" />
     <None Include="commands-fr.json" />
+    <None Include="labels-fr.json" />
     <None Include="observed-keys.txt" />
     <None Include="packages.config" />
   </ItemGroup>
