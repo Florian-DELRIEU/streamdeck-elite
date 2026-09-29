@@ -117,10 +117,7 @@ namespace Elite.Tests
             Assert.That(FireGroupSender.TryParse("FireGroup-I", out group), Is.False);
             Assert.That(FireGroupSender.TryParse("CycleFireGroupNext", out group), Is.False);
             Assert.That(FireGroupSender.TryParse(null, out group), Is.False);
-
-            Assert.That(FireGroupSender.Presses(2, 0), Is.EqualTo(2), "C from A: 2 x next");
-            Assert.That(FireGroupSender.Presses(0, 3), Is.EqualTo(-3), "A from D: 3 x previous");
-            Assert.That(FireGroupSender.Presses(1, 1), Is.EqualTo(0));
+            Assert.That(FireGroupSender.Name(2), Is.EqualTo("FireGroup-C"));
         }
 
         [Test]

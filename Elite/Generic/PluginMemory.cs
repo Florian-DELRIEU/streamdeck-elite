@@ -11,7 +11,7 @@ namespace Elite.Generic
     /// <summary>
     /// File of what the plugin remembers between two sessions (v3.3, docs/L10-v3.md):
     /// %APPDATA%\ZV Stream Deck Elite\memoire.json, outside of the plugin folder so that it survives a reinstallation.
-    /// Sections: ships (ShipMemory) and history (History). Written atomically (temporary file, then replaced), at most
+    /// Sections: ships (ShipMemory) and history (History). Same folder: objets-illegaux.json (IllegalItems, v3.8). Written atomically (temporary file, then replaced), at most
     /// every SaveInterval; an unreadable file is ignored (WARN) and rewritten. Without Configure (unit tests): memory only.
     /// </summary>
     public static class PluginMemory
@@ -53,6 +53,9 @@ namespace Elite.Generic
             ShipMemory.Load(json?["ships"] as JObject, (string)json?["currentShip"]);
             History.Load(json?["history"] as JObject, DateTime.UtcNow);
             Log(TracingLevel.INFO, $"PluginMemory: {file} ({ShipMemory.ShipCount} ships, {History.SeriesCount} history series)");
+
+            // editable list of the same folder (v3.8)
+            IllegalItems.Configure(Path.Combine(Path.GetDirectoryName(file), IllegalItems.FileName));
         }
 
         /// <summary>For unit tests: no file, nothing remembered.</summary>
@@ -68,6 +71,7 @@ namespace Elite.Generic
 
             ShipMemory.Reset();
             History.Reset();
+            IllegalItems.Reset();
         }
 
         /// <summary>Saves now if the last save is old enough, otherwise once at the end of the interval.</summary>

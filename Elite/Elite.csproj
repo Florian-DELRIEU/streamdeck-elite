@@ -208,6 +208,8 @@
     <Compile Include="Generic\KeyRenderer.cs" />
     <Compile Include="Generic\PluginMemory.cs" />
     <Compile Include="Generic\PressGesture.cs" />
+    <Compile Include="Generic\FireGroupCycle.cs" />
+    <Compile Include="Generic\IllegalItems.cs" />
     <Compile Include="Generic\ProfilePages.cs" />
     <Compile Include="Generic\ShipMemory.cs" />
     <Compile Include="Generic\StoreKeys.cs" />

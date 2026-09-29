@@ -27,6 +27,10 @@ namespace Elite.CatalogGen
             var backpack = new Group("calc.Backpack", "calc.Backpack", "Calculé — sac à dos", Categories.OnFoot, true);
             foreach (var name in Consumables)
                 backpack.Add(name, FieldTypes.Integer);
+            // v3.8: illegal items (Elite.Generic.IllegalItems + stolen items)
+            backpack.Add("Illegal", FieldTypes.Bool);
+            backpack.Add("IllegalCount", FieldTypes.Integer);
+            backpack.Add("Stolen", FieldTypes.Integer);
             catalog.Groups.Add(backpack);
 
             var ship = new Group("ship", "ship", "Vaisseau mémorisé", "ship", false);

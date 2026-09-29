@@ -69,6 +69,8 @@
     <Compile Include="ProfilePagesTests.cs" />
     <Compile Include="ValueFormatterTests.cs" />
     <Compile Include="RawEventTests.cs" />
+    <Compile Include="FireGroupCycleTests.cs" />
+    <Compile Include="IllegalItemsTests.cs" />
     <Compile Include="ReferenceKeysTests.cs" />
     <Compile Include="ShipMemoryTests.cs" />
     <Compile Include="StoreKeysTests.cs" />

@@ -146,7 +146,7 @@
   "UpThrustButton": "Propulseurs de manœuvre : poussée vers le haut (appui bref).",
   "UpThrustButton_Landing": "Poussée vers le haut, variante des commandes d'atterrissage (appui bref).",
   "UseAlternateFlightValuesToggle": "Bascule sur les commandes de vol alternatives.",
-  "UseBoostJuice": "Boost.",
+  "UseBoostJuice": "Boost. En supercroisière avec un FSD SCO : active la surcharge (SCO), visible avec la donnée status.Flags2.FsdScoActive.",
   "UseShieldCell": "Utilise une cellule de bouclier (SCB).",
   "WeaponColourToggle": "Change la couleur des tirs (cosmétique).",
   "WingNavLock": "Verrou de navigation sur l'ailier sélectionné (tu suis ses sauts).",

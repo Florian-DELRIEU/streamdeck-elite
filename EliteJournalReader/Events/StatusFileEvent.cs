@@ -163,7 +163,10 @@ namespace EliteJournalReader.Events
         BreathableAtmosphere = 0x00010000,
         TelepresenceMulticrew = 0x00020000,
         PhysicalMulticrew = 0x00040000,
-        Fsdhyperdrivecharging = 0x00080000
+        Fsdhyperdrivecharging = 0x00080000,
+        // ZV Stream Deck Elite v3.8 (docs/L11-v3.8.md), from the journal documentation of Frontier
+        FsdScoActive = 0x00100000, // Supercruise Overdrive (SCO) active
+        SupercruiseAssist = 0x00200000 // Supercruise Assist active (aligned and throttle in the blue zone)
     }
 
     public enum StatusGuiFocus

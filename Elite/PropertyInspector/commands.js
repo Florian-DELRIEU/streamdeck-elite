@@ -147,7 +147,7 @@ var ELITE_COMMANDS = {
 ["UpThrustButton","Up Thrust Button","Propulseurs de man\u0153uvre : pouss\u00e9e vers le haut (appui bref)."],
 ["UpThrustButton_Landing","Up Thrust Button Landing","Pouss\u00e9e vers le haut, variante des commandes d'atterrissage (appui bref)."],
 ["UseAlternateFlightValuesToggle","Use Alternate Flight Values Toggle","Bascule sur les commandes de vol alternatives."],
-["UseBoostJuice","Use Boost Juice","Boost."],
+["UseBoostJuice","Use Boost Juice","Boost. En supercroisi\u00e8re avec un FSD SCO : active la surcharge (SCO), visible avec la donn\u00e9e status.Flags2.FsdScoActive."],
 ["UseShieldCell","Use Shield Cell","Utilise une cellule de bouclier (SCB)."],
 ["WeaponColourToggle","Weapon Colour Toggle","Change la couleur des tirs (cosm\u00e9tique)."],
 ["WingNavLock","Wing Nav Lock","Verrou de navigation sur l'ailier s\u00e9lectionn\u00e9 (tu suis ses sauts)."],
