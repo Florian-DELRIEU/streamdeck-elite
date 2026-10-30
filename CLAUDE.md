@@ -121,6 +121,8 @@ Depuis L6, le générateur fusionne aussi `Elite.CatalogGen/descriptions-fr.json
 
 Depuis L9, `powershell -NoProfile -ExecutionPolicy Bypass -File pack.ps1` (après le build Release) produit `dist\com.mhwlng.elite.streamDeckPlugin` (`dist/` ignoré par git) : `DistributionTool.exe` d'Elgato s'il est dans `tools\` ou le PATH, sinon zip dont la racine est le dossier `com.mhwlng.elite.sdPlugin`, sans `*.pdb` ni `*.log` ; critère `== PACK OK`. Ce paquet sert à une première installation (double-clic) ; pour mettre à jour la version installée, garder la procédure robocopy ci-dessous.
 
+Depuis le 2026-10-30, `.github/workflows/plugin.yml` (GitHub Actions, `windows-latest`) fait la même chose sur GitHub : nuget.exe → `build.ps1` Debug → `test.ps1` → `build.ps1` Release → `pack.ps1`. Un push sur `feature/generic-api` ou `claude/**` met le fichier dans l'onglet **Actions** (page de l'exécution, « Artifacts », 30 jours) ; un push de tag (`V3.8`…) l'attache aussi à la release du tag (créée si elle n'existe pas). C'est aussi une vraie compilation MSBuild sous Windows pour chaque push de la branche de session.
+
 Note : `nuget restore` interroge nuget.org à chaque build (liste des vulnérabilités, parfois servie depuis le cache) ; les paquets eux-mêmes ne sont téléchargés que s'ils manquent dans `packages/`.
 
 Piège shell : sous Windows, Claude Code exécute ses commandes dans Git Bash. Si MSBuild est appelé directement depuis bash, utiliser `-p:Configuration=Debug` et jamais `/p:...` (MSYS convertit les arguments commençant par `/` en chemins). Le plus simple : passer par `build.ps1`.

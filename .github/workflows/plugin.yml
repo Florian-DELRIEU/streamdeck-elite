@@ -1,0 +1,61 @@
+# Builds the plugin on a GitHub Windows machine and produces com.mhwlng.elite.streamDeckPlugin.
+# - push on a branch: file downloadable from the Actions tab (run page, "Artifacts")
+# - push of a tag (V3.8...): the file is also attached to the GitHub release of the tag
+name: Plugin
+
+on:
+  push:
+    branches: ['feature/generic-api', 'claude/**']
+    tags: ['V*', 'v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  plugin:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: NuGet (C:\nuget\nuget.exe, used by build.ps1)
+        run: |
+          $ProgressPreference = 'SilentlyContinue'
+          New-Item -ItemType Directory -Force -Path C:\nuget | Out-Null
+          Invoke-WebRequest -Uri https://dist.nuget.org/win-x86-commandline/latest/nuget.exe -OutFile C:\nuget\nuget.exe
+
+      - name: Build Debug
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1; exit $LASTEXITCODE
+
+      - name: Tests
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File test.ps1; exit $LASTEXITCODE
+
+      - name: Build Release
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1 -Configuration Release; exit $LASTEXITCODE
+
+      - name: Pack
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File pack.ps1; exit $LASTEXITCODE
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: com.mhwlng.elite.streamDeckPlugin
+          path: dist/com.mhwlng.elite.streamDeckPlugin
+          retention-days: 30
+
+      - name: Attach to the release
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          $ErrorActionPreference = 'Continue'
+          gh release view $env:TAG *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $env:TAG --title $env:TAG --generate-notes
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          gh release upload $env:TAG dist\com.mhwlng.elite.streamDeckPlugin --clobber
+          exit $LASTEXITCODE
